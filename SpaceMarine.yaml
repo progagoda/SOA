@@ -10,7 +10,7 @@ info:
 servers:
   - url: http://localhost:4532/api/v1
 paths:
-  /space-marines:
+  /api/v1/space-marines:
     get:
       summary: Получить список SpaceMarine
       operationId: getSpaceMarines
@@ -100,25 +100,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceMarine'
-  /space-marines/{id}:
-    get:
-      summary: Получить SpaceMarine по ID
-      operationId: getSpaceMarineById
-      parameters:
-        - name: id
-          in: path
-          description: ID SpaceMarine
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SpaceMarine'
-  /space-marines/create:
     post:
       summary: Создать новый SpaceMarine
       operationId: createSpaceMarine
@@ -137,18 +118,60 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
-          description: Ошибка валидации данных
+          description: Неверные данные SpaceMarine
+  /api/v1/space-marine-minimal:
+    get:
+      summary: Получить минимальный по coordinates SpaceMarine
+      operationId: getSpaceMarineWithMinimumCoordinates
+      responses:
+        '200':
+          description: Успешный ответ
           content:
-            application/json:
+            application/xml:
               schema:
-                $ref: '#/components/schemas/ValidationError'
-        '422':
-          description: Нарушение ограничений целостности
+                $ref: '#/components/schemas/SpaceMarine'
+                
+  /api/v1/space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
+    get:
+      summary: Получить количество SpaceMarine, значение health которых меньше заданного
+      operationId: countSpaceMarinesWithHealthLessThan
+      parameters:
+        - name: health
+          in: path
+          description: Здоровье SpaceMarine
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Успешный ответ
           content:
-            application/json:
+            application/xml:
               schema:
-                $ref: '#/components/schemas/IntegrityViolationError'
-  /space-marines/update/{id}:
+                $ref: '#/components/schemas/SpaceMarinesCount'
+        '400':
+          description: Неверный health
+  /api/v1/space-marines/{id}:
+    get:
+      summary: Получить SpaceMarine по ID
+      operationId: getSpaceMarineById
+      parameters:
+        - name: id
+          in: path
+          description: ID SpaceMarine
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+        '400':
+          description: Неверный id
+    
     put:
       summary: Обновить SpaceMarine по ID
       operationId: updateSpaceMarineById
@@ -174,18 +197,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
-          description: Ошибка валидации данных
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ValidationError'
-        '422':
-          description: Нарушение ограничений целостности
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/IntegrityViolationError'
-  /space-marines/delete/{id}:
+          description: Неверные данные SpaceMarine
     delete:
       summary: Удалить SpaceMarine по ID
       operationId: deleteSpaceMarineById
@@ -199,54 +211,81 @@ paths:
       responses:
         '204':
           description: Успешное удаление
-  /space-marines/delete/meleeWeapon/{meleeWeapon}:
+        '400':
+          description: Неверный id
+  /api/v1/space-marines/{melee-weapon}:
     delete:
-      summary: Удалить SpaceMarine по meleeWeapon
-      operationId: deleteSpaceMarineByMeleeWeapon
+      summary: Удалить все SpaceMarines по meleeWeapon
+      operationId: deleteSpaceMarinesByMeleeWeapon
       parameters:
-        - name: meleeWeapon
+        - name: melee-weapon
           in: path
-          description: Выберите тип оружия(CHAIN_AXE, MANREAPER, POWER_BLADE)
-          required: false
+          description: One of the melee weapons
+          required: true
           schema:
             type: string
             enum:
-              - CHAIN_AXE
-              - MANREAPER
-              - POWER_BLADE
+            - CHAIN_AXE
+            - MANREAPER
+            - POWER_BLADE
       responses:
         '204':
           description: Успешное удаление
-  /api/space-marines/min-coordinate:
-    get:
-      summary: Получить объект с минимальными координатами
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceMarine'
-        '404':
-          description: Объект не найден
-  /api/space-marines/count-by-loyal:
-    get:
-      summary: Получить количество объектов по значению поля loyal
-      parameters:
-        - in: query
-          name: maxLoyal
-          schema:
-            type: boolean
-          description: Максимальное значение поля loyal
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                type: integer
         '400':
-          description: Некорректный запрос
+          description: Неверный meleeWeapon
+          
+  /api/v1/starship/create/{id}/{name}:
+    post:
+      summary: Создать новый Starship
+      operationId: createStarship
+      parameters:
+        - name: id
+          in: path
+          description: ID of starship
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: path
+          description: Name of the starship
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Успешное создание
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Starship'
+        '400':
+          description: Неверные данные Starship
+  /api/v1/starship/{starship-id}/unload/{space-marine-id}:
+    put:
+      summary: Высадить десантника с корабля
+      operationId: unloadMarineFromStarship
+      parameters:
+        - name: starship-id
+          in: path
+          description: ID of Starship
+          required: true
+          schema:
+            type: integer
+        - name: space-marine-id
+          in: path
+          description: ID of SpaceMarine
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Успешная высадка
+        '400':
+          description: Неверные данные Starship или SpaceMarine
+        '401':
+          description: Десантник не находится на этом корабле
+    
+
 components:
   schemas:
     SpaceMarine:
@@ -276,6 +315,8 @@ components:
             - POWER_BLADE
         chapter:
           $ref: '#/components/schemas/Chapter'
+        starshipId:
+          type: integer
     Coordinates:
       type: object
       properties:
@@ -294,15 +335,12 @@ components:
           type: string
         world:
           type: string
-    ValidationError:
+    SpaceMarinesCount:
+      type: integer
+    Starship:
       type: object
       properties:
-        field:
-          type: string
-        message:
-          type: string
-    IntegrityViolationError:
-      type: object
-      properties:
-         message:
+        id:
+          type: integer
+        name:
           type: string
