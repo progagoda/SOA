@@ -1,0 +1,174 @@
+openapi: 3.0.3
+info:
+  title: Управление коллекцией SpaceMarine
+  description: API для управления коллекцией SpaceMarine
+  version: 1.0.0
+  contact:
+    name: Ваше имя
+  license:
+    name: Лицензия
+servers:
+  - url: http://localhost:4532/api/v1
+paths:
+  /space-marines:
+    get:
+      summary: Получить список SpaceMarine
+      operationId: getSpaceMarines
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы
+          required: false
+          schema:
+            type: integer
+        - name: size
+          in: query
+          description: Размер страницы
+          required: false
+          schema:
+            type: integer
+        - name: sort
+          in: query
+          description: Сортировка (например, "name,asc")
+          required: false
+          schema:
+            type: string
+        - name: health
+          in: query
+          description: Фильтр по здоровью
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name:
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceMarine'
+  /space-marines/{id}:
+    get:
+      summary: Получить SpaceMarine по ID
+      operationId: getSpaceMarineById
+      parameters:
+        - name: id
+          in: path
+          description: ID SpaceMarine
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+  /space-marines/create:
+    post:
+      summary: Создать новый SpaceMarine
+      operationId: createSpaceMarine
+      requestBody:
+        description: Новый SpaceMarine
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SpaceMarine'
+      responses:
+        '201':
+          description: Успешное создание
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+  /space-marines/{id}/update:
+    put:
+      summary: Обновить SpaceMarine по ID
+      operationId: updateSpaceMarineById
+      parameters:
+        - name: id
+          in: path
+          description: ID SpaceMarine
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Обновленный SpaceMarine
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SpaceMarine'
+      responses:
+        '200':
+          description: Успешное обновление
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+  /space-marines/{id}/delete:
+    delete:
+      summary: Удалить SpaceMarine по ID
+      operationId: deleteSpaceMarineById
+      parameters:
+        - name: id
+          in: path
+          description: ID SpaceMarine
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Успешное удаление
+components:
+  schemas:
+    SpaceMarine:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        creationDate:
+          type: string
+          format: date-time
+        health:
+          type: number
+          minimum: 0
+        loyal:
+          type: boolean
+        height:
+          type: number
+        meleeWeapon:
+          type: string
+          enum:
+            - CHAIN_AXE
+            - MANREAPER
+            - POWER_BLADE
+        chapter:
+          $ref: '#/components/schemas/Chapter'
+    Coordinates:
+      type: object
+      properties:
+        x:
+          type: integer
+          minimum: -246
+        'y':
+          type: integer
+          minimum: -67
+    Chapter:
+      type: object
+      properties:
+        name:
+          type: string
+        parentLegion:
+          type: string
+        world:
+          type: string
