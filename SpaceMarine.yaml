@@ -302,7 +302,7 @@ components:
         message:
           type: string
     IntegrityViolationError:
-     S type: object
+      type: object
       properties:
          message:
           type: string
