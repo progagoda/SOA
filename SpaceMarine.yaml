@@ -136,6 +136,7 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/SpaceMarine'
+<<<<<<< HEAD
         '400':
           description: Ошибка валидации данных
           content:
@@ -148,6 +149,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IntegrityViolationError'
+=======
+>>>>>>> parent of b2bf803 (add error part)
   /space-marines/{id}/update:
     put:
       summary: Обновить SpaceMarine по ID
@@ -199,54 +202,6 @@ paths:
       responses:
         '204':
           description: Успешное удаление
-  /space-marines/delete/meleeWeapon/{meleeWeapon}:
-    delete:
-      summary: Удалить SpaceMarine по meleeWeapon
-      operationId: deleteSpaceMarineByMeleeWeapon
-      parameters:
-        - name: meleeWeapon
-          in: path
-          description: Выберите тип оружия(CHAIN_AXE, MANREAPER, POWER_BLADE)
-          required: false
-          schema:
-            type: string
-            enum:
-              - CHAIN_AXE
-              - MANREAPER
-              - POWER_BLADE
-      responses:
-        '204':
-          description: Успешное удаление
-  /api/space-marines/min-coordinate:
-    get:
-      summary: Получить объект с минимальными координатами
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceMarine'
-        '404':
-          description: Объект не найден
-  /api/space-marines/count-by-loyal:
-    get:
-      summary: Получить количество объектов по значению поля loyal
-      parameters:
-        - in: query
-          name: maxLoyal
-          schema:
-            type: boolean
-          description: Максимальное значение поля loyal
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/json:
-              schema:
-                type: integer
-        '400':
-          description: Некорректный запрос
 components:
   schemas:
     SpaceMarine:
@@ -293,16 +248,4 @@ components:
         parentLegion:
           type: string
         world:
-          type: string
-    ValidationError:
-      type: object
-      properties:
-        field:
-          type: string
-        message:
-          type: string
-    IntegrityViolationError:
-      type: object
-      properties:
-         message:
           type: string
