@@ -10,7 +10,7 @@ info:
 servers:
   - url: http://localhost:4532/api/v1
 paths:
-  /space-marines:
+  /api/v1/space-marines:
     get:
       summary: Получить список SpaceMarine
       operationId: getSpaceMarines
@@ -100,25 +100,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceMarine'
-  /space-marines/{id}:
-    get:
-      summary: Получить SpaceMarine по ID
-      operationId: getSpaceMarineById
-      parameters:
-        - name: id
-          in: path
-          description: ID SpaceMarine
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SpaceMarine'
-  /space-marines/create:
     post:
       summary: Создать новый SpaceMarine
       operationId: createSpaceMarine
@@ -148,7 +129,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IntegrityViolationError'
-  /space-marines/{id}/update:
+  /space-marines/update/{id}:
     put:
       summary: Обновить SpaceMarine по ID
       operationId: updateSpaceMarineById
@@ -185,7 +166,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/IntegrityViolationError'
-  /space-marines/{id}/delete:
+  /space-marines/delete/{id}:
     delete:
       summary: Удалить SpaceMarine по ID
       operationId: deleteSpaceMarineById
@@ -276,6 +257,8 @@ components:
             - POWER_BLADE
         chapter:
           $ref: '#/components/schemas/Chapter'
+        starshipId:
+          type: integer
     Coordinates:
       type: object
       properties:
