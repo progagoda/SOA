@@ -171,7 +171,7 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверный id
-    
+  /space-marines/{id}/update:
     put:
       summary: Обновить SpaceMarine по ID
       operationId: updateSpaceMarineById
@@ -198,6 +198,9 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверные данные SpaceMarine
+        '422':
+          description: Нарушение ограничений целостности
+  /space-marines/{id}/delete:
     delete:
       summary: Удалить SpaceMarine по ID
       operationId: deleteSpaceMarineById
@@ -284,8 +287,6 @@ paths:
           description: Неверные данные Starship или SpaceMarine
         '401':
           description: Десантник не находится на этом корабле
-    
-
 components:
   schemas:
     SpaceMarine:
