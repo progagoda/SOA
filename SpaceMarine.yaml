@@ -4,93 +4,32 @@ info:
   description: API для управления коллекцией SpaceMarine
   version: 1.0.0
   contact:
-    name: Ваше имя
+    name: Артемкин Артем, Брудар Артем
   license:
     name: Лицензия
+tags:
+  - name: first-service-base
+    description: Основной функционал первого сервиса
+  - name: first-service-additional
+    description: Дополнительный функционал первого сервиса
+  - name: second-service-base
+    description: Основной функционал второго сервиса
 servers:
-  - url: http://localhost:4532/api/v1
+  - url: http://localhost:4532/api/
 paths:
-  /api/v1/space-marines:
-    get:
+  /api/v1/space-marines/search:
+    post:
+      tags:
+        - first-service-base
       summary: Получить список SpaceMarine
       operationId: getSpaceMarines
-      parameters:
-        - name: page
-          in: query
-          description: Номер страницы (по умолчанию 1)
-          required: false
-          schema:
-            type: integer
-            default: 1
-        - name: size
-          in: query
-          description: Размер страницы (по умолчанию 10)
-          required: false
-          schema:
-            type: integer
-            default: 10
-        - name: sort
-          in: query
-          description: Поле для сортировки (например, "name")
-          required: false
-          schema:
-            type: string
-        - name: order
-          in: query
-          description: Порядок сортировки (asc или desc)
-          required: false
-          schema:
-            type: string
-            enum:
-              - asc
-              - desc
-        - name: name
-          in: query
-          description: Фильтр по имени
-          required: false
-          schema:
-            type: string
-        - name: coordinatesX
-          in: query
-          description: Фильтр по координате X
-          required: false
-          schema:
-            type: integer
-        - name: coordinatesY
-          in: query
-          description: Фильтр по координате Y
-          required: false
-          schema:
-            type: integer
-        - name: loyal
-          in: query
-          description: Фильтр по полю loyal (true/false)
-          required: false
-          schema:
-            type: boolean
-        - name: health
-          in: query
-          description: Минимальное значение здоровья для фильтрации
-          required: false
-          schema:
-            type: number
-            minimum: 0
-        - name: meleeWeapon
-          in: query
-          description: Фильтр по типу оружия (CHAIN_AXE, MANREAPER, POWER_BLADE)
-          required: false
-          schema:
-              type: string
-              enum:
-                - CHAIN_AXE
-                - MANREAPER
-                - POWER_BLADE
-        - name: chapterName
-          in: query
-          description: Фильтр по имени главы
-          required: false
-          schema:
-            type: string
+      requestBody:
+        description: Новый SpaceMarine
+        required: true
+        content:
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/SpaceMarineSearch'
       responses:
         '200':
           description: Успешный ответ
@@ -100,7 +39,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceMarine'
+  /api/v1/space-marines:
     post:
+      tags:
+        - first-service-base
       summary: Создать новый SpaceMarine
       operationId: createSpaceMarine
       requestBody:
@@ -119,40 +61,11 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверные данные SpaceMarine
-  /api/v1/space-marine-minimal:
-    get:
-      summary: Получить минимальный по coordinates SpaceMarine
-      operationId: getSpaceMarineWithMinimumCoordinates
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SpaceMarine'
-                
-  /api/v1/space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
-    get:
-      summary: Получить количество SpaceMarine, значение health которых меньше заданного
-      operationId: countSpaceMarinesWithHealthLessThan
-      parameters:
-        - name: health
-          in: path
-          description: Здоровье SpaceMarine
-          required: true
-          schema:
-            type: number
-      responses:
-        '200':
-          description: Успешный ответ
-          content:
-            application/xml:
-              schema:
-                $ref: '#/components/schemas/SpaceMarinesCount'
-        '400':
-          description: Неверный health
+
   /api/v1/space-marines/{id}:
     get:
+      tags:
+        - first-service-base
       summary: Получить SpaceMarine по ID
       operationId: getSpaceMarineById
       parameters:
@@ -171,8 +84,10 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверный id
-  /space-marines/{id}/update:
+    
     put:
+      tags:
+        - first-service-base
       summary: Обновить SpaceMarine по ID
       operationId: updateSpaceMarineById
       parameters:
@@ -198,10 +113,9 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверные данные SpaceMarine
-        '422':
-          description: Нарушение ограничений целостности
-  /space-marines/{id}/delete:
     delete:
+      tags:
+        - first-service-base
       summary: Удалить SpaceMarine по ID
       operationId: deleteSpaceMarineById
       parameters:
@@ -218,6 +132,8 @@ paths:
           description: Неверный id
   /api/v1/space-marines/{melee-weapon}:
     delete:
+      tags:
+        - first-service-additional
       summary: Удалить все SpaceMarines по meleeWeapon
       operationId: deleteSpaceMarinesByMeleeWeapon
       parameters:
@@ -236,9 +152,48 @@ paths:
           description: Успешное удаление
         '400':
           description: Неверный meleeWeapon
+  /api/v1/space-marine-minimal:
+    get:
+      tags:
+        - first-service-additional
+      summary: Получить минимальный по coordinates SpaceMarine
+      operationId: getSpaceMarineWithMinimumCoordinates
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarine'
+                
+  /api/v1/space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
+    get:
+      tags:
+        - first-service-additional
+      summary: Получить количество SpaceMarine, значение health которых меньше заданного
+      operationId: countSpaceMarinesWithHealthLessThan
+      parameters:
+        - name: health
+          in: path
+          description: Здоровье SpaceMarine
+          required: true
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarinesCount'
+        '400':
+          description: Неверный health
+
           
   /api/v1/starship/create/{id}/{name}:
     post:
+      tags:
+        - second-service-base
       summary: Создать новый Starship
       operationId: createStarship
       parameters:
@@ -265,6 +220,8 @@ paths:
           description: Неверные данные Starship
   /api/v1/starship/{starship-id}/unload/{space-marine-id}:
     put:
+      tags:
+        - second-service-base
       summary: Высадить десантника с корабля
       operationId: unloadMarineFromStarship
       parameters:
@@ -287,8 +244,51 @@ paths:
           description: Неверные данные Starship или SpaceMarine
         '401':
           description: Десантник не находится на этом корабле
+    
+
 components:
   schemas:
+    SpaceMarineSearch:
+      type: object
+      properties:
+        page:
+          type: integer
+        size:
+          type: integer
+        sort:
+          type: string
+          enum:
+            - ASC
+            - DESC
+        spaceMarine:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            coordinates:
+              $ref: '#/components/schemas/Coordinates'
+            creationDate:
+              type: string
+              format: date-time
+            health:
+              type: number
+              minimum: 0
+            loyal:
+              type: boolean
+            height:
+              type: number
+            meleeWeapon:
+              type: string
+              enum:
+                - CHAIN_AXE
+                - MANREAPER
+                - POWER_BLADE
+            chapter:
+              $ref: '#/components/schemas/Chapter'
+            starshipId:
+              type: integer
     SpaceMarine:
       type: object
       properties:
