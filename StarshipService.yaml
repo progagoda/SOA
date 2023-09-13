@@ -1,0 +1,62 @@
+openapi: 3.0.3
+info:
+  title: Starship Service
+  description: Starship service REST endpoints for SOA Lab_1
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:4532/api/'
+paths:
+  /api/v1/starship/create/{id}/{name}:
+    post:
+      tags:
+        - second-service-base
+      summary: Создать новый Starship
+      operationId: createStarship
+      parameters:
+        - name: id
+          in: path
+          description: ID of starship
+          required: true
+          schema:
+            type: integer
+        - name: name
+          in: path
+          description: Name of the starship
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Успешное создание
+          content:
+            application/xml:
+              schema:
+                $ref: './SpaceMarine.yaml#/components/schemas/Starship'
+        '400':
+          description: Неверные данные Starship
+  /api/v1/starship/{starship-id}/unload/{space-marine-id}:
+    put:
+      tags:
+        - second-service-base
+      summary: Высадить десантника с корабля
+      operationId: unloadMarineFromStarship
+      parameters:
+        - name: starship-id
+          in: path
+          description: ID of Starship
+          required: true
+          schema:
+            type: integer
+        - name: space-marine-id
+          in: path
+          description: ID of SpaceMarine
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Успешная высадка
+        '400':
+          description: Неверные данные Starship или SpaceMarine
+        '401':
+          description: Десантник не находится на этом корабле
