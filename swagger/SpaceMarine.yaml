@@ -24,27 +24,27 @@ paths:
       parameters:
         - name: page
           in: query
-          description: Номер страницы (по умолчанию 1)
+          description: Номер страницы (по умолчанию 1). Натуральное число
           required: false
           schema:
             type: integer
             default: 1
         - name: size
           in: query
-          description: Размер страницы (по умолчанию 10)
+          description: Размер страницы (по умолчанию 10). Натуральное число
           required: false
           schema:
             type: integer
             default: 10
         - name: sort
           in: query
-          description: Поле для сортировки (например, "name")
+          description: Поле для сортировки (например, "name"). Строка с названием существующего поля SpaceMarine
           required: false
           schema:
             type: string
         - name: order
           in: query
-          description: Порядок сортировки (asc или desc)
+          description: Порядок сортировки (asc или desc).
           required: false
           schema:
             type: string
@@ -53,38 +53,38 @@ paths:
               - desc
         - name: name
           in: query
-          description: Фильтр по имени
+          description: Фильтр по имени. Любая строка.
           required: false
           schema:
             type: string
         - name: coordinatesX
           in: query
-          description: Фильтр по координате X
+          description: Фильтр по координате X. Действительное число.
           required: false
           schema:
-            type: integer
+            type: number
         - name: coordinatesY
           in: query
-          description: Фильтр по координате Y
+          description: Фильтр по координате Y. Действительное число
           required: false
           schema:
-            type: integer
+            type: number
         - name: loyal
           in: query
-          description: Фильтр по полю loyal (true/false)
+          description: Фильтр по полю loyal (true/false).
           required: false
           schema:
             type: boolean
         - name: health
           in: query
-          description: Минимальное значение здоровья для фильтрации
+          description: Значение здоровья для фильтрации. Неотрицательное действительное число
           required: false
           schema:
             type: number
             minimum: 0
         - name: meleeWeapon
           in: query
-          description: Фильтр по типу оружия (CHAIN_AXE, MANREAPER, POWER_BLADE)
+          description: Фильтр по типу оружия (только одно из CHAIN_AXE, MANREAPER, POWER_BLADE)
           required: false
           schema:
               type: string
@@ -94,21 +94,36 @@ paths:
                 - POWER_BLADE
         - name: chapterName
           in: query
-          description: Фильтр по имени главы
+          description: Фильтр по имени главы. Строка
           required: false
           schema:
             type: string
-      summary: Получить список SpaceMarine
-      operationId: getSpaceMarines
       responses:
         '200':
           description: Успешный ответ
           content:
             application/xml:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpaceMarine'
+                type: object
+                $ref: '#/components/schemas/SpaceMarines'
+        '400':
+          description: Неверные данные выборки
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/SpaceMarineSearchWrongFields'
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
     post:
       tags:
         - first-service-base
@@ -130,6 +145,21 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверные данные SpaceMarine
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarineSearchWrongFields'
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
 
   /space-marines/{id}:
     get:
@@ -140,7 +170,7 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID SpaceMarine
+          description: ID SpaceMarine. Натуральное число
           required: true
           schema:
             type: integer
@@ -153,16 +183,27 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверный id
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
     
     put:
       tags:
         - first-service-base
-      summary: Обновить SpaceMarine по ID
+      summary: Обновить SpaceMarine по ID.
       operationId: updateSpaceMarineById
       parameters:
         - name: id
           in: path
-          description: ID SpaceMarine
+          description: ID SpaceMarine. Натуральное число
           required: true
           schema:
             type: integer
@@ -172,7 +213,7 @@ paths:
         content:
           application/xml:
             schema:
-              $ref: '#/components/schemas/SpaceMarine'
+              $ref: '#/components/schemas/SpaceMarineUpdate'
       responses:
         '200':
           description: Успешное обновление
@@ -182,15 +223,30 @@ paths:
                 $ref: '#/components/schemas/SpaceMarine'
         '400':
           description: Неверные данные SpaceMarine
+          content:
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/SpaceMarineSearchWrongFields'
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
     delete:
       tags:
         - first-service-base
-      summary: Удалить SpaceMarine по ID
+      summary: Удалить SpaceMarine по ID.
       operationId: deleteSpaceMarineById
       parameters:
         - name: id
           in: path
-          description: ID SpaceMarine
+          description: ID SpaceMarine.  Натуральное число
           required: true
           schema:
             type: integer
@@ -199,11 +255,22 @@ paths:
           description: Успешное удаление
         '400':
           description: Неверный id
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
   /space-marines/{melee-weapon}:
     delete:
       tags:
         - first-service-additional
-      summary: Удалить все SpaceMarines по meleeWeapon
+      summary: Удалить все SpaceMarines по meleeWeapon.
       operationId: deleteSpaceMarinesByMeleeWeapon
       parameters:
         - name: melee-weapon
@@ -221,7 +288,18 @@ paths:
           description: Успешное удаление
         '400':
           description: Неверный meleeWeapon
-  /space-marine-minimal:
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
+  /space-marine/coords/min:
     get:
       tags:
         - first-service-additional
@@ -234,8 +312,19 @@ paths:
             application/xml:
               schema:
                 $ref: '#/components/schemas/SpaceMarine'
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
                 
-  /space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
+  /space-marines/health/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
     get:
       tags:
         - first-service-additional
@@ -244,7 +333,7 @@ paths:
       parameters:
         - name: health
           in: path
-          description: Здоровье SpaceMarine
+          description: Здоровье SpaceMarine. Неотрицательное число
           required: true
           schema:
             type: number
@@ -257,50 +346,27 @@ paths:
                 $ref: '#/components/schemas/SpaceMarinesCount'
         '400':
           description: Неверный health
+        '500':
+          description: Сервер не готов обработать запрос
+        '503':
+          description: Сервис не готов обработать запрос
+        default:
+          description: Непредвиденная ошибка
+          content:
+            application/xml:
+              schema:
+                type: object
+                $ref: '#/components/schemas/Error'
 
 components:
   schemas:
-    SpaceMarineSearch:
+    SpaceMarines:
       type: object
       properties:
-        page:
-          type: integer
-        size:
-          type: integer
-        sort:
-          type: string
-          enum:
-            - ASC
-            - DESC
-        spaceMarine:
-          type: object
-          properties:
-            id:
-              type: integer
-            name:
-              type: string
-            coordinates:
-              $ref: '#/components/schemas/Coordinates'
-            creationDate:
-              type: string
-              format: date-time
-            health:
-              type: number
-              minimum: 0
-            loyal:
-              type: boolean
-            height:
-              type: number
-            meleeWeapon:
-              type: string
-              enum:
-                - CHAIN_AXE
-                - MANREAPER
-                - POWER_BLADE
-            chapter:
-              $ref: '#/components/schemas/Chapter'
-            starshipId:
-              type: integer
+        spaceMarines:
+          type: array
+          items:
+            $ref: '#/components/schemas/SpaceMarine'
     SpaceMarine:
       type: object
       properties:
@@ -330,6 +396,31 @@ components:
           $ref: '#/components/schemas/Chapter'
         starshipId:
           type: integer
+    SpaceMarineUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/Coordinates'
+        health:
+          type: number
+          minimum: 0
+        loyal:
+          type: boolean
+        height:
+          type: number
+        meleeWeapon:
+          type: string
+          enum:
+            - CHAIN_AXE
+            - MANREAPER
+            - POWER_BLADE
+        chapter:
+          $ref: '#/components/schemas/Chapter'
+        starshipId:
+          type: integer
+      
     Coordinates:
       type: object
       properties:
@@ -357,3 +448,23 @@ components:
           type: integer
         name:
           type: string
+    SpaceMarineSearchWrongFields:
+      type: object
+      properties:
+        wrongField:
+          type: array
+          items:
+            type: string
+    Error:
+      type: object
+      required:
+        - code
+        - msg
+      properties:
+        code:
+          type: integer
+          example: 404
+        msg:
+          type: string
+          example: Url not found
+        
