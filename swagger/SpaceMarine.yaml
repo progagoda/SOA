@@ -13,9 +13,9 @@ tags:
   - name: first-service-additional
     description: Дополнительный функционал первого сервиса
 servers:
-  - url: http://localhost:4532/api/
+  - url: http://localhost:4532/api/v1
 paths:
-  /api/v1/space-marines/search:
+  /space-marines/search:
     post:
       tags:
         - first-service-base
@@ -37,7 +37,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceMarine'
-  /api/v1/space-marines:
+  /space-marines:
     post:
       tags:
         - first-service-base
@@ -60,7 +60,7 @@ paths:
         '400':
           description: Неверные данные SpaceMarine
 
-  /api/v1/space-marines/{id}:
+  /space-marines/{id}:
     get:
       tags:
         - first-service-base
@@ -128,7 +128,7 @@ paths:
           description: Успешное удаление
         '400':
           description: Неверный id
-  /api/v1/space-marines/{melee-weapon}:
+  /space-marines/{melee-weapon}:
     delete:
       tags:
         - first-service-additional
@@ -150,7 +150,7 @@ paths:
           description: Успешное удаление
         '400':
           description: Неверный meleeWeapon
-  /api/v1/space-marine-minimal:
+  /space-marine-minimal:
     get:
       tags:
         - first-service-additional
@@ -164,7 +164,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceMarine'
                 
-  /api/v1/space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
+  /space-marines/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
     get:
       tags:
         - first-service-additional
