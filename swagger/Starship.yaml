@@ -76,7 +76,7 @@ paths:
           description: Успешная высадка
         '400':
           description: Неверные данные Starship или SpaceMarine
-           content:
+          content:
             application/xml:
               schema:
                 $ref: './SpaceMarine.yaml#/components/schemas/SpaceMarineSearchWrongFields'
