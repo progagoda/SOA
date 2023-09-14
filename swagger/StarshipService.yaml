@@ -8,9 +8,9 @@ info:
   license:
     name: Лицензия
 servers:
-  - url: 'http://localhost:4532/api/'
+  - url: 'http://localhost:4532/api/v1'
 paths:
-  /api/v1/starship/create/{id}/{name}:
+  /starship/create/{id}/{name}:
     post:
       tags:
         - second-service-base
@@ -38,7 +38,21 @@ paths:
                 $ref: './SpaceMarine.yaml#/components/schemas/Starship'
         '400':
           description: Неверные данные Starship
-  /api/v1/starship/{starship-id}/unload/{space-marine-id}:
+          content:
+            application/xml:
+              schema:
+                $ref: './SpaceMarine.yaml#/components/schemas/SpaceMarineSearchWrongFields'
+        '500':
+          description: Ошибка сервера
+        '503':
+          description: Ошибка сервиса
+        default:
+          description: Returns error code, message and time in case of error
+          content:
+            application/json:
+              schema:
+                $ref: './SpaceMarine.yaml#/components/schemas/Error'
+  /starship/{starship-id}/unload/{space-marine-id}:
     put:
       tags:
         - second-service-base
@@ -62,5 +76,19 @@ paths:
           description: Успешная высадка
         '400':
           description: Неверные данные Starship или SpaceMarine
+           content:
+            application/xml:
+              schema:
+                $ref: './SpaceMarine.yaml#/components/schemas/SpaceMarineSearchWrongFields'
         '401':
           description: Десантник не находится на этом корабле
+        '500':
+          description: Ошибка сервера
+        '503':
+          description: Ошибка сервиса
+        default:
+          description: Returns error code, message and time in case of error
+          content:
+            application/json:
+              schema:
+                $ref: './SpaceMarine.yaml#/components/schemas/Error' 
