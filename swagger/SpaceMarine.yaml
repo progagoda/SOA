@@ -123,7 +123,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
     post:
       tags:
         - first-service-base
@@ -159,7 +159,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
 
   /space-marines/{id}:
     get:
@@ -193,7 +193,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
     
     put:
       tags:
@@ -237,7 +237,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
     delete:
       tags:
         - first-service-base
@@ -265,7 +265,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
   /space-marines/{melee-weapon}:
     delete:
       tags:
@@ -298,7 +298,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
   /space-marine/coords/min:
     get:
       tags:
@@ -322,7 +322,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
                 
   /space-marines/health/{health}: #loyal - это boolean и сделать по заданию не получится, поэтому я взял health
     get:
@@ -356,7 +356,7 @@ paths:
             application/xml:
               schema:
                 type: object
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/UnexpectedError'
 
 components:
   schemas:
@@ -455,7 +455,7 @@ components:
           type: array
           items:
             type: string
-    Error:
+    UnexpectedError:
       type: object
       required:
         - code

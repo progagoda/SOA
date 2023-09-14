@@ -19,13 +19,13 @@ paths:
       parameters:
         - name: id
           in: path
-          description: ID of starship
+          description: ID Starship. Натуральное число
           required: true
           schema:
             type: integer
         - name: name
           in: path
-          description: Name of the starship
+          description: Имя starship. Строка
           required: true
           schema:
             type: string
@@ -41,17 +41,17 @@ paths:
           content:
             application/xml:
               schema:
-                $ref: './SpaceMarine.yaml#/components/schemas/SpaceMarineSearchWrongFields'
+                $ref: '#/components/schemas/StarshipWrongFields'
         '500':
-          description: Ошибка сервера
+          description: Сервер не готов обработать запрос
         '503':
-          description: Ошибка сервиса
+          description: Сервис не готов обработать запрос
         default:
-          description: Returns error code, message and time in case of error
+          description: Непредвиденная ошибка
           content:
-            application/json:
+            application/xml:
               schema:
-                $ref: './SpaceMarine.yaml#/components/schemas/Error'
+                $ref: './SpaceMarine.yaml#/components/schemas/UnexpectedError'
   /starship/{starship-id}/unload/{space-marine-id}:
     put:
       tags:
@@ -61,25 +61,25 @@ paths:
       parameters:
         - name: starship-id
           in: path
-          description: ID of Starship
+          description: ID Starship. Натуральное число
           required: true
           schema:
             type: integer
         - name: space-marine-id
           in: path
-          description: ID of SpaceMarine
+          description: ID SpaceMarine. Натуральное число
           required: true
           schema:
             type: string
       responses:
-        '201':
+        '204':
           description: Успешная высадка
         '400':
           description: Неверные данные Starship или SpaceMarine
           content:
             application/xml:
               schema:
-                $ref: './SpaceMarine.yaml#/components/schemas/SpaceMarineSearchWrongFields'
+                $ref: '#/components/schemas/LandWrongFields'
         '401':
           description: Десантник не находится на этом корабле
         '500':
@@ -87,8 +87,24 @@ paths:
         '503':
           description: Ошибка сервиса
         default:
-          description: Returns error code, message and time in case of error
+          description: Непредвиденная ошибка
           content:
-            application/json:
+            application/xml:
               schema:
-                $ref: './SpaceMarine.yaml#/components/schemas/Error' 
+                $ref: './SpaceMarine.yaml#/components/schemas/UnexpectedError' 
+
+components:
+  schemas:
+    StarshipWrongFields:
+      type: object
+      properties:
+        wrongField:
+          type: array
+          items:
+            type: string
+    LandWrongFields:
+      type: object
+      properties:
+        wrongField:
+          type: string
+          example: starship-ip
