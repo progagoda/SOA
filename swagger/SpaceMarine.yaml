@@ -15,19 +15,91 @@ tags:
 servers:
   - url: http://localhost:4532/api/v1
 paths:
-  /space-marines/search:
-    post:
+  /space-marines:
+    get:
       tags:
         - first-service-base
       summary: Получить список SpaceMarine
       operationId: getSpaceMarines
-      requestBody:
-        description: Новый SpaceMarine
-        required: true
-        content:
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/SpaceMarineSearch'
+      parameters:
+        - name: page
+          in: query
+          description: Номер страницы (по умолчанию 1)
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: size
+          in: query
+          description: Размер страницы (по умолчанию 10)
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - name: sort
+          in: query
+          description: Поле для сортировки (например, "name")
+          required: false
+          schema:
+            type: string
+        - name: order
+          in: query
+          description: Порядок сортировки (asc или desc)
+          required: false
+          schema:
+            type: string
+            enum:
+              - asc
+              - desc
+        - name: name
+          in: query
+          description: Фильтр по имени
+          required: false
+          schema:
+            type: string
+        - name: coordinatesX
+          in: query
+          description: Фильтр по координате X
+          required: false
+          schema:
+            type: integer
+        - name: coordinatesY
+          in: query
+          description: Фильтр по координате Y
+          required: false
+          schema:
+            type: integer
+        - name: loyal
+          in: query
+          description: Фильтр по полю loyal (true/false)
+          required: false
+          schema:
+            type: boolean
+        - name: health
+          in: query
+          description: Минимальное значение здоровья для фильтрации
+          required: false
+          schema:
+            type: number
+            minimum: 0
+        - name: meleeWeapon
+          in: query
+          description: Фильтр по типу оружия (CHAIN_AXE, MANREAPER, POWER_BLADE)
+          required: false
+          schema:
+              type: string
+              enum:
+                - CHAIN_AXE
+                - MANREAPER
+                - POWER_BLADE
+        - name: chapterName
+          in: query
+          description: Фильтр по имени главы
+          required: false
+          schema:
+            type: string
+      summary: Получить список SpaceMarine
+      operationId: getSpaceMarines
       responses:
         '200':
           description: Успешный ответ
@@ -37,7 +109,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceMarine'
-  /space-marines:
     post:
       tags:
         - first-service-base
