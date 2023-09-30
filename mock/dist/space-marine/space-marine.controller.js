@@ -15,15 +15,20 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaceMarineController = void 0;
 const common_1 = require("@nestjs/common");
 const space_marine_service_1 = require("./space-marine.service");
+const spaceMarines_1 = require("../db/spaceMarines");
 let SpaceMarineController = class SpaceMarineController {
     constructor(spaceMarineService) {
         this.spaceMarineService = spaceMarineService;
     }
     async getAll() {
+        console.log(spaceMarines_1.spaceMarines);
         return this.spaceMarineService.getAll();
     }
     async deleteSpaceMarine(id) {
         return this.spaceMarineService.deleteSpaceMarine(id);
+    }
+    handleXmlRequest(xmlBody) {
+        return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine);
     }
 };
 exports.SpaceMarineController = SpaceMarineController;
@@ -40,6 +45,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "deleteSpaceMarine", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SpaceMarineController.prototype, "handleXmlRequest", null);
 exports.SpaceMarineController = SpaceMarineController = __decorate([
     (0, common_1.Controller)('api/v1/space-marines'),
     __metadata("design:paramtypes", [space_marine_service_1.SpaceMarineService])

@@ -14,4 +14,10 @@ export class SpaceMarineService {
         spaceMarines.splice(spaceMarine.id)
         return spaceMarines;
     }
+    createSpaceMarine(spaceMarine){
+        spaceMarine.creationDate= new Date;
+        const lastMarines =  spaceMarines[spaceMarines.length-1];
+        spaceMarine.id = lastMarines ? lastMarines.id+1: 1;
+        spaceMarines.push(spaceMarine);
+    }
 }

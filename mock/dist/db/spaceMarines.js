@@ -34,8 +34,8 @@ exports.spaceMarines = [
         'height': 0,
         'meleeWeapon': 'CHAIN_AXE',
         'chapter': {
-            'name': 'string',
-            'parentLegion': 'string',
+            'name': 'Artem',
+            'parentLegion': 'America',
             'world': 'string',
         },
         'starshipId': 0,

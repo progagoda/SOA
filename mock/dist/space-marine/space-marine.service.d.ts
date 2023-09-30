@@ -37,4 +37,5 @@ export declare class SpaceMarineService {
         };
         starshipId: number;
     }[];
+    createSpaceMarine(spaceMarine: any): void;
 }

@@ -14,10 +14,15 @@ let SpaceMarineService = class SpaceMarineService {
         return spaceMarines_1.spaceMarines;
     }
     deleteSpaceMarine(id) {
-        console.log(id);
         const spaceMarine = spaceMarines_1.spaceMarines.find(item => item.id.toString() === id);
         spaceMarines_1.spaceMarines.splice(spaceMarine.id);
         return spaceMarines_1.spaceMarines;
+    }
+    createSpaceMarine(spaceMarine) {
+        spaceMarine.creationDate = new Date;
+        const lastMarines = spaceMarines_1.spaceMarines[spaceMarines_1.spaceMarines.length - 1];
+        spaceMarine.id = lastMarines ? lastMarines.id + 1 : 1;
+        spaceMarines_1.spaceMarines.push(spaceMarine);
     }
 };
 exports.SpaceMarineService = SpaceMarineService;

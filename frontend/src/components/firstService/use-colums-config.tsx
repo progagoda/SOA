@@ -25,14 +25,12 @@ export const columns =(handleDeleteSpaceMarine: { (id: string): Promise<void>; (
         dataIndex: ['coordinates', 'x'],
         key: 'x',
         sorter: true,
-        sorterField: 'CoordinatesX'
       },
       {
         title: 'Y',
-        dataIndex: 'coordinates',
-        key: 'coordinates',
+        dataIndex: ['coordinates', 'y'],
+        key: 'coordinatesY',
         sorter: true,
-        render: (item: TCoordinates) => `${item.y}`,
       },
     ],
   },
@@ -74,24 +72,21 @@ export const columns =(handleDeleteSpaceMarine: { (id: string): Promise<void>; (
     children: [
       {
         title: 'Name',
-        dataIndex: 'chapter',
-        key: 'name',
+        dataIndex: ['chapter','name'],
+        key: 'chapterName',
         sorter: true,
-        render: (item: TChapter) => `${item.name}`,
       },
       {
         title: 'ParentLegion',
-        dataIndex: 'chapter',
-        key: 'parentLegion',
+        dataIndex: ['chapter', 'parentLegion'],
+        key: 'chapterParentLegion',
         sorter: true,
-        render: (item: TChapter) => `${item.parentLegion}`,
       },
       {
         title: 'World',
-        dataIndex: 'chapter',
-        key: 'world',
+        dataIndex: ['chapter', 'world'],
+        key: 'chapterWorld',
         sorter: true,
-        render: (item: TChapter) => `${item.world}`,
       },
 
     ],

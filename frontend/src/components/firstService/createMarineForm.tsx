@@ -39,19 +39,29 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>((props, re
         >
           <Input />
         </Form.Item>
+          <Space>
+
         <Form.Item
-          name='coordinates'
-          label='Coordinates'
+          name='coordinatesX'
+          label='CoordinatesX'
           rules={[
             {
               required: true,
             },
           ]}>
-          <Space>
             <InputNumber min={-246} addonBefore='x' />
-            <InputNumber min={-67} addonBefore='y' />
-          </Space>
         </Form.Item>
+              <Form.Item
+                  name='coordinatesY'
+                  label='CoordinatesY'
+                  rules={[
+                      {
+                          required: true,
+                      },
+                  ]}>
+                  <InputNumber min={-67} addonBefore='y' />
+              </Form.Item>
+    </Space>
         <Form.Item
           name='meleeWeapon'
           label='MeleeWeapon'
@@ -94,20 +104,43 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>((props, re
             <Option key={2} value={false}>false</Option>
           </Select>
         </Form.Item>
+          <Space>
         <Form.Item
-          name='chapter'
-          label='Chapter'
+          name='chapterName'
+          label='Name'
           rules={[
             {
               required: true,
             },
           ]}>
-          <Space>
+
             <Input placeholder='name' />
-            <Input placeholder='parentLegion' />
-            <Input placeholder='world' />
-          </Space>
         </Form.Item>
+          <Form.Item
+              name='chapterParentLegion'
+              label='Legion'
+              rules={[
+                  {
+                      required: true,
+                  },
+              ]}>
+              <Space>
+                  <Input placeholder='parentLegion' />
+              </Space>
+          </Form.Item>
+          <Form.Item
+              name='chapterWorld'
+              label='World'
+              rules={[
+                  {
+                      required: true,
+                  },
+              ]}>
+              <Space>
+                  <Input placeholder='world' />
+              </Space>
+          </Form.Item>
+          </Space>
         <Form.Item
           name='health'
           label='Health'
