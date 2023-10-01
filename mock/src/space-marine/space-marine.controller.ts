@@ -1,6 +1,5 @@
 import {Body, Controller, Delete, Get, Param, Post} from '@nestjs/common';
 import {SpaceMarineService} from './space-marine.service';
-import {spaceMarines} from "../db/spaceMarines";
 
 @Controller('api/v1/space-marines')
 export class SpaceMarineController {
@@ -9,7 +8,7 @@ export class SpaceMarineController {
 
   @Get()
   async getAll() {
-    console.log(spaceMarines)
+
     return this.spaceMarineService.getAll();
 
   }
@@ -20,7 +19,7 @@ export class SpaceMarineController {
   }
 
   @Post()
-  handleXmlRequest(@Body() xmlBody: any) {
+  createSpaceMarine(@Body() xmlBody: any) {
     return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine)
   }
 }

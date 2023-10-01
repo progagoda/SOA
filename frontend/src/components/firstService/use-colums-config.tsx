@@ -1,4 +1,4 @@
-import { TChapter, TCoordinates } from '../../types';
+import {TChapter, TCoordinates, TFilters} from '../../types';
 import { bol, chapter, meleeWeapon } from '../../constants';
 import { Popconfirm } from 'antd';
 import React from 'react';
@@ -9,7 +9,7 @@ export const columns =(handleDeleteSpaceMarine: { (id: string): Promise<void>; (
     title: 'Id',
     dataIndex: 'id',
     key: 'id',
-    sorter: true
+    sorter: true,
   },
   {
     title: 'Name',

@@ -29,4 +29,16 @@ export type TSpaceMarine = {
     chapter: TChapter,
     starshipId: number,
 }
+export type TFilters = {
+    id: number[]
+    name: string[],
+    coordinates: TCoordinates[],
+    creationDate: string[],
+    health: number[],
+    loyal: bol[],
+    height: number[],
+    meleeWeapon: meleeWeapon[],
+    chapter: TChapter[],
+    starshipId: number[],
+}
 export type TSpaceMarineFormRef = FormInstance<TSpaceMarine>;
