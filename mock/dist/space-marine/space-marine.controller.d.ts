@@ -40,5 +40,5 @@ export declare class SpaceMarineController {
         };
         starshipId: number;
     }[]>;
-    handleXmlRequest(xmlBody: any): void;
+    createSpaceMarine(xmlBody: any): void;
 }

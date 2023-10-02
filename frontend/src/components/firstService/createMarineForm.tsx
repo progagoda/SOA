@@ -1,13 +1,13 @@
-import { Form, Input, InputNumber, Select, Space } from 'antd';
-import React from 'react';
-import { meleeWeapon } from '../../constants';
-import { TSpaceMarineFormRef } from '../../types';
+import { Form, Input, InputNumber, Select, Space } from 'antd'
+import React from 'react'
+import { meleeWeapon } from '../../constants'
+import { TSpaceMarineFormRef } from '../../types'
 
-
-const { Option } = Select;
-export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>((props, ref) => {
-    const [form] = Form.useForm();
-    CreateMarineForm.displayName = 'CreateMarineForm';
+const { Option } = Select
+export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
+  (props, ref) => {
+    const [form] = Form.useForm()
+    CreateMarineForm.displayName = 'CreateMarineForm'
     const layout = {
       labelCol: {
         span: 16,
@@ -15,153 +15,168 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>((props, re
       wrapperCol: {
         span: 40,
       },
-    };
+    }
 
     return (
       <Form
-        ref={ref}
-        {...layout}
-        layout='vertical'
-        form={form}
-        name='control-hooks'
+        ref={ ref }
+        { ...layout }
+        layout="vertical"
+        form={ form }
+        name="control-hooks"
         style={{
           maxWidth: 600,
         }}
       >
         <Form.Item
-          name='name'
-          label='Name'
-          rules={[
+          name="name"
+          label="Name"
+          rules={ [
             {
               required: true,
             },
-          ]}
+          ] }
         >
           <Input />
         </Form.Item>
-          <Space>
-
+        <Space>
+          <Form.Item
+            name="coordinatesX"
+            label="CoordinatesX"
+            rules={ [
+              {
+                required: true,
+              },
+            ] }
+          >
+            <InputNumber min={ -246 } addonBefore="x" />
+          </Form.Item>
+          <Form.Item
+            name="coordinatesY"
+            label="CoordinatesY"
+            rules={ [
+              {
+                required: true,
+              },
+            ] }
+          >
+            <InputNumber min={ -67 } addonBefore="y" />
+          </Form.Item>
+        </Space>
         <Form.Item
-          name='coordinatesX'
-          label='CoordinatesX'
-          rules={[
+          name="meleeWeapon"
+          label="MeleeWeapon"
+          rules={ [
             {
               required: true,
             },
-          ]}>
-            <InputNumber min={-246} addonBefore='x' />
-        </Form.Item>
-              <Form.Item
-                  name='coordinatesY'
-                  label='CoordinatesY'
-                  rules={[
-                      {
-                          required: true,
-                      },
-                  ]}>
-                  <InputNumber min={-67} addonBefore='y' />
-              </Form.Item>
-    </Space>
-        <Form.Item
-          name='meleeWeapon'
-          label='MeleeWeapon'
-          rules={[
-            {
-              required: true,
-            },
-          ]}
+          ] }
         >
           <Select
-            placeholder='Select a option and change input text above'
+            placeholder="Select a option and change input text above"
             allowClear
           >
-            {Object.values(meleeWeapon).map((item: meleeWeapon) => <Option key={item} value={item}>{item}</Option>)}
+            { Object.values(meleeWeapon).map((item: meleeWeapon) => (
+              <Option key={ item } value={ item }>
+                { item }
+              </Option>
+            )) }
           </Select>
         </Form.Item>
         <Form.Item
-          name='health'
-          label='Health'
-          rules={[
+          name="health"
+          label="Health"
+          rules={ [
             {
               required: true,
             },
-          ]}>
-          <InputNumber min={0} />
+          ] }
+        >
+          <InputNumber min={ 0 } />
         </Form.Item>
         <Form.Item
-          name='loyal'
-          label='Loyal'
-          rules={[
+          name="loyal"
+          label="Loyal"
+          rules={ [
             {
               required: true,
             },
-          ]}>
+          ] }
+        >
           <Select
-            placeholder='Select a option and change input text above'
+            placeholder="Select a option and change input text above"
             allowClear
           >
-            <Option key={1} value={true}>true</Option>
-            <Option key={2} value={false}>false</Option>
+            <Option key={ 1 } value={ true }>
+              true
+            </Option>
+            <Option key={ 2 } value={ false }>
+              false
+            </Option>
           </Select>
         </Form.Item>
-          <Space>
-        <Form.Item
-          name='chapterName'
-          label='Name'
-          rules={[
-            {
-              required: true,
-            },
-          ]}>
-
-            <Input placeholder='name' />
-        </Form.Item>
+        <Space>
           <Form.Item
-              name='chapterParentLegion'
-              label='Legion'
-              rules={[
-                  {
-                      required: true,
-                  },
-              ]}>
-              <Space>
-                  <Input placeholder='parentLegion' />
-              </Space>
+            name="chapterName"
+            label="Name"
+            rules={ [
+              {
+                required: true,
+              },
+            ] }
+          >
+            <Input placeholder="name" />
           </Form.Item>
           <Form.Item
-              name='chapterWorld'
-              label='World'
-              rules={[
-                  {
-                      required: true,
-                  },
-              ]}>
-              <Space>
-                  <Input placeholder='world' />
-              </Space>
+            name="chapterParentLegion"
+            label="Legion"
+            rules={ [
+              {
+                required: true,
+              },
+            ] }
+          >
+            <Space>
+              <Input placeholder="parentLegion" />
+            </Space>
           </Form.Item>
-          </Space>
+          <Form.Item
+            name="chapterWorld"
+            label="World"
+            rules={ [
+              {
+                required: true,
+              },
+            ] }
+          >
+            <Space>
+              <Input placeholder="world" />
+            </Space>
+          </Form.Item>
+        </Space>
         <Form.Item
-          name='health'
-          label='Health'
-          rules={[
+          name="health"
+          label="Health"
+          rules={ [
             {
               required: true,
             },
-          ]}>
-          <InputNumber min={0} />
+          ] }
+        >
+          <InputNumber min={ 0 } />
         </Form.Item>
         <Form.Item
-          name='starshipId'
-          label='StarshipId'
-          rules={[
+          name="starshipId"
+          label="StarshipId"
+          rules={ [
             {
               required: true,
             },
-          ]}>
-          <InputNumber min={0} />
+          ] }
+        >
+          <InputNumber min={ 0 } />
         </Form.Item>
       </Form>
-    );
+    )
   },
-);
+)
