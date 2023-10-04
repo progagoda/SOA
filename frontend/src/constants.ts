@@ -1,4 +1,4 @@
-import { TChapter, TSpaceMarineFilters } from './types'
+import { TChapter, TSpaceMarine} from './types'
 
 export enum meleeWeapon {
   CHAIN_AXE = 'CHAIN_AXE',
@@ -14,7 +14,7 @@ export enum bol {
   ok = 'true',
   no = 'false',
 }
-export const spaceMarineInit: TSpaceMarineFilters = {
+export const spaceMarineInit: TSpaceMarine = {
   id: 0,
   name: '',
   coordinatesX: 0,

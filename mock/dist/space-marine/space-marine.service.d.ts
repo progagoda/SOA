@@ -38,4 +38,5 @@ export declare class SpaceMarineService {
         starshipId: number;
     }[];
     createSpaceMarine(spaceMarine: any): void;
+    updateSpaceMarine(spaceMarine: any, id: string): void;
 }

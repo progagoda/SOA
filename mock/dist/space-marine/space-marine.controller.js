@@ -28,6 +28,9 @@ let SpaceMarineController = class SpaceMarineController {
     createSpaceMarine(xmlBody) {
         return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine);
     }
+    updateSpaceMarine(xmlBody, id) {
+        return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id);
+    }
 };
 exports.SpaceMarineController = SpaceMarineController;
 __decorate([
@@ -50,6 +53,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SpaceMarineController.prototype, "createSpaceMarine", null);
+__decorate([
+    (0, common_1.Put)(':id'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", void 0)
+], SpaceMarineController.prototype, "updateSpaceMarine", null);
 exports.SpaceMarineController = SpaceMarineController = __decorate([
     (0, common_1.Controller)('api/v1/space-marines'),
     __metadata("design:paramtypes", [space_marine_service_1.SpaceMarineService])

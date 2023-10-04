@@ -25,7 +25,7 @@ export type TCoordinates = {
   x: number
   y: number
 }
-export type TSpaceMarine = {
+export type TApiSpaceMarine = {
   id: number
   name: string
   coordinates: TCoordinates
@@ -37,7 +37,7 @@ export type TSpaceMarine = {
   chapter: TChapter
   starshipId: number
 }
-export type TSpaceMarineFilters = {
+export type TSpaceMarine = {
   id: number
   name: string
   coordinatesX: TCoordinates['x']
@@ -53,5 +53,3 @@ export type TSpaceMarineFilters = {
   starshipId: number
 }
 export type TSpaceMarineFormRef = FormInstance<TSpaceMarine>
-
-export type TUpdateMarineFormRef = FormInstance<TSpaceMarineFilters>

@@ -1,29 +1,43 @@
-import { Form, Input, InputNumber, Select, Space } from 'antd'
 import React from 'react'
+import { Form, Input, InputNumber, Modal, Select, Space } from 'antd'
+import { TSpaceMarine } from '../../types'
+import { editSpaceMarine } from '../../api'
 import { meleeWeapon } from '../../constants'
-import { TSpaceMarineFormRef } from '../../types'
+import { useSpaceMarines } from '../../hooks'
 
 const { Option } = Select
-export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
-  (props, ref) => {
-    const [form] = Form.useForm()
-    UpdateMarineForm.displayName = 'UpdateMarineForm'
-    const layout = {
-      labelCol: {
-        span: 16,
-      },
-      wrapperCol: {
-        span: 40,
-      },
-    }
-
-    return (
+const EditMarineForm = ({
+  isEditing,
+  setEditing,
+  editingMarine,
+}: {
+  isEditing: boolean
+  setEditing: (isEditing: boolean) => void
+  editingMarine: TSpaceMarine
+}) => {
+  const [form] = Form.useForm()
+  const {update} = useSpaceMarines()
+  const saveEditMarine = async () => {
+    const spaceMarine = form.getFieldsValue()
+    console.error(spaceMarine)
+    await editSpaceMarine(spaceMarine,editingMarine.id)
+    update()
+  }
+  return (
+    <Modal
+      open={ isEditing }
+      title={ 'Edit Space Marine' }
+      okText={ 'Save' }
+      onCancel={ () => setEditing(false) }
+      onOk={ () => {
+        saveEditMarine()
+        setEditing(false)
+      } }
+    >
       <Form
-        ref={ ref }
-        { ...layout }
         layout="vertical"
-        form={ form }
         name="control-hooks"
+        form={ form }
         style={{
           maxWidth: 600,
         }}
@@ -31,41 +45,53 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
         <Form.Item
           name="name"
           label="Name"
+          initialValue={ editingMarine.name }
           rules={ [
             {
               required: true,
             },
           ] }
         >
-          <Input />
+          <Input value={ editingMarine.name }></Input>
         </Form.Item>
         <Space>
           <Form.Item
             name="coordinatesX"
             label="CoordinatesX"
+            initialValue={ editingMarine.coordinatesX }
             rules={ [
               {
                 required: true,
               },
             ] }
           >
-            <InputNumber min={ -246 } addonBefore="x" />
+            <InputNumber
+              value={ editingMarine.coordinatesX }
+              min={ -246 }
+              addonBefore="x"
+            />
           </Form.Item>
           <Form.Item
             name="coordinatesY"
             label="CoordinatesY"
+            initialValue={ editingMarine.coordinatesX }
             rules={ [
               {
                 required: true,
               },
             ] }
           >
-            <InputNumber min={ -67 } addonBefore="y" />
+            <InputNumber
+              value={ editingMarine.coordinatesY }
+              min={ -67 }
+              addonBefore="y"
+            />
           </Form.Item>
         </Space>
         <Form.Item
           name="meleeWeapon"
           label="MeleeWeapon"
+          initialValue={ editingMarine.meleeWeapon }
           rules={ [
             {
               required: true,
@@ -77,13 +103,17 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
             allowClear
           >
             { Object.values(meleeWeapon).map((item: meleeWeapon) => (
-              <Option key={ item } value={ item }>
+              <Option
+                key={ item }
+                value={ item }
+              >
                 { item }
               </Option>
             )) }
           </Select>
         </Form.Item>
         <Form.Item
+          initialValue={ editingMarine.health }
           name="health"
           label="Health"
           rules={ [
@@ -92,9 +122,10 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
             },
           ] }
         >
-          <InputNumber min={ 0 } />
+          <InputNumber value={ editingMarine.health } min={ 0 } ></InputNumber>
         </Form.Item>
         <Form.Item
+          initialValue={ editingMarine.loyal }
           name="loyal"
           label="Loyal"
           rules={ [
@@ -117,6 +148,7 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
         </Form.Item>
         <Space>
           <Form.Item
+            initialValue={ editingMarine.chapterName }
             name="chapterName"
             label="Name"
             rules={ [
@@ -125,10 +157,11 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
               },
             ] }
           >
-            <Input placeholder="name" />
+            <Input placeholder="name" value={ editingMarine.chapterName }></Input>
           </Form.Item>
           <Form.Item
             name="chapterParentLegion"
+            initialValue={ editingMarine.chapterParentLegion }
             label="Legion"
             rules={ [
               {
@@ -137,11 +170,12 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
             ] }
           >
             <Space>
-              <Input placeholder="parentLegion" />
+              <Input placeholder="parentLegion" value={ editingMarine.chapterParentLegion }></Input>
             </Space>
           </Form.Item>
           <Form.Item
             name="chapterWorld"
+            initialValue={ editingMarine.chapterWorld }
             label="World"
             rules={ [
               {
@@ -150,23 +184,25 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
             ] }
           >
             <Space>
-              <Input placeholder="world" />
+              <Input value = { editingMarine.chapterWorld } placeholder="world" />
             </Space>
           </Form.Item>
         </Space>
         <Form.Item
           name="height"
           label="Height"
+          initialValue={ editingMarine.height }
           rules={ [
             {
               required: true,
             },
           ] }
         >
-          <InputNumber min={ 0 } />
+          <InputNumber value={ editingMarine.height } min={ 0 } />
         </Form.Item>
         <Form.Item
           name="starshipId"
+          initialValue={ editingMarine.starshipId }
           label="StarshipId"
           rules={ [
             {
@@ -174,9 +210,10 @@ export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
             },
           ] }
         >
-          <InputNumber min={ 0 } />
+          <InputNumber value={ editingMarine.starshipId } min={ 0 } />
         </Form.Item>
       </Form>
-    )
-  },
-)
+    </Modal>
+  )
+}
+export default EditMarineForm

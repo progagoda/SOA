@@ -1,22 +1,20 @@
-import {  TSpaceMarineFilters, } from '../../types'
-import {bol, meleeWeapon} from '../../constants'
-import { SearchOutlined } from '@ant-design/icons'
-import {
-  Button,
-  Input,
-  InputRef,
-  Popconfirm,
-  Space,
-} from 'antd'
+import { TSpaceMarine } from '../../types'
+import { bol, meleeWeapon } from '../../constants'
+import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
+import { Button, Input, InputRef, Space } from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
 
-type DataIndex = keyof TSpaceMarineFilters
-export const columns = ({handleDeleteSpaceMarine}: {
-  handleDeleteSpaceMarine: { (id: string): Promise<void>; (arg0: string): void },
-} ) => {
+type DataIndex = keyof TSpaceMarine
+export const columns = ({
+  handleDeleteSpaceMarine,
+  handleEditSpaceMarine,
+}: {
+  handleDeleteSpaceMarine: { (id: number): Promise<void> }
+  handleEditSpaceMarine: { (record: TSpaceMarine): Promise<void> }
+}) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
@@ -37,7 +35,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex,
-  ): ColumnType<TSpaceMarineFilters> => ({
+  ): ColumnType<TSpaceMarine> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -144,7 +142,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
       children: [
         {
           title: 'X',
-          dataIndex: ['coordinates', 'x'],
+          dataIndex: 'coordinatesX',
           key: 'coordinatesX',
           sorter: true,
           editable: true,
@@ -153,7 +151,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
 
         {
           title: 'Y',
-          dataIndex: ['coordinates', 'y'],
+          dataIndex: 'coordinatesY',
           key: 'coordinatesY',
           sorter: true,
           editable: true,
@@ -216,7 +214,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
       children: [
         {
           title: 'Name',
-          dataIndex: ['chapter', 'name'],
+          dataIndex: 'chapterName',
           key: 'chapterName',
           sorter: true,
           editable: true,
@@ -224,7 +222,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
         },
         {
           title: 'ParentLegion',
-          dataIndex: ['chapter', 'parentLegion'],
+          dataIndex: 'chapterParentLegion',
           key: 'chapterParentLegion',
           sorter: true,
           editable: true,
@@ -232,7 +230,7 @@ export const columns = ({handleDeleteSpaceMarine}: {
         },
         {
           title: 'World',
-          dataIndex: ['chapter', 'world'],
+          dataIndex: 'chapterWorld',
           key: 'chapterWorld',
           sorter: true,
           editable: true,
@@ -250,14 +248,18 @@ export const columns = ({handleDeleteSpaceMarine}: {
     },
     {
       title: 'Action',
-      dataIndex: 'id',
-      render: (id: string) => (
-        <Popconfirm
-          title="Sure to delete?"
-          onConfirm={ () => handleDeleteSpaceMarine(id) }
-        >
-          <a>Delete</a>
-        </Popconfirm>
+      render: (record: TSpaceMarine) => (
+        <>
+          <EditOutlined
+            onClick={ () => {
+              handleEditSpaceMarine(record)
+            } }
+          />
+          <DeleteOutlined
+            onClick={ () => handleDeleteSpaceMarine(record.id) }
+            style={{ color: 'red', marginLeft: 12 }}
+          />
+        </>
       ),
     },
   ]

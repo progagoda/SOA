@@ -19,10 +19,19 @@ let SpaceMarineService = class SpaceMarineService {
         return spaceMarines_1.spaceMarines;
     }
     createSpaceMarine(spaceMarine) {
-        spaceMarine.creationDate = new Date;
+        const newSpaceMarine = { ...spaceMarine };
+        newSpaceMarine.creationDate = new Date;
         const lastMarines = spaceMarines_1.spaceMarines[spaceMarines_1.spaceMarines.length - 1];
-        spaceMarine.id = lastMarines ? lastMarines.id + 1 : 1;
-        spaceMarines_1.spaceMarines.push(spaceMarine);
+        newSpaceMarine.id = lastMarines ? lastMarines.id + 1 : 1;
+        spaceMarines_1.spaceMarines.push(newSpaceMarine);
+    }
+    updateSpaceMarine(spaceMarine, id) {
+        const deleteSpaceMarine = spaceMarines_1.spaceMarines.find(item => item.id.toString() === id);
+        spaceMarines_1.spaceMarines.splice(deleteSpaceMarine.id - 1, 1);
+        const updateSpaceMarine = { ...spaceMarine };
+        updateSpaceMarine.creationDate = new Date;
+        updateSpaceMarine.id = id;
+        spaceMarines_1.spaceMarines.push(updateSpaceMarine);
     }
 };
 exports.SpaceMarineService = SpaceMarineService;

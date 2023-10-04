@@ -1,5 +1,4 @@
 import {
-  // Form,
   Button,
   Col,
   Divider,
@@ -13,7 +12,7 @@ import {
 import { columns } from './use-colums-config'
 import React, { useEffect, useRef, useState } from 'react'
 import { CreateMarineForm } from './createMarineForm'
-import { TSpaceMarineFormRef} from '../../types'
+import { TSpaceMarine, TSpaceMarineFormRef } from '../../types'
 import { useQueryClient } from 'react-query'
 import {
   createSpaceMarine,
@@ -21,14 +20,17 @@ import {
   getSpaceMarines,
 } from '../../api'
 import { useSpaceMarines } from '../../hooks'
+import EditMarineForm from './editMarineForm'
+import { spaceMarineInit } from '../../constants'
 import { buildFilters } from '../../helpers'
 
 export const FirstService = () => {
   const [open, setOpen] = useState(false)
   const [isDelete, setDelete] = useState(false)
   const [isCreate, setCreate] = useState(false)
+  const [isEditing, setEditing] = useState(false);
+  const [editingMarine, setEditingMarine] = useState(spaceMarineInit)
   const form = useRef<TSpaceMarineFormRef>(null)
-  // const formUpdate = useRef<TSpaceMarineFormRef>(null)
   const queryClient = useQueryClient()
   const [messageApi, contextHolder] = message.useMessage()
   const { data, isLoading, isError, update } = useSpaceMarines()
@@ -36,7 +38,11 @@ export const FirstService = () => {
     current: 1,
     pageSize: 4,
   })
-  const handleDeleteSpaceMarine = async (id: string) => {
+  const handleEditSpaceMarine = async (record: TSpaceMarine) => {
+    setEditing(true);
+    setEditingMarine({...record})
+  }
+  const handleDeleteSpaceMarine = async (id: number) => {
     setDelete(false)
     await deleteSpaceMarine(id).catch((err) => {
       messageApi.open({
@@ -118,7 +124,8 @@ export const FirstService = () => {
     </Space>
   )
 
-  const columnsConfig = columns({handleDeleteSpaceMarine: handleDeleteSpaceMarine})
+  const columnsConfig = columns({handleDeleteSpaceMarine, handleEditSpaceMarine})
+
   const updateMarine = () => {
     const error = update()
     if (error) {
@@ -200,7 +207,10 @@ export const FirstService = () => {
             columns={ columnsConfig }
             onChange={ onChange }
           />
+
         ) }
+      <EditMarineForm isEditing={ isEditing } setEditing={ setEditing } editingMarine={ editingMarine }  />
+
     </>
   )
 }

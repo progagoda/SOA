@@ -1,44 +1,13 @@
 import axios from 'axios'
-import { create } from 'xmlbuilder2'
+import { TSpaceMarine } from './types'
+import { buildMarineXML } from './helpers'
 
-const URL = process.env.REACT_APP_URL
+const FirstServiceURL = process.env.REACT_APP_URL1
 
 export async function createSpaceMarine(query: any): Promise<any> {
   const {spaceMarine} = query.queryKey[1]
-  const xmlObject = create()
-    .ele('SpaceMarine')
-    .ele('name')
-    .txt(spaceMarine.name)
-    .up()
-    .ele('coordinates')
-    .ele('x')
-    .txt(spaceMarine.coordinatesX)
-    .up()
-    .ele('y')
-    .txt(spaceMarine.coordinatesY)
-    .up()
-    .ele('coordinates')
-    .ele('health')
-    .txt(spaceMarine.health)
-    .up()
-    .ele('height')
-    .txt(spaceMarine?.height)
-    .up()
-    .ele('meleeWeapon')
-    .txt(spaceMarine?.meleeWeapon)
-    .up()
-    .ele('Chapter')
-    .ele('name')
-    .txt(spaceMarine?.chapterName)
-    .up()
-    .ele('parentLegion')
-    .txt(spaceMarine?.chapterParentLegion)
-    .up()
-    .ele('world')
-    .txt(spaceMarine?.chapterWorld)
-    .up()
-    .end({ prettyPrint: true })
-  const { data } = await axios.post(`${URL}/space-marines`, xmlObject, {
+  const xmlObject = buildMarineXML(spaceMarine);
+  const { data } = await axios.post(`${FirstServiceURL}/space-marines`, xmlObject, {
     headers: {
       'Content-Type': 'application/xml',
     },
@@ -51,7 +20,7 @@ export async function getSpaceMarines(
   filters?: any,
   pagination?: any,
 ) {
-  const { data } = await axios.get(`${URL}/space-marines`, {
+  const { data } = await axios.get(`${FirstServiceURL}/space-marines`, {
     params: {
       sort: sorter.field,
       order: sorter.order,
@@ -63,7 +32,16 @@ export async function getSpaceMarines(
   return data
 }
 
-export async function deleteSpaceMarine(id: string) {
-  const { data } = await axios.delete(`${URL}/space-marines/${id}`)
+export async function deleteSpaceMarine(id: number) {
+  const { data } = await axios.delete(`${FirstServiceURL}/space-marines/${id}`)
   return data
+}
+export async function editSpaceMarine(spaceMarine: TSpaceMarine, id: number): Promise<any>{
+  const xmlObject=buildMarineXML(spaceMarine)
+  const {data} = await axios.put(`${FirstServiceURL}/space-marines/${id}`,xmlObject,{
+    headers: {
+      'Content-Type': 'application/xml',
+    },
+  })
+  return data;
 }

@@ -15,9 +15,19 @@ export class SpaceMarineService {
         return spaceMarines;
     }
     createSpaceMarine(spaceMarine){
-        spaceMarine.creationDate= new Date;
+        const newSpaceMarine = {...spaceMarine}
+        newSpaceMarine.creationDate= new Date;
         const lastMarines =  spaceMarines[spaceMarines.length-1];
-        spaceMarine.id = lastMarines ? lastMarines.id+1: 1;
-        spaceMarines.push(spaceMarine);
+        newSpaceMarine.id = lastMarines ? lastMarines.id+1: 1;
+        spaceMarines.push(newSpaceMarine);
+    }
+    updateSpaceMarine(spaceMarine, id: string){
+        const deleteSpaceMarine= spaceMarines.find(item=>
+          item.id.toString()=== id)
+        spaceMarines.splice(deleteSpaceMarine.id-1,1)
+        const updateSpaceMarine = {...spaceMarine}
+        updateSpaceMarine.creationDate = new Date;
+        updateSpaceMarine.id = id;
+        spaceMarines.push(updateSpaceMarine);
     }
 }
