@@ -1,13 +1,13 @@
-import { TSpaceMarine } from '../../types'
-import { bol } from '../../constants'
+import { TSpaceMarineFilters } from '../../types'
+import { bol, meleeWeapon } from '../../constants'
 import { SearchOutlined } from '@ant-design/icons'
 import { Button, Input, InputRef, Popconfirm, Space } from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
-import type { ColumnType,  } from 'antd/es/table'
+import type { ColumnType } from 'antd/es/table'
 
-type DataIndex = keyof TSpaceMarine
+type DataIndex = keyof TSpaceMarineFilters
 export const columns = (handleDeleteSpaceMarine: {
   (id: string): Promise<void>
   (arg0: string): void
@@ -33,7 +33,7 @@ export const columns = (handleDeleteSpaceMarine: {
 
   const getColumnSearchProps = (
     dataIndex: DataIndex,
-  ): ColumnType<TSpaceMarine> => ({
+  ): ColumnType<TSpaceMarineFilters> => ({
     filterDropdown: ({
       setSelectedKeys,
       selectedKeys,
@@ -139,9 +139,9 @@ export const columns = (handleDeleteSpaceMarine: {
         {
           title: 'X',
           dataIndex: ['coordinates', 'x'],
-          key: 'x',
+          key: 'coordinatesX',
           sorter: true,
-          ...getColumnSearchProps('coordinates'),
+          ...getColumnSearchProps('coordinatesX'),
         },
 
         {
@@ -149,6 +149,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['coordinates', 'y'],
           key: 'coordinatesY',
           sorter: true,
+          ...getColumnSearchProps('coordinatesY'),
         },
       ],
     },
@@ -162,12 +163,14 @@ export const columns = (handleDeleteSpaceMarine: {
           .toISOString()
           .replace(/T/, ' ') // replace T with a space
           .replace(/\..+/, '')}`,
+      ...getColumnSearchProps('creationDate'),
     },
     {
       title: 'Health',
       dataIndex: 'health',
       key: 'health',
       sorter: true,
+      ...getColumnSearchProps('health'),
     },
     {
       title: 'Loyal',
@@ -175,18 +178,25 @@ export const columns = (handleDeleteSpaceMarine: {
       key: 'loyal',
       sorter: true,
       render: (item: boolean) => `${item ? bol.ok : bol.no}`,
+      ...getColumnSearchProps('loyal'),
     },
     {
       title: 'Height',
       dataIndex: 'height',
       key: 'height',
       sorter: true,
+      ...getColumnSearchProps('height'),
     },
     {
       title: 'MeleeWeapon',
       dataIndex: 'meleeWeapon',
       key: 'meleeWeapon',
       sorter: true,
+      filters:[
+        {text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE},
+        {text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER},
+        {text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE},
+      ],
     },
     {
       title: 'Chapter',
@@ -196,18 +206,21 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['chapter', 'name'],
           key: 'chapterName',
           sorter: true,
+          ...getColumnSearchProps('chapterName'),
         },
         {
           title: 'ParentLegion',
           dataIndex: ['chapter', 'parentLegion'],
           key: 'chapterParentLegion',
           sorter: true,
+          ...getColumnSearchProps('chapterParentLegion'),
         },
         {
           title: 'World',
           dataIndex: ['chapter', 'world'],
           key: 'chapterWorld',
           sorter: true,
+          ...getColumnSearchProps('chapterWorld'),
         },
       ],
     },
@@ -216,6 +229,7 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'starshipId',
       key: 'starshipId',
       sorter: true,
+      ...getColumnSearchProps('starshipId'),
     },
     {
       title: 'Action',
