@@ -15,7 +15,7 @@ let SpaceMarineService = class SpaceMarineService {
     }
     deleteSpaceMarine(id) {
         const spaceMarine = spaceMarines_1.spaceMarines.find(item => item.id.toString() === id);
-        spaceMarines_1.spaceMarines.splice(spaceMarine.id);
+        spaceMarines_1.spaceMarines.splice(spaceMarine.id - 1, 1);
         return spaceMarines_1.spaceMarines;
     }
     createSpaceMarine(spaceMarine) {

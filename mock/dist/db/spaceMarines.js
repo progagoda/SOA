@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.spaceMarines = void 0;
 exports.spaceMarines = [
     {
-        'id': 0,
+        'id': 1,
         'name': 'Some Marines',
         'coordinates': {
             'x': -246,
@@ -22,7 +22,7 @@ exports.spaceMarines = [
         'starshipId': 0,
     },
     {
-        'id': 1,
+        'id': 2,
         'name': 'Some Marines',
         'coordinates': {
             'x': -246,
@@ -41,7 +41,7 @@ exports.spaceMarines = [
         'starshipId': 0,
     },
     {
-        'id': 2,
+        'id': 3,
         'name': 'Some Marines',
         'coordinates': {
             'x': -246,

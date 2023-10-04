@@ -11,7 +11,7 @@ export class SpaceMarineService {
         const spaceMarine= spaceMarines.find(item=>
             item.id.toString()===id)
 
-        spaceMarines.splice(spaceMarine.id)
+        spaceMarines.splice(spaceMarine.id-1,1)
         return spaceMarines;
     }
     createSpaceMarine(spaceMarine){

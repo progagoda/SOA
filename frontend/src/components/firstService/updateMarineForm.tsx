@@ -4,10 +4,10 @@ import { meleeWeapon } from '../../constants'
 import { TSpaceMarineFormRef } from '../../types'
 
 const { Option } = Select
-export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
+export const UpdateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
   (props, ref) => {
     const [form] = Form.useForm()
-    CreateMarineForm.displayName = 'CreateMarineForm'
+    UpdateMarineForm.displayName = 'UpdateMarineForm'
     const layout = {
       labelCol: {
         span: 16,

@@ -7,7 +7,15 @@ export type TColumn = {
   key: string
   render?: (item: TColumn | TChapter) => ReactNode
 }
-
+export interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
+  editing: boolean;
+  dataIndex: string;
+  title: any;
+  inputType: 'number' | 'text';
+  record: TSpaceMarine;
+  index: number;
+  children: React.ReactNode;
+}
 export type TChapter = {
   name: string
   parentLegion: string
@@ -45,3 +53,5 @@ export type TSpaceMarineFilters = {
   starshipId: number
 }
 export type TSpaceMarineFormRef = FormInstance<TSpaceMarine>
+
+export type TUpdateMarineFormRef = FormInstance<TSpaceMarineFilters>

@@ -1,21 +1,25 @@
-import { TSpaceMarineFilters } from '../../types'
-import { bol, meleeWeapon } from '../../constants'
+import {  TSpaceMarineFilters, } from '../../types'
+import {bol, meleeWeapon} from '../../constants'
 import { SearchOutlined } from '@ant-design/icons'
-import { Button, Input, InputRef, Popconfirm, Space } from 'antd'
+import {
+  Button,
+  Input,
+  InputRef,
+  Popconfirm,
+  Space,
+} from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
 
 type DataIndex = keyof TSpaceMarineFilters
-export const columns = (handleDeleteSpaceMarine: {
-  (id: string): Promise<void>
-  (arg0: string): void
-}) => {
+export const columns = ({handleDeleteSpaceMarine}: {
+  handleDeleteSpaceMarine: { (id: string): Promise<void>; (arg0: string): void },
+} ) => {
   const [searchText, setSearchText] = useState('')
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
-
   const handleSearch = (
     selectedKeys: string[],
     confirm: (param?: FilterConfirmProps) => void,
@@ -125,12 +129,14 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'id',
       key: 'id',
       sorter: true,
+      editable: true,
     },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
       sorter: true,
+      editable: true,
       ...getColumnSearchProps('name'),
     },
     {
@@ -141,6 +147,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['coordinates', 'x'],
           key: 'coordinatesX',
           sorter: true,
+          editable: true,
           ...getColumnSearchProps('coordinatesX'),
         },
 
@@ -149,6 +156,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['coordinates', 'y'],
           key: 'coordinatesY',
           sorter: true,
+          editable: true,
           ...getColumnSearchProps('coordinatesY'),
         },
       ],
@@ -158,6 +166,7 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'creationDate',
       key: 'creationDate',
       sorter: true,
+      editable: true,
       render: (item: Date) =>
         `${new Date(item)
           .toISOString()
@@ -170,6 +179,7 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'health',
       key: 'health',
       sorter: true,
+      editable: true,
       ...getColumnSearchProps('health'),
     },
     {
@@ -177,7 +187,8 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'loyal',
       key: 'loyal',
       sorter: true,
-      render: (item: boolean) => `${item ? bol.ok : bol.no}`,
+      editable: true,
+      render: (item: boolean) => `${bol.ok}`,
       ...getColumnSearchProps('loyal'),
     },
     {
@@ -185,6 +196,7 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'height',
       key: 'height',
       sorter: true,
+      editable: true,
       ...getColumnSearchProps('height'),
     },
     {
@@ -192,10 +204,11 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'meleeWeapon',
       key: 'meleeWeapon',
       sorter: true,
-      filters:[
-        {text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE},
-        {text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER},
-        {text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE},
+      editable: true,
+      filters: [
+        { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE },
+        { text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER },
+        { text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE },
       ],
     },
     {
@@ -206,6 +219,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['chapter', 'name'],
           key: 'chapterName',
           sorter: true,
+          editable: true,
           ...getColumnSearchProps('chapterName'),
         },
         {
@@ -213,6 +227,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['chapter', 'parentLegion'],
           key: 'chapterParentLegion',
           sorter: true,
+          editable: true,
           ...getColumnSearchProps('chapterParentLegion'),
         },
         {
@@ -220,6 +235,7 @@ export const columns = (handleDeleteSpaceMarine: {
           dataIndex: ['chapter', 'world'],
           key: 'chapterWorld',
           sorter: true,
+          editable: true,
           ...getColumnSearchProps('chapterWorld'),
         },
       ],
@@ -229,6 +245,7 @@ export const columns = (handleDeleteSpaceMarine: {
       dataIndex: 'starshipId',
       key: 'starshipId',
       sorter: true,
+      editable: true,
       ...getColumnSearchProps('starshipId'),
     },
     {

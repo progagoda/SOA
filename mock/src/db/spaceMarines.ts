@@ -1,6 +1,6 @@
 export const spaceMarines = [
   {
-    'id': 0,
+    'id': 1,
     'name': 'Some Marines',
     'coordinates': {
       'x': -246,
@@ -19,7 +19,7 @@ export const spaceMarines = [
     'starshipId': 0,
   },
   {
-    'id': 1,
+    'id': 2,
     'name': 'Some Marines',
     'coordinates': {
       'x': -246,
@@ -38,7 +38,7 @@ export const spaceMarines = [
     'starshipId': 0,
   },
   {
-    'id': 2,
+    'id': 3,
     'name': 'Some Marines',
     'coordinates': {
       'x': -246,
