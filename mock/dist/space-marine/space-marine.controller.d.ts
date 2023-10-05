@@ -41,5 +41,5 @@ export declare class SpaceMarineController {
         starshipId: number;
     }[]>;
     createSpaceMarine(xmlBody: any): void;
-    updateSpaceMarine(xmlBody: any, id: string): void;
+    updateSpaceMarine(xmlBody: any, id: string): import("./space-marine.dto").SpaceMarineDto;
 }

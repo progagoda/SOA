@@ -1,10 +1,12 @@
 import {Injectable} from '@nestjs/common';
 import {spaceMarines} from "../db/spaceMarines";
+import { SpaceMarineDto } from './space-marine.dto'
 
 
 @Injectable()
 export class SpaceMarineService {
     getAll() {
+        console.log(spaceMarines)
         return spaceMarines;
     }
     deleteSpaceMarine(id:string){
@@ -15,19 +17,23 @@ export class SpaceMarineService {
         return spaceMarines;
     }
     createSpaceMarine(spaceMarine){
-        const newSpaceMarine = {...spaceMarine}
+        const newSpaceMarine:SpaceMarineDto = {...spaceMarine}
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         newSpaceMarine.creationDate= new Date;
         const lastMarines =  spaceMarines[spaceMarines.length-1];
-        newSpaceMarine.id = lastMarines ? lastMarines.id+1: 1;
+        newSpaceMarine.id = (lastMarines ? lastMarines.id+1: 1);
+        newSpaceMarine.loyal = spaceMarine.loyal === 'true'
         spaceMarines.push(newSpaceMarine);
     }
-    updateSpaceMarine(spaceMarine, id: string){
-        const deleteSpaceMarine= spaceMarines.find(item=>
-          item.id.toString()=== id)
-        spaceMarines.splice(deleteSpaceMarine.id-1,1)
-        const updateSpaceMarine = {...spaceMarine}
+    updateSpaceMarine(spaceMarine: SpaceMarineDto, id: string){
+        const updateSpaceMarine:SpaceMarineDto = {...spaceMarine}
+        const foundIndex = spaceMarines.findIndex(x => x.id.toString() === id);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
         updateSpaceMarine.creationDate = new Date;
-        updateSpaceMarine.id = id;
-        spaceMarines.push(updateSpaceMarine);
+        updateSpaceMarine.id = parseInt(id);
+        spaceMarines[foundIndex] = updateSpaceMarine;
+        return updateSpaceMarine;
     }
 }

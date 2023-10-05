@@ -55,6 +55,10 @@ __decorate([
     __metadata("design:type", Number)
 ], SpaceMarineDto.prototype, "health", void 0);
 __decorate([
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], SpaceMarineDto.prototype, "loyal", void 0);
+__decorate([
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], SpaceMarineDto.prototype, "height", void 0);

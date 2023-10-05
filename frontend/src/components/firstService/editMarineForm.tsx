@@ -4,24 +4,48 @@ import { TSpaceMarine } from '../../types'
 import { editSpaceMarine } from '../../api'
 import { meleeWeapon } from '../../constants'
 import { useSpaceMarines } from '../../hooks'
+import { NotificationInstance } from 'antd/es/notification/interface'
 
 const { Option } = Select
 const EditMarineForm = ({
   isEditing,
   setEditing,
   editingMarine,
+  api,
+  contextHolder,
 }: {
   isEditing: boolean
   setEditing: (isEditing: boolean) => void
   editingMarine: TSpaceMarine
+  api: NotificationInstance
+  contextHolder: React.ReactElement
 }) => {
   const [form] = Form.useForm()
-  const {update} = useSpaceMarines()
+  const { update } = useSpaceMarines()
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
-    console.error(spaceMarine)
-    await editSpaceMarine(spaceMarine,editingMarine.id)
-    update()
+    const isEmpty = spaceMarine
+      ? Object.values(spaceMarine).some(
+          (value) => value === undefined || value === null || value === '',
+        )
+      : false
+
+    if (isEmpty) {
+      api.error({
+        message: `ERROR`,
+        description: <>{ `Correct your fields` }</>,
+        placement: 'bottomLeft',
+      })
+    } else {
+      await editSpaceMarine(spaceMarine, editingMarine.id).catch((error) => {
+        api.info({
+          message: `ERROR`,
+          description: <>{ `${error}` }</>,
+        })
+      })
+      setEditing(false)
+      update()
+    }
   }
   return (
     <Modal
@@ -31,9 +55,9 @@ const EditMarineForm = ({
       onCancel={ () => setEditing(false) }
       onOk={ () => {
         saveEditMarine()
-        setEditing(false)
       } }
     >
+      { contextHolder }
       <Form
         layout="vertical"
         name="control-hooks"
@@ -103,10 +127,7 @@ const EditMarineForm = ({
             allowClear
           >
             { Object.values(meleeWeapon).map((item: meleeWeapon) => (
-              <Option
-                key={ item }
-                value={ item }
-              >
+              <Option key={ item } value={ item }>
                 { item }
               </Option>
             )) }
@@ -122,7 +143,7 @@ const EditMarineForm = ({
             },
           ] }
         >
-          <InputNumber value={ editingMarine.health } min={ 0 } ></InputNumber>
+          <InputNumber value={ editingMarine.health } min={ 0 }></InputNumber>
         </Form.Item>
         <Form.Item
           initialValue={ editingMarine.loyal }
@@ -170,7 +191,10 @@ const EditMarineForm = ({
             ] }
           >
             <Space>
-              <Input placeholder="parentLegion" value={ editingMarine.chapterParentLegion }></Input>
+              <Input
+                placeholder="parentLegion"
+                value={ editingMarine.chapterParentLegion }
+              ></Input>
             </Space>
           </Form.Item>
           <Form.Item
@@ -184,7 +208,7 @@ const EditMarineForm = ({
             ] }
           >
             <Space>
-              <Input value = { editingMarine.chapterWorld } placeholder="world" />
+              <Input value={ editingMarine.chapterWorld } placeholder="world" />
             </Space>
           </Form.Item>
         </Space>

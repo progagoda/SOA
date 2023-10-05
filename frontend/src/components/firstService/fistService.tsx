@@ -1,10 +1,10 @@
 import {
   Button,
   Col,
+  notification,
   Divider,
   Drawer,
   Empty,
-  message,
   Row,
   Space,
   Table,
@@ -32,7 +32,7 @@ export const FirstService = () => {
   const [editingMarine, setEditingMarine] = useState(spaceMarineInit)
   const form = useRef<TSpaceMarineFormRef>(null)
   const queryClient = useQueryClient()
-  const [messageApi, contextHolder] = message.useMessage()
+  const [api, contextHolder] = notification.useNotification();
   const { data, isLoading, isError, update } = useSpaceMarines()
   const [pagination, setPagination] = useState({
     current: 1,
@@ -43,27 +43,39 @@ export const FirstService = () => {
     setEditingMarine({...record})
   }
   const handleDeleteSpaceMarine = async (id: number) => {
+    console.error(isDelete)
     setDelete(false)
-    await deleteSpaceMarine(id).catch((err) => {
-      messageApi.open({
-        type: 'error',
-        content: `${err}`,
-      })
+    await deleteSpaceMarine(id).catch((error) => {
+      api.error({
+        message: `ERROR`,
+        description: <>{ `${error}` }</>,
+      });
     })
     setDelete(true)
   }
   const handleCreateSpaceMarine = async (): Promise<any> => {
     const spaceMarine = form?.current?.getFieldsValue()
-    queryClient
-      .fetchQuery(['createSpaceMarines', { spaceMarine }], createSpaceMarine)
-      .catch((err) => {
-        messageApi.open({
-          type: 'error',
-          content: `${err}`,
-        })
+    const isEmpty = spaceMarine? Object.values(spaceMarine).some(value => value === undefined || value === null || value === ''): false;
+
+    if(isEmpty){
+      api.error({
+        message: `ERROR`,
+        description: <>{ `Correct your fields` }</>,
+        placement: 'bottomLeft'
+    })
+    }
+    else {
+      if(spaceMarine)
+      await createSpaceMarine(spaceMarine)
+      .catch((error) => {
+        api.error({
+          message: `ERROR`,
+          description: <>{ `${error}` }</>,
+        });
       })
-    setCreate(true)
-    setOpen(false)
+      setCreate(true)
+      setOpen(false)
+    }
   }
 
   const showDrawer = () => {
@@ -72,15 +84,6 @@ export const FirstService = () => {
   const onClose = () => {
     setOpen(false)
   }
-
-  useEffect(() => {
-    queryClient.invalidateQueries('getSpaceMarines').catch((reason) => {
-      messageApi.open({
-        type: 'error',
-        content: reason,
-      })
-    })
-  }, [open, isDelete, isCreate])
 
   const onChange = async (
     pagination: any,
@@ -127,17 +130,26 @@ export const FirstService = () => {
   const columnsConfig = columns({handleDeleteSpaceMarine, handleEditSpaceMarine})
 
   const updateMarine = () => {
-    const error = update()
-    if (error) {
-      messageApi.open({
-        type: 'error',
-        content: error,
-      })
+     update()
+    if (isError) {
+      api.error({
+        message: `ERROR`,
+        description: <>{ `The server is sleeping` }</>,
+      });
     }
   }
+    useEffect(() => {
+      queryClient.invalidateQueries('getSpaceMarines').catch((error) => {
+        api.error({
+          message: `ERROR`,
+          description: <>{ `${error}` }</>,
+        });
+      })
+    }, [open,isCreate, isDelete])
+
 
   return (
-    <>
+      <>
       { contextHolder }
       <Divider> Space marines collection</Divider>
       <Space>
@@ -197,20 +209,13 @@ export const FirstService = () => {
             }}
             loading={ isLoading }
             bordered
-            rowClassName="editable-row"
-            // components={{
-            //   body: {
-            //     cell: UpdateInput,
-            //   },
-            // }}
             dataSource={ data }
             columns={ columnsConfig }
             onChange={ onChange }
           />
 
         ) }
-      <EditMarineForm isEditing={ isEditing } setEditing={ setEditing } editingMarine={ editingMarine }  />
-
+      <EditMarineForm isEditing={ isEditing } setEditing={ setEditing } editingMarine={ editingMarine } api = { api } contextHolder={ contextHolder } />
     </>
   )
 }

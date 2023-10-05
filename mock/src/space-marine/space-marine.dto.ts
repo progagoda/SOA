@@ -1,6 +1,5 @@
 
-import {isString, IsNumber, IsString, isDate, IsDate, min, IsInt} from "class-validator";
-import * as diagnostics_channel from "diagnostics_channel";
+import { IsNumber, IsString, IsDate, IsInt, IsBoolean } from 'class-validator'
 
 
 
@@ -30,6 +29,8 @@ export class SpaceMarineDto{
   creationDate: string
   @IsNumber()
   health: number
+  @IsBoolean()
+  loyal: boolean
   @IsNumber()
   height: number
   @IsString()

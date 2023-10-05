@@ -41,6 +41,7 @@ __decorate([
 ], SpaceMarineController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Delete)(':id'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -48,6 +49,7 @@ __decorate([
 ], SpaceMarineController.prototype, "deleteSpaceMarine", null);
 __decorate([
     (0, common_1.Post)(),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -55,7 +57,8 @@ __decorate([
 ], SpaceMarineController.prototype, "createSpaceMarine", null);
 __decorate([
     (0, common_1.Put)(':id'),
-    __param(0, (0, common_1.Body)()),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
+    __param(0, (0, common_1.Body)(new common_1.ValidationPipe())),
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),

@@ -24,6 +24,7 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
         layout="vertical"
         form={ form }
         name="control-hooks"
+        scrollToFirstError
         style={{
           maxWidth: 600,
         }}
@@ -34,8 +35,10 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
           rules={ [
             {
               required: true,
+              message: "Please write name"
             },
           ] }
+          hasFeedback
         >
           <Input />
         </Form.Item>

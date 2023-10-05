@@ -9,7 +9,7 @@ export const useSpaceMarines = () => {
     getSpaceMarines,
     {
       retry:2,
-      select: (data: TApiSpaceMarine[]):TSpaceMarine[]=>mapSpaceMarines(data)
+      select: (data: TApiSpaceMarine[]):TSpaceMarine[]=> mapSpaceMarines(data)
     },
   )
   const update = ():string | null => {

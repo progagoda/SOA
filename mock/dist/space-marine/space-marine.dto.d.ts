@@ -13,6 +13,7 @@ export declare class SpaceMarineDto {
     coordinates: TCoordinates;
     creationDate: string;
     health: number;
+    loyal: boolean;
     height: number;
     meleeWeapon: string;
     chapter: TChapter;

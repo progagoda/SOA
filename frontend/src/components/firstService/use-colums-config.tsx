@@ -154,7 +154,6 @@ export const columns = ({
           dataIndex: 'coordinatesY',
           key: 'coordinatesY',
           sorter: true,
-          editable: true,
           ...getColumnSearchProps('coordinatesY'),
         },
       ],
@@ -164,7 +163,6 @@ export const columns = ({
       dataIndex: 'creationDate',
       key: 'creationDate',
       sorter: true,
-      editable: true,
       render: (item: Date) =>
         `${new Date(item)
           .toISOString()
@@ -177,7 +175,6 @@ export const columns = ({
       dataIndex: 'health',
       key: 'health',
       sorter: true,
-      editable: true,
       ...getColumnSearchProps('health'),
     },
     {
@@ -186,7 +183,7 @@ export const columns = ({
       key: 'loyal',
       sorter: true,
       editable: true,
-      render: (item: boolean) => `${bol.ok}`,
+      render: (item: boolean) => `${item? bol.ok: bol.no}`,
       ...getColumnSearchProps('loyal'),
     },
     {
@@ -194,7 +191,6 @@ export const columns = ({
       dataIndex: 'height',
       key: 'height',
       sorter: true,
-      editable: true,
       ...getColumnSearchProps('height'),
     },
     {
@@ -202,7 +198,6 @@ export const columns = ({
       dataIndex: 'meleeWeapon',
       key: 'meleeWeapon',
       sorter: true,
-      editable: true,
       filters: [
         { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE },
         { text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER },
@@ -217,7 +212,6 @@ export const columns = ({
           dataIndex: 'chapterName',
           key: 'chapterName',
           sorter: true,
-          editable: true,
           ...getColumnSearchProps('chapterName'),
         },
         {
@@ -225,7 +219,6 @@ export const columns = ({
           dataIndex: 'chapterParentLegion',
           key: 'chapterParentLegion',
           sorter: true,
-          editable: true,
           ...getColumnSearchProps('chapterParentLegion'),
         },
         {
@@ -233,7 +226,6 @@ export const columns = ({
           dataIndex: 'chapterWorld',
           key: 'chapterWorld',
           sorter: true,
-          editable: true,
           ...getColumnSearchProps('chapterWorld'),
         },
       ],
@@ -243,7 +235,6 @@ export const columns = ({
       dataIndex: 'starshipId',
       key: 'starshipId',
       sorter: true,
-      editable: true,
       ...getColumnSearchProps('starshipId'),
     },
     {

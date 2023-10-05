@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const spaceMarines_1 = require("../db/spaceMarines");
 let SpaceMarineService = class SpaceMarineService {
     getAll() {
+        console.log(spaceMarines_1.spaceMarines);
         return spaceMarines_1.spaceMarines;
     }
     deleteSpaceMarine(id) {
@@ -22,16 +23,17 @@ let SpaceMarineService = class SpaceMarineService {
         const newSpaceMarine = { ...spaceMarine };
         newSpaceMarine.creationDate = new Date;
         const lastMarines = spaceMarines_1.spaceMarines[spaceMarines_1.spaceMarines.length - 1];
-        newSpaceMarine.id = lastMarines ? lastMarines.id + 1 : 1;
+        newSpaceMarine.id = (lastMarines ? lastMarines.id + 1 : 1);
+        newSpaceMarine.loyal = spaceMarine.loyal === 'true';
         spaceMarines_1.spaceMarines.push(newSpaceMarine);
     }
     updateSpaceMarine(spaceMarine, id) {
-        const deleteSpaceMarine = spaceMarines_1.spaceMarines.find(item => item.id.toString() === id);
-        spaceMarines_1.spaceMarines.splice(deleteSpaceMarine.id - 1, 1);
         const updateSpaceMarine = { ...spaceMarine };
+        const foundIndex = spaceMarines_1.spaceMarines.findIndex(x => x.id.toString() === id);
         updateSpaceMarine.creationDate = new Date;
-        updateSpaceMarine.id = id;
-        spaceMarines_1.spaceMarines.push(updateSpaceMarine);
+        updateSpaceMarine.id = parseInt(id);
+        spaceMarines_1.spaceMarines[foundIndex] = updateSpaceMarine;
+        return updateSpaceMarine;
     }
 };
 exports.SpaceMarineService = SpaceMarineService;

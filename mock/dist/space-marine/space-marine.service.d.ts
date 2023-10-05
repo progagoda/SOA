@@ -1,3 +1,4 @@
+import { SpaceMarineDto } from './space-marine.dto';
 export declare class SpaceMarineService {
     getAll(): {
         id: number;
@@ -38,5 +39,5 @@ export declare class SpaceMarineService {
         starshipId: number;
     }[];
     createSpaceMarine(spaceMarine: any): void;
-    updateSpaceMarine(spaceMarine: any, id: string): void;
+    updateSpaceMarine(spaceMarine: SpaceMarineDto, id: string): SpaceMarineDto;
 }

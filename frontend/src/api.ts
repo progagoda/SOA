@@ -4,8 +4,8 @@ import { buildMarineXML } from './helpers'
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 
-export async function createSpaceMarine(query: any): Promise<any> {
-  const {spaceMarine} = query.queryKey[1]
+export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
+  console.error(spaceMarine)
   const xmlObject = buildMarineXML(spaceMarine);
   const { data } = await axios.post(`${FirstServiceURL}/space-marines`, xmlObject, {
     headers: {
