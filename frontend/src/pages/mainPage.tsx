@@ -4,6 +4,7 @@ import { FirstService } from '../components/firstService/fistService'
 import React from 'react'
 import { SecondService } from '../components/secondService/secondService'
 import { Diagram } from '../components/diagram/diagram'
+import ReactBuilder from '../components/reactBuilder/reactBuilder'
 
 export const MainPage: React.FC = () => {
   const onChange = (key: string) => key
@@ -22,6 +23,11 @@ export const MainPage: React.FC = () => {
       key: '3',
       label: 'Scheme',
       children: <Diagram />,
+    },
+    {
+      key: '4',
+      label: 'React Builder',
+      children: <ReactBuilder />,
     },
   ]
   return <Tabs defaultActiveKey="1" items={ items } onChange={ onChange } />

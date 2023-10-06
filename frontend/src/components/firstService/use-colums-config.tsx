@@ -199,7 +199,7 @@ export const columns = ({
       key: 'meleeWeapon',
       sorter: true,
       filters: [
-        { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE },
+        { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE, },
         { text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER },
         { text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE },
       ],

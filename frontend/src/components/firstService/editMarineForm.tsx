@@ -44,6 +44,7 @@ const EditMarineForm = ({
         })
       })
       setEditing(false)
+      form.resetFields();
       update()
     }
   }
