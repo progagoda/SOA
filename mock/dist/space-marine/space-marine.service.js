@@ -11,7 +11,6 @@ const common_1 = require("@nestjs/common");
 const spaceMarines_1 = require("../db/spaceMarines");
 let SpaceMarineService = class SpaceMarineService {
     getAll() {
-        console.log(spaceMarines_1.spaceMarines);
         return spaceMarines_1.spaceMarines;
     }
     deleteSpaceMarine(id) {

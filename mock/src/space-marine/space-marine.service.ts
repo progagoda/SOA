@@ -6,7 +6,6 @@ import { SpaceMarineDto } from './space-marine.dto'
 @Injectable()
 export class SpaceMarineService {
     getAll() {
-        console.log(spaceMarines)
         return spaceMarines;
     }
     deleteSpaceMarine(id:string){

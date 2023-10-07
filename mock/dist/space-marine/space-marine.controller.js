@@ -29,6 +29,7 @@ let SpaceMarineController = class SpaceMarineController {
         return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine);
     }
     updateSpaceMarine(xmlBody, id) {
+        console.log(xmlBody);
         return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id);
     }
 };

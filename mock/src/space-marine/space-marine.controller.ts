@@ -21,13 +21,13 @@ export class SpaceMarineController {
 
   @Post()
   @UsePipes(new ValidationPipe())
-  createSpaceMarine(@Body() xmlBody: any) {
+  async createSpaceMarine(@Body() xmlBody: any) {
     return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine)
   }
 
   @Put(':id')
   @UsePipes(new ValidationPipe())
-  updateSpaceMarine(@Body(new ValidationPipe()) xmlBody: any,@Param('id') id: string) {
+  async updateSpaceMarine(@Body(new ValidationPipe()) xmlBody: any,@Param('id') id: string) {
     return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id)
   }
 }

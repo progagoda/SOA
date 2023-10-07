@@ -1,19 +1,28 @@
-import { TChapter, TSpaceMarine} from './types'
+import { TChapter, TSpaceMarine } from './types'
 
 export enum meleeWeapon {
   CHAIN_AXE = 'CHAIN_AXE',
   MANREAPER = 'MANREAPER',
   POWER_BLADE = 'POWER_BLADE',
 }
+
 export const chapter: TChapter = {
   name: 'Alex',
   parentLegion: 'Goblin',
   world: 'MineCraft',
 }
+
 export enum bol {
   ok = 'true',
   no = 'false',
 }
+
+export enum FIRST_SERVICE_ACTION {
+  DeleteMarineForMelee = 'Delete marine for melee weapon',
+  GetMarineForMinCoords = 'Get marine for minimal coordinates',
+  GetMarineForHealth = 'Get marine for health',
+}
+
 export const spaceMarineInit: TSpaceMarine = {
   id: 0,
   name: '',
@@ -25,7 +34,7 @@ export const spaceMarineInit: TSpaceMarine = {
   height: 0,
   meleeWeapon: meleeWeapon.MANREAPER,
   chapterName: '',
-  chapterParentLegion:'',
-  chapterWorld:'',
+  chapterParentLegion: '',
+  chapterWorld: '',
   starshipId: 0,
 }
