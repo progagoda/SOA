@@ -3,7 +3,7 @@ import {
   Col,
   Divider,
   Drawer,
-  Empty,
+  Empty, InputNumber,
   notification,
   Row,
   Select,
@@ -14,10 +14,14 @@ import { columns } from './use-colums-config'
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { CreateMarineForm } from './createMarineForm'
 import { TSpaceMarine, TSpaceMarineFormRef } from '../../types'
-import { useQueryClient } from 'react-query'
+
 import {
+  apiService,
   createSpaceMarine,
   deleteSpaceMarine,
+  deleteSpaceMarineForMelee,
+  getSpaceMarineForHealth,
+  getSpaceMarineForMinCoords,
   getSpaceMarines,
 } from '../../api'
 import { useSpaceMarines } from '../../hooks'
@@ -29,6 +33,7 @@ import {
 } from '../../constants'
 import { buildFilters } from '../../helpers'
 import { DeleteOutlined } from '@ant-design/icons'
+import { useQueryClient } from 'react-query'
 
 const { Option } = Select
 
@@ -39,10 +44,12 @@ export const FirstService = () => {
   const [isEditing, setEditing] = useState(false)
   const [editingMarine, setEditingMarine] = useState(spaceMarineInit)
   const form = useRef<TSpaceMarineFormRef>(null)
-  const [additional, setAdditional] = useState<ReactElement>()
   const queryClient = useQueryClient()
+  const [additional, setAdditional] = useState<ReactElement>()
+  const [mlWeapon, setMlWeapon] = useState(meleeWeapon.POWER_BLADE);
+  const [health, setHealth] = useState<number|null>();
   const [api, contextHolder] = notification.useNotification()
-  const { data, isLoading, isError, update } = useSpaceMarines()
+  const { data, isLoading, isError } = useSpaceMarines()
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 4,
@@ -52,14 +59,8 @@ export const FirstService = () => {
     setEditingMarine({ ...record })
   }
   const handleDeleteSpaceMarine = async (id: number) => {
-    console.error(isDelete)
     setDelete(false)
-    await deleteSpaceMarine(id).catch((error) => {
-      api.error({
-        message: `ERROR`,
-        description: <>{ `${error}` }</>,
-      })
-    })
+    await apiService(api, deleteSpaceMarine, id);
     setDelete(true)
   }
   const handleCreateSpaceMarine = async (): Promise<any> => {
@@ -78,12 +79,7 @@ export const FirstService = () => {
       })
     } else {
       if (spaceMarine)
-        await createSpaceMarine(spaceMarine).catch((error) => {
-          api.error({
-            message: `ERROR`,
-            description: <>{ `${error}` }</>,
-          })
-        })
+        await apiService(api,createSpaceMarine, spaceMarine);
       setCreate(true)
       setOpen(false)
     }
@@ -143,15 +139,6 @@ export const FirstService = () => {
     handleEditSpaceMarine,
   })
 
-  const updateMarine = () => {
-    update()
-    if (isError) {
-      api.error({
-        message: `ERROR`,
-        description: <>{ `The server is sleeping` }</>,
-      })
-    }
-  }
   const handleChange = (action: string) => {
     if (action === FIRST_SERVICE_ACTION.DeleteMarineForMelee) {
       setAdditional(
@@ -159,6 +146,7 @@ export const FirstService = () => {
           <Select
             placeholder="Select a option and change input text above"
             allowClear
+            onChange={ (value) => setMlWeapon(value) }
           >
             { Object.values(meleeWeapon).map((item: meleeWeapon) => (
               <Option key={ item } value={ item }>
@@ -167,10 +155,23 @@ export const FirstService = () => {
             )) }
           </Select>
           <DeleteOutlined
-            onClick={ ()=>console.error() }
+            onClick={ ()=> apiService(api, deleteSpaceMarineForMelee, mlWeapon) }
             style={{ color: 'red', marginLeft: 12 }}
           />
         </Space>
+      )
+    }
+    if (action === FIRST_SERVICE_ACTION.GetMarineForHealth){
+      setAdditional(
+        <>
+          <InputNumber onChange={ (value)=> setHealth(value) } min={ -67 } addonBefore="health" />
+        <Button onClick ={ ()=>{apiService(api, getSpaceMarineForHealth, health)} }>Get marine is less than the current value</Button>
+
+        </>)
+    }
+    if (action === FIRST_SERVICE_ACTION.GetMarineForMinCoords){
+      setAdditional(
+      <Button onClick ={ ()=>{apiService(api, getSpaceMarineForMinCoords,'')} }>Get marine is less than the current value</Button>
       )
     }
   }
@@ -198,7 +199,7 @@ export const FirstService = () => {
         </Button>
         <Button
           type="primary"
-          onClick={ () => updateMarine() }
+          onClick={ () => apiService(api) }
           style={{ marginBottom: 16 }}
         >
           Update

@@ -1,11 +1,35 @@
 import axios from 'axios'
 import { TSpaceMarine } from './types'
 import { buildMarineXML } from './helpers'
+import { meleeWeapon } from './constants'
+import React from 'react'
+import { NotificationInstance } from 'antd/es/notification/interface'
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 
+export const apiService = async (
+  api: NotificationInstance,
+  fun?: (arg: any) => Promise<any>,
+  arg?: any,
+) => {
+  if(fun && arg) {
+    await fun(arg).catch((error) => {
+      api.error({
+        message: `ERROR`,
+        description: <>{ `${error.message}` }</>,
+      })
+    })
+  }
+  await axios.get(`${FirstServiceURL}/space-marines`).catch((error) => {
+    api.error({
+      message: `ERROR`,
+      description: <>{ `${error.message}` }</>,
+    })
+  });
+}
+
 export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
-  console.error(spaceMarine)
+  console.error('HIHIHI')
   const xmlObject = buildMarineXML(spaceMarine);
   const { data } = await axios.post(`${FirstServiceURL}/space-marines`, xmlObject, {
     headers: {
@@ -44,4 +68,17 @@ export async function editSpaceMarine(spaceMarine: TSpaceMarine, id: number): Pr
     },
   })
   return data;
+}
+
+export async function deleteSpaceMarineForMelee(meleeWeapon: meleeWeapon): Promise<any> {
+  const { data } = await axios.delete(`${FirstServiceURL}/space-marines/melee-weapon/${meleeWeapon}`)
+  return data
+}
+export async function getSpaceMarineForMinCoords(): Promise<any> {
+  const { data } = await axios.get(`${FirstServiceURL}/space-marines/coords/min`)
+  return data
+}
+export async function getSpaceMarineForHealth(health: number): Promise<any> {
+  const { data } = await axios.get(`${FirstServiceURL}/space-marines/health/${health}`)
+  return data
 }

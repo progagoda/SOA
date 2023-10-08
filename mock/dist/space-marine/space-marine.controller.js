@@ -25,12 +25,14 @@ let SpaceMarineController = class SpaceMarineController {
     async deleteSpaceMarine(id) {
         return this.spaceMarineService.deleteSpaceMarine(id);
     }
-    createSpaceMarine(xmlBody) {
+    async createSpaceMarine(xmlBody) {
         return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine);
     }
-    updateSpaceMarine(xmlBody, id) {
-        console.log(xmlBody);
+    async updateSpaceMarine(xmlBody, id) {
         return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id);
+    }
+    async deleteSpaceMarineForMeleeWeapon(meleeWeapon) {
+        return this.spaceMarineService.deleteSpaceMarineForMeleeWeapon(meleeWeapon);
     }
 };
 exports.SpaceMarineController = SpaceMarineController;
@@ -54,7 +56,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "createSpaceMarine", null);
 __decorate([
     (0, common_1.Put)(':id'),
@@ -63,8 +65,16 @@ __decorate([
     __param(1, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "updateSpaceMarine", null);
+__decorate([
+    (0, common_1.Delete)('melee-weapon/:meleeWeapon'),
+    (0, common_1.UsePipes)(new common_1.ValidationPipe()),
+    __param(0, (0, common_1.Param)('meleeWeapon')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], SpaceMarineController.prototype, "deleteSpaceMarineForMeleeWeapon", null);
 exports.SpaceMarineController = SpaceMarineController = __decorate([
     (0, common_1.Controller)('api/v1/space-marines'),
     __metadata("design:paramtypes", [space_marine_service_1.SpaceMarineService])

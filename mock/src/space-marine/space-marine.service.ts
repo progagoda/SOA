@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {spaceMarines} from "../db/spaceMarines";
 import { SpaceMarineDto } from './space-marine.dto'
-
+import {_} from 'lodash'
 
 @Injectable()
 export class SpaceMarineService {
@@ -34,5 +34,10 @@ export class SpaceMarineService {
         updateSpaceMarine.id = parseInt(id);
         spaceMarines[foundIndex] = updateSpaceMarine;
         return updateSpaceMarine;
+    }
+    deleteSpaceMarineForMeleeWeapon(meleeWeapon:string){
+        return _.remove(spaceMarines, function(item) {
+            return item.meleeWeapon === meleeWeapon;
+        });
     }
 }

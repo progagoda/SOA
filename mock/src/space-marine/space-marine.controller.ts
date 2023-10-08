@@ -30,4 +30,9 @@ export class SpaceMarineController {
   async updateSpaceMarine(@Body(new ValidationPipe()) xmlBody: any,@Param('id') id: string) {
     return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id)
   }
+  @Delete('melee-weapon/:meleeWeapon')
+  @UsePipes(new ValidationPipe())
+  async deleteSpaceMarineForMeleeWeapon(@Param('meleeWeapon') meleeWeapon: string) {
+    return this.spaceMarineService.deleteSpaceMarineForMeleeWeapon(meleeWeapon);
+  }
 }

@@ -40,6 +40,7 @@ export declare class SpaceMarineController {
         };
         starshipId: number;
     }[]>;
-    createSpaceMarine(xmlBody: any): void;
-    updateSpaceMarine(xmlBody: any, id: string): import("./space-marine.dto").SpaceMarineDto;
+    createSpaceMarine(xmlBody: any): Promise<void>;
+    updateSpaceMarine(xmlBody: any, id: string): Promise<import("./space-marine.dto").SpaceMarineDto>;
+    deleteSpaceMarineForMeleeWeapon(meleeWeapon: string): Promise<any>;
 }

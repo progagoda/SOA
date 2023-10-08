@@ -9,6 +9,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SpaceMarineService = void 0;
 const common_1 = require("@nestjs/common");
 const spaceMarines_1 = require("../db/spaceMarines");
+const lodash_1 = require("lodash");
 let SpaceMarineService = class SpaceMarineService {
     getAll() {
         return spaceMarines_1.spaceMarines;
@@ -33,6 +34,11 @@ let SpaceMarineService = class SpaceMarineService {
         updateSpaceMarine.id = parseInt(id);
         spaceMarines_1.spaceMarines[foundIndex] = updateSpaceMarine;
         return updateSpaceMarine;
+    }
+    deleteSpaceMarineForMeleeWeapon(meleeWeapon) {
+        return lodash_1._.remove(spaceMarines_1.spaceMarines, function (item) {
+            return item.meleeWeapon === meleeWeapon;
+        });
     }
 };
 exports.SpaceMarineService = SpaceMarineService;

@@ -1,9 +1,8 @@
 import React from 'react'
 import { Form, Input, InputNumber, Modal, Select, Space } from 'antd'
 import { TSpaceMarine } from '../../types'
-import { editSpaceMarine } from '../../api'
+import { apiService, editSpaceMarine } from '../../api'
 import { meleeWeapon } from '../../constants'
-import { useSpaceMarines } from '../../hooks'
 import { NotificationInstance } from 'antd/es/notification/interface'
 
 const { Option } = Select
@@ -21,7 +20,6 @@ const EditMarineForm = ({
   contextHolder: React.ReactElement
 }) => {
   const [form] = Form.useForm()
-  const { update } = useSpaceMarines()
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
     const isEmpty = spaceMarine
@@ -45,7 +43,7 @@ const EditMarineForm = ({
       })
       setEditing(false)
       form.resetFields();
-      update()
+      apiService(api)
     }
   }
   return (

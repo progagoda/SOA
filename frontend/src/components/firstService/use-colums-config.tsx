@@ -182,8 +182,9 @@ export const columns = ({
       dataIndex: 'loyal',
       key: 'loyal',
       sorter: true,
-      editable: true,
-      render: (item: boolean) => `${item? bol.ok: bol.no}`,
+      render: (item: boolean) => {
+        console.error(item)
+        return `${item? bol.ok: bol.no}`},
       ...getColumnSearchProps('loyal'),
     },
     {

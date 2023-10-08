@@ -40,4 +40,5 @@ export declare class SpaceMarineService {
     }[];
     createSpaceMarine(spaceMarine: any): void;
     updateSpaceMarine(spaceMarine: SpaceMarineDto, id: string): SpaceMarineDto;
+    deleteSpaceMarineForMeleeWeapon(meleeWeapon: string): any;
 }
