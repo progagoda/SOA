@@ -10,9 +10,9 @@ const FirstServiceURL = process.env.REACT_APP_URL1
 export const apiService = async (
   api: NotificationInstance,
   fun?: (arg: any) => Promise<any>,
-  arg?: any,
+  arg: any = null,
 ) => {
-  if(fun && arg) {
+  if(fun) {
     await fun(arg).catch((error) => {
       api.error({
         message: `ERROR`,
@@ -20,6 +20,7 @@ export const apiService = async (
       })
     })
   }
+
   await axios.get(`${FirstServiceURL}/space-marines`).catch((error) => {
     api.error({
       message: `ERROR`,
@@ -29,7 +30,6 @@ export const apiService = async (
 }
 
 export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
-  console.error('HIHIHI')
   const xmlObject = buildMarineXML(spaceMarine);
   const { data } = await axios.post(`${FirstServiceURL}/space-marines`, xmlObject, {
     headers: {

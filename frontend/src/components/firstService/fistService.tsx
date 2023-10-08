@@ -22,7 +22,6 @@ import {
   deleteSpaceMarineForMelee,
   getSpaceMarineForHealth,
   getSpaceMarineForMinCoords,
-  getSpaceMarines,
 } from '../../api'
 import { useSpaceMarines } from '../../hooks'
 import EditMarineForm from './editMarineForm'
@@ -103,7 +102,7 @@ export const FirstService = () => {
       filters,
       sorter,
     )
-    await getSpaceMarines(sorterCopy, filters, paginationCopy)
+    await queryClient.invalidateQueries(['getSpaceMarine', sorterCopy, filters, paginationCopy])
   }
 
   const footer = (
@@ -171,7 +170,7 @@ export const FirstService = () => {
     }
     if (action === FIRST_SERVICE_ACTION.GetMarineForMinCoords){
       setAdditional(
-      <Button onClick ={ ()=>{apiService(api, getSpaceMarineForMinCoords,'')} }>Get marine is less than the current value</Button>
+      <Button onClick ={ ()=>{apiService(api, getSpaceMarineForMinCoords,'')} }>Get marine for min coords</Button>
       )
     }
   }

@@ -163,12 +163,12 @@ export const columns = ({
       dataIndex: 'creationDate',
       key: 'creationDate',
       sorter: true,
+      ...getColumnSearchProps('creationDate'),
       render: (item: Date) =>
         `${new Date(item)
           .toISOString()
           .replace(/T/, ' ') // replace T with a space
           .replace(/\..+/, '')}`,
-      ...getColumnSearchProps('creationDate'),
     },
     {
       title: 'Health',
@@ -182,10 +182,8 @@ export const columns = ({
       dataIndex: 'loyal',
       key: 'loyal',
       sorter: true,
-      render: (item: boolean) => {
-        console.error(item)
-        return `${item? bol.ok: bol.no}`},
       ...getColumnSearchProps('loyal'),
+      render: (item: boolean) => `${item ? bol.ok: bol.no}`,
     },
     {
       title: 'Height',
