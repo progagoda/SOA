@@ -17,13 +17,11 @@ import { TSpaceMarine, TSpaceMarineFormRef } from '../../types'
 
 import {
   apiService,
-  createSpaceMarine,
-  deleteSpaceMarine,
   deleteSpaceMarineForMelee,
   getSpaceMarineForHealth,
   getSpaceMarineForMinCoords,
 } from '../../api'
-import { useSpaceMarines } from '../../hooks'
+import { useCreateSpaceMarine, useDeleteSpace, useSpaceMarines } from '../../hooks'
 import EditMarineForm from './editMarineForm'
 import {
   FIRST_SERVICE_ACTION,
@@ -48,6 +46,8 @@ export const FirstService = () => {
   const [mlWeapon, setMlWeapon] = useState(meleeWeapon.POWER_BLADE);
   const [health, setHealth] = useState<number|null>();
   const [api, contextHolder] = notification.useNotification()
+  const deleteSpaceMarine = useDeleteSpace();
+  const createSpaceMarine = useCreateSpaceMarine()
   const { data, isLoading, isError } = useSpaceMarines()
   const [pagination, setPagination] = useState({
     current: 1,
@@ -59,7 +59,7 @@ export const FirstService = () => {
   }
   const handleDeleteSpaceMarine = async (id: number) => {
     setDelete(false)
-    await apiService(api, deleteSpaceMarine, id);
+    deleteSpaceMarine(id);
     setDelete(true)
   }
   const handleCreateSpaceMarine = async (): Promise<any> => {
@@ -78,7 +78,7 @@ export const FirstService = () => {
       })
     } else {
       if (spaceMarine)
-        await apiService(api,createSpaceMarine, spaceMarine);
+        createSpaceMarine(spaceMarine)
       setCreate(true)
       setOpen(false)
     }
@@ -113,10 +113,10 @@ export const FirstService = () => {
             Close
           </Button>
         </Col>
-        <Col style={{ paddingRight: '0px' }}>
+        <Col>
           <Button
             htmlType="button"
-            style={{ marginRight: '8px' }}
+            style={{ marginLeft: '48px' }}
             onClick={ () => form.current?.resetFields() }
           >
             Reset
@@ -124,6 +124,7 @@ export const FirstService = () => {
           <Button
             type="primary"
             htmlType="submit"
+            style={{ marginLeft: '10px' }}
             onClick={ handleCreateSpaceMarine }
           >
             Submit

@@ -4,6 +4,7 @@ import { TSpaceMarine } from '../../types'
 import { apiService, editSpaceMarine } from '../../api'
 import { meleeWeapon } from '../../constants'
 import { NotificationInstance } from 'antd/es/notification/interface'
+import { useEditSpaceMarine } from '../../hooks'
 
 const { Option } = Select
 const EditMarineForm = ({
@@ -20,6 +21,7 @@ const EditMarineForm = ({
   contextHolder: React.ReactElement
 }) => {
   const [form] = Form.useForm()
+  const editSpaceMarine = useEditSpaceMarine();
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
     const isEmpty = spaceMarine
@@ -35,15 +37,9 @@ const EditMarineForm = ({
         placement: 'bottomLeft',
       })
     } else {
-      await editSpaceMarine(spaceMarine, editingMarine.id).catch((error) => {
-        api.info({
-          message: `ERROR`,
-          description: <>{ `${error}` }</>,
-        })
-      })
+      editSpaceMarine(spaceMarine);
       setEditing(false)
       form.resetFields();
-      apiService(api)
     }
   }
   return (

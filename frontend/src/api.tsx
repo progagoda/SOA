@@ -6,7 +6,7 @@ import React from 'react'
 import { NotificationInstance } from 'antd/es/notification/interface'
 
 const FirstServiceURL = process.env.REACT_APP_URL1
-
+// const SecondServiceURL = process.env.REACT_APP_URL2
 export const apiService = async (
   api: NotificationInstance,
   fun?: (arg: any) => Promise<any>,
@@ -60,9 +60,9 @@ export async function deleteSpaceMarine(id: number) {
   const { data } = await axios.delete(`${FirstServiceURL}/space-marines/${id}`)
   return data
 }
-export async function editSpaceMarine(spaceMarine: TSpaceMarine, id: number): Promise<any>{
+export async function editSpaceMarine(spaceMarine: TSpaceMarine): Promise<any>{
   const xmlObject=buildMarineXML(spaceMarine)
-  const {data} = await axios.put(`${FirstServiceURL}/space-marines/${id}`,xmlObject,{
+  const {data} = await axios.put(`${FirstServiceURL}/space-marines/${spaceMarine.id}`,xmlObject,{
     headers: {
       'Content-Type': 'application/xml',
     },
