@@ -67,7 +67,7 @@ export async function getSpaceMarines(
   })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  return jsonData?.SpaceMarines.spaceMarines;
+  return jsonData?.SpaceMarines.spaceMarine;
 }
 
 export async function deleteSpaceMarine(id: number) {
@@ -99,7 +99,7 @@ export async function getSpaceMarineForHealth(health: number): Promise<any> {
 export async function getStarships(){
   const {data} = await axios.get(`${SecondServiceURL}`, { headers: {
       'Content-Type': 'application/xml',
-    },})
+    }})
   let jsonData
   parseString(data, { explicitArray: false }, (err: any, result: any) => {
     if (err) {
@@ -109,7 +109,7 @@ export async function getStarships(){
   })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  return jsonData?.Starhips.starships
+  return jsonData?.Starhips.starship
 }
 export async function createStarship(starship: TStarship): Promise<any> {
   const { data } = await axios.post(`${SecondServiceURL}/${starship.name}`)
