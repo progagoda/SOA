@@ -5,6 +5,7 @@ import { meleeWeapon } from './constants'
 import React from 'react'
 import { NotificationInstance } from 'antd/es/notification/interface'
 import { queryClient } from './index'
+import { parseString } from 'xml2js';
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
@@ -45,7 +46,7 @@ export async function getSpaceMarines(
   filters?: any,
   pagination?: any,
 ) {
-  const { data } = await axios.get(`${FirstServiceURL}`, {
+  const  {data}  = await axios.get(`${FirstServiceURL}`, {
     params: {
       sort: sorter.field,
       order: sorter.order,
@@ -53,8 +54,20 @@ export async function getSpaceMarines(
       size: pagination?.size,
       ...filters,
     },
+    headers: {
+      'Content-Type': 'application/xml',
+    },
   })
-  return data
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  return jsonData?.SpaceMarines.spaceMarines;
 }
 
 export async function deleteSpaceMarine(id: number) {
@@ -84,11 +97,21 @@ export async function getSpaceMarineForHealth(health: number): Promise<any> {
   return data
 }
 export async function getStarships(){
-  const {data} = await axios.get(`${SecondServiceURL}`)
-  return data
+  const {data} = await axios.get(`${SecondServiceURL}`, { headers: {
+      'Content-Type': 'application/xml',
+    },})
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  return jsonData?.Starhips.starships
 }
 export async function createStarship(starship: TStarship): Promise<any> {
-
   const { data } = await axios.post(`${SecondServiceURL}/${starship.name}`)
   return data
 }

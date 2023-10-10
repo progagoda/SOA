@@ -7,6 +7,7 @@ const { Option } = Select
 export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
   (props, ref) => {
     const [form] = Form.useForm()
+    //@typescript-eslint/no-empty-function
     CreateMarineForm.displayName = 'CreateMarineForm'
     const layout = {
       labelCol: {
