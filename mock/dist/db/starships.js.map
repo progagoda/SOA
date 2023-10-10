@@ -1,0 +1,1 @@
+{"version":3,"file":"starships.js","sourceRoot":"","sources":["../../src/db/starships.ts"],"names":[],"mappings":";;;AAAa,QAAA,SAAS,GAAG;IACvB;QACE,EAAE,EAAE,CAAC;QACL,IAAI,EAAE,UAAU;KACjB;IACD;QACE,EAAE,EAAE,CAAC;QACL,IAAI,EAAE,OAAO;KACd;IACD;QACE,EAAE,EAAE,CAAC;QACL,IAAI,EAAE,QAAQ;KACf;CACF,CAAC"}

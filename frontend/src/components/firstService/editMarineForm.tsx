@@ -1,7 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Form, Input, InputNumber, Modal, Select, Space } from 'antd'
 import { TSpaceMarine } from '../../types'
-import { apiService, editSpaceMarine } from '../../api'
 import { meleeWeapon } from '../../constants'
 import { NotificationInstance } from 'antd/es/notification/interface'
 import { useEditSpaceMarine } from '../../hooks'
@@ -22,6 +21,7 @@ const EditMarineForm = ({
 }) => {
   const [form] = Form.useForm()
   const editSpaceMarine = useEditSpaceMarine();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
     const isEmpty = spaceMarine
@@ -37,15 +37,19 @@ const EditMarineForm = ({
         placement: 'bottomLeft',
       })
     } else {
+      form.resetFields();
       editSpaceMarine(spaceMarine);
       setEditing(false)
-      form.resetFields();
     }
   }
+  useEffect(()=>{
+    console.error(editingMarine)
+    form.resetFields()
+  },[isEditing])
   return (
     <Modal
       open={ isEditing }
-      title={ 'Edit Space Marine' }
+      title={ `Edit ${editingMarine.name}` }
       okText={ 'Save' }
       onCancel={ () => setEditing(false) }
       onOk={ () => {
@@ -64,14 +68,13 @@ const EditMarineForm = ({
         <Form.Item
           name="name"
           label="Name"
-          initialValue={ editingMarine.name }
           rules={ [
             {
               required: true,
             },
           ] }
         >
-          <Input value={ editingMarine.name }></Input>
+          <Input defaultValue={ `${editingMarine.name}` }/>
         </Form.Item>
         <Space>
           <Form.Item
@@ -93,7 +96,7 @@ const EditMarineForm = ({
           <Form.Item
             name="coordinatesY"
             label="CoordinatesY"
-            initialValue={ editingMarine.coordinatesX }
+            initialValue={ editingMarine.coordinatesY }
             rules={ [
               {
                 required: true,

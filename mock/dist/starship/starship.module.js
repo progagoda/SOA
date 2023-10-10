@@ -6,20 +6,17 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.StarshipModule = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
-const app_service_1 = require("./app.service");
-const space_marine_module_1 = require("./space-marine/space-marine.module");
-const starship_module_1 = require("./starship/starship.module");
-let AppModule = class AppModule {
+const starship_service_1 = require("./starship.service");
+const starship_controller_1 = require("./starship.controller");
+let StarshipModule = class StarshipModule {
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
+exports.StarshipModule = StarshipModule;
+exports.StarshipModule = StarshipModule = __decorate([
     (0, common_1.Module)({
-        imports: [space_marine_module_1.SpaceMarineModule, starship_module_1.StarshipModule],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        controllers: [starship_controller_1.StarshipController],
+        providers: [starship_service_1.StarshipService],
     })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+], StarshipModule);
+//# sourceMappingURL=starship.module.js.map

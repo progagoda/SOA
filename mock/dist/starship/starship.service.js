@@ -6,20 +6,23 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AppModule = void 0;
+exports.StarshipService = void 0;
 const common_1 = require("@nestjs/common");
-const app_controller_1 = require("./app.controller");
-const app_service_1 = require("./app.service");
-const space_marine_module_1 = require("./space-marine/space-marine.module");
-const starship_module_1 = require("./starship/starship.module");
-let AppModule = class AppModule {
+const starships_1 = require("../db/starships");
+let StarshipService = class StarshipService {
+    getAll() {
+        return starships_1.starships;
+    }
+    createStarship(name) {
+        const newStarship = {
+            id: starships_1.starships[starships_1.starships.length - 1] ? starships_1.starships[starships_1.starships.length - 1].id + 1 : 1,
+            name: name
+        };
+        starships_1.starships.push(newStarship);
+    }
 };
-exports.AppModule = AppModule;
-exports.AppModule = AppModule = __decorate([
-    (0, common_1.Module)({
-        imports: [space_marine_module_1.SpaceMarineModule, starship_module_1.StarshipModule],
-        controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
-    })
-], AppModule);
-//# sourceMappingURL=app.module.js.map
+exports.StarshipService = StarshipService;
+exports.StarshipService = StarshipService = __decorate([
+    (0, common_1.Injectable)()
+], StarshipService);
+//# sourceMappingURL=starship.service.js.map

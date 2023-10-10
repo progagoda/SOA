@@ -5,7 +5,7 @@ import { Switch, theme } from 'antd'
 import {ConfigProvider, Layout} from 'antd'
 
 function App() {
-  const [currentTheme, setCurrentTheme] = useState('Light')
+  const [currentTheme, setCurrentTheme] = useState('Dark')
   const changeTheme = ()=>{
     if(currentTheme==='Light'){
       setCurrentTheme('Dark')
@@ -22,7 +22,7 @@ function App() {
       }}
     >
       <Layout className='layout'>
-        <Switch style = {{width: 80 , margin:10}} onChange={ ()=>changeTheme() } checkedChildren="Light" unCheckedChildren="Dark" />
+        <Switch style = {{width: 80 , margin:10}} onChange={ ()=>changeTheme() } checkedChildren={ currentTheme } unCheckedChildren={ currentTheme } />
       <MainPage/>
       </Layout>
     </ConfigProvider>)

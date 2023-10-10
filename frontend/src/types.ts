@@ -52,4 +52,13 @@ export type TSpaceMarine = {
   chapterWorld: TChapter['world']
   starshipId: number
 }
+export type TStarship = {
+  id: number,
+  name: string
+}
+export type TDisembarkStarshipArg = {
+  spaceMarineId: number,
+  starshipId: number
+}
 export type TSpaceMarineFormRef = FormInstance<TSpaceMarine>
+export type TStarshipFormRef = FormInstance<TStarship>

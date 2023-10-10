@@ -1,15 +1,15 @@
 import { useMutation, useQuery } from 'react-query'
 import {
   apiService,
-  createSpaceMarine,
-  deleteSpaceMarine,
+  createSpaceMarine, createStarship,
+  deleteSpaceMarine, disembarkStarship,
   editSpaceMarine,
   getSpaceMarines,
+  getStarships,
 } from './api'
 import { mapSpaceMarines } from './helpers'
-import { TApiSpaceMarine, TSpaceMarine } from './types'
+import { TApiSpaceMarine, TDisembarkStarshipArg, TSpaceMarine, TStarship } from './types'
 import { notification } from 'antd'
-
 export const useSpaceMarines = () => {
   const { data, isLoading, isError } = useQuery(
     'getSpaceMarines',
@@ -44,6 +44,29 @@ export const useDeleteSpace = () => {
   const [api] = notification.useNotification()
   const { mutate } = useMutation(['deleteSpaceMarine'], (id: number) =>
     apiService(api, deleteSpaceMarine, id),
+  )
+
+  return mutate
+}
+export const useGetStarship = ()=> {
+  const { data, isLoading, isError } = useQuery<TStarship[]>(['getStarship'], getStarships)
+  return { data, isLoading, isError }
+}
+export const useCreateStarship = () => {
+  const [api] = notification.useNotification()
+  const { mutate } = useMutation(
+    ['createStarship'],
+    (starship: TStarship) =>
+      apiService(api, createStarship, starship),
+  )
+  return mutate
+}
+export const useDisembarkStarship = ()=>{
+  const [api] = notification.useNotification()
+  const { mutate } = useMutation(
+    ['disembarkStarship'],
+    (arg: TDisembarkStarshipArg) =>
+      apiService(api, disembarkStarship, arg),
   )
   return mutate
 }

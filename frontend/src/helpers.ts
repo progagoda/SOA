@@ -3,16 +3,15 @@ import { create } from 'xmlbuilder2'
 import { spaceMarineInit } from './constants'
 
 export const buildFilters = (pagination: any, filters: any, sorter: any) => {
-  const sorterCopy = {...sorter}
-  const paginationCopy = {...pagination}
+  const sorterCopy = { ...sorter }
+  const paginationCopy = { ...pagination }
   sorterCopy.order = sorter.order === 'ascend' ? 'asc' : 'desc'
   sorterCopy.field = sorter.columnKey
   paginationCopy.page = pagination.current
   paginationCopy.size = pagination.pageSize
-  return {sorterCopy, paginationCopy, filters }
+  return { sorterCopy, paginationCopy, filters }
 }
-export const buildMarineXML = (spaceMarine: TSpaceMarine = spaceMarineInit): string => {
-  const xmlObject = create()
+export const buildMarineXML = (spaceMarine: TSpaceMarine = spaceMarineInit): string => create()
     .ele('SpaceMarine')
     .ele('name')
     .txt(spaceMarine.name)
@@ -52,10 +51,6 @@ export const buildMarineXML = (spaceMarine: TSpaceMarine = spaceMarineInit): str
     .txt(spaceMarine?.starshipId.toString())
     .up()
     .end({ prettyPrint: true })
-  console.error(xmlObject)
-  return xmlObject
-}
-
 
 export const mapSpaceMarines= (spaceMarines: TApiSpaceMarine[]): TSpaceMarine[] =>
   spaceMarines.map((spaceMarine)=>({
