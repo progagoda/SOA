@@ -4,7 +4,7 @@ import { buildMarineXML } from './helpers'
 import { meleeWeapon } from './constants'
 import React from 'react'
 import { NotificationInstance } from 'antd/es/notification/interface'
-// import { parseString } from 'xml2js';
+import { parseString } from 'xml2js';
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
@@ -45,21 +45,21 @@ export async function getSpaceMarines(
       size: args.queryKey[3]?.size,
       ...args.queryKey[2],
     },
-    // headers: {
-    //   'Content-Type': 'application/xml',
-    // },
+    headers: {
+      'Content-Type': 'application/xml',
+    },
   })
-  // let jsonData
-  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
-  //   if (err) {
-  //     throw err
-  //   }
-  //   jsonData = result
-  // })
-  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // //@ts-ignore
-  // return jsonData?.SpaceMarines.spaceMarine;
-  return data
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  return jsonData?.SpaceMarines.spaceMarine;
+  // return data
 }
 
 export async function deleteSpaceMarine(id: number) {
@@ -90,21 +90,21 @@ export async function getSpaceMarineForHealth(health: number): Promise<any> {
 }
 export async function getStarships(){
   const {data} = await axios.get(`${SecondServiceURL}`, {
-    // headers: {
-    //   'Content-Type': 'application/xml',
-    // }
+    headers: {
+      'Content-Type': 'application/xml',
+    }
   })
-  // let jsonData
-  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
-  //   if (err) {
-  //     throw err
-  //   }
-  //   jsonData = result
-  // })
-  // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // //@ts-ignore
-  // return jsonData?.Starhips.starship
-  return data
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //@ts-ignore
+  return jsonData?.Starhips.starship
+  // return data
 }
 export async function createStarship(starship: TStarship): Promise<any> {
   const { data } = await axios.post(`${SecondServiceURL}/${starship.name}`)
