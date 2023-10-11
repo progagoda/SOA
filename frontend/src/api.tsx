@@ -65,8 +65,13 @@ export async function getSpaceMarines(
     }
     jsonData = result
   })
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+// eslint-disable-next-line no-console
+console.log(jsonData?.SpaceMarines.spaceMarine)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
+
   return jsonData?.SpaceMarines.spaceMarine;
 }
 
@@ -76,6 +81,10 @@ export async function deleteSpaceMarine(id: number) {
 }
 export async function editSpaceMarine(spaceMarine: TSpaceMarine): Promise<any>{
   const xmlObject=buildMarineXML(spaceMarine)
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-ignore
+// eslint-disable-next-line no-console
+  console.log(spaceMarine)
   const {data} = await axios.put(`${FirstServiceURL}/${spaceMarine.id}`,xmlObject,{
     headers: {
       'Content-Type': 'application/xml',
@@ -89,7 +98,7 @@ export async function deleteSpaceMarineForMelee(meleeWeapon: meleeWeapon): Promi
   return data
 }
 export async function getSpaceMarineForMinCoords(): Promise<any> {
-  const { data } = await axios.get(`${FirstServiceURL}coords/min`)
+  const { data } = await axios.get(`${FirstServiceURL}/coords/min`)
   return data
 }
 export async function getSpaceMarineForHealth(health: number): Promise<any> {
