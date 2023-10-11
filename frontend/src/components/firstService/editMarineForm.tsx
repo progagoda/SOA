@@ -44,7 +44,6 @@ const EditMarineForm = ({
     }
   }
   useEffect(()=>{
-    console.error(editingMarine)
     form.resetFields()
   },[isEditing])
   return (

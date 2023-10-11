@@ -16,16 +16,9 @@ import { columns } from './use-colums-config'
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { CreateMarineForm } from './createMarineForm'
 import { TSpaceMarine, TSpaceMarineFormRef } from '../../types'
-
 import {
-  apiService,
-  deleteSpaceMarineForMelee,
-  getSpaceMarineForHealth,
-  getSpaceMarineForMinCoords,
-} from '../../api'
-import {
-  useCreateSpaceMarine,
-  useDeleteSpace,
+  useCreateSpaceMarine, useDeleteMarineForMelee,
+  useDeleteSpace, useGetSpaceMarineForHealth, useGetSpaceMarineForMinCoords,
   useSpaceMarines,
 } from '../../hooks'
 import EditMarineForm from './editMarineForm'
@@ -53,12 +46,18 @@ export const FirstService = () => {
   const [health, setHealth] = useState<number | null>()
   const [api, contextHolder] = notification.useNotification()
   const deleteSpaceMarine = useDeleteSpace()
-  const createSpaceMarine = useCreateSpaceMarine()
-  const { data, isLoading, isError } = useSpaceMarines()
+  const [sorter,setSorter] = useState()
+  const [filters, setFilters] = useState()
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 4,
   })
+  const createSpaceMarine = useCreateSpaceMarine()
+  const { data, isLoading, isError } = useSpaceMarines(sorter, filters, pagination)
+  const deleteSpaceMarineForMelee= useDeleteMarineForMelee();
+  const getSpaceMarineForHealth = useGetSpaceMarineForHealth()
+  const getSpaceMarineForMinCoords= useGetSpaceMarineForMinCoords()
+
   const handleEditSpaceMarine = async (record: TSpaceMarine) => {
     setEditing(true)
     setEditingMarine(record)
@@ -105,12 +104,10 @@ export const FirstService = () => {
       filters,
       sorter,
     )
-    await queryClient.invalidateQueries([
-      'getSpaceMarines',
-      sorterCopy,
-      filters,
-      paginationCopy,
-    ])
+    setSorter(sorterCopy)
+    setFilters(filters)
+    // eslint-disable-next-line no-console
+    await queryClient.invalidateQueries(['getSpaceMarine', sorterCopy, filters, paginationCopy])
   }
 
   const footer = (
@@ -146,7 +143,6 @@ export const FirstService = () => {
     handleDeleteSpaceMarine,
     handleEditSpaceMarine,
   })
-
   const handleChange = (action: string) => {
     if (action === FIRST_SERVICE_ACTION.DeleteMarineForMelee) {
       setAdditional(
@@ -163,35 +159,41 @@ export const FirstService = () => {
             )) }
           </Select>
           <DeleteOutlined
-            onClick={ () => apiService(api, deleteSpaceMarineForMelee, mlWeapon) }
+            onClick={ () => deleteSpaceMarineForMelee(mlWeapon) }
             style={{ color: 'red', marginLeft: 12 }}
           />
-        </Space>,
+        </Space>
       )
     }
     if (action === FIRST_SERVICE_ACTION.GetMarineForHealth) {
       setAdditional(
-        <>
+        <Space wrap>
           <InputNumber
+            defaultValue={ 3 }
             onChange={ (value) => setHealth(value) }
             min={ -67 }
             addonBefore="health"
+            value={ health }
           />
           <Button
             onClick={ () => {
-              apiService(api, getSpaceMarineForHealth, health)
-            } }
+              health ? getSpaceMarineForHealth(health): api.error({
+                message: `ERROR`,
+                description: <>{ `Correct input field` }</>,
+              })
+
+              } }
           >
             Get marine is less than the current value
           </Button>
-        </>,
+        </Space>
       )
     }
     if (action === FIRST_SERVICE_ACTION.GetMarineForMinCoords) {
       setAdditional(
         <Button
           onClick={ () => {
-            apiService(api, getSpaceMarineForMinCoords, '')
+            getSpaceMarineForMinCoords()
           } }
         >
           Get marine for min coords
@@ -206,7 +208,7 @@ export const FirstService = () => {
         description: <>{ `${error}` }</>,
       })
     })
-  }, [open, isDelete])
+  }, [isDelete])
 
   return (
     <>
@@ -222,7 +224,7 @@ export const FirstService = () => {
         </Button>
         <Button
           type="primary"
-          onClick={ () => apiService(api) }
+          onClick={ () => queryClient.invalidateQueries('getSpaceMarines') }
           style={{ marginBottom: 16 }}
         >
           Update
