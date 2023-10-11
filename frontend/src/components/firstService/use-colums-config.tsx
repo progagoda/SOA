@@ -134,7 +134,6 @@ export const columns = ({
       dataIndex: 'name',
       key: 'name',
       sorter: true,
-      editable: true,
       ...getColumnSearchProps('name'),
     },
     {

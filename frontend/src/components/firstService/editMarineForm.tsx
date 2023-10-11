@@ -24,6 +24,7 @@ const EditMarineForm = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
+    spaceMarine.id = editingMarine.id;
     const isEmpty = spaceMarine
       ? Object.values(spaceMarine).some(
           (value) => value === undefined || value === null || value === '',
@@ -43,7 +44,6 @@ const EditMarineForm = ({
     }
   }
   useEffect(()=>{
-    console.error(editingMarine)
     form.resetFields()
   },[isEditing])
   return (
