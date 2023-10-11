@@ -75,7 +75,7 @@ export async function deleteSpaceMarine(id: number) {
   return data
 }
 export async function editSpaceMarine(spaceMarine: TSpaceMarine): Promise<any>{
-  const xmlObject=buildMarineXML(spaceMarine)
+  const xmlObject= buildMarineXML(spaceMarine)
   const {data} = await axios.put(`${FirstServiceURL}/${spaceMarine.id}`,xmlObject,{
     headers: {
       'Content-Type': 'application/xml',
