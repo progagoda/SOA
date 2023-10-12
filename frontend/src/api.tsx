@@ -8,7 +8,7 @@ import { parseString } from 'xml2js';
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
-// const SecondServiceURL = process.env.REACT_APP_URL2
+
 export const apiService = async (
   api: NotificationInstance,
   fun?: (arg: any) => Promise<any>,
@@ -56,10 +56,6 @@ export async function getSpaceMarines(
     }
     jsonData = result
   })
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//@ts-ignore
-// eslint-disable-next-line no-console
-console.log(jsonData?.SpaceMarines.spaceMarine)
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
 
@@ -106,10 +102,9 @@ export async function getStarships(){
     }
     jsonData = result
   })
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-  return jsonData?.Starhips.starship
-  // return data
+  return jsonData?.Starships.starship
 }
 export async function createStarship(starship: TStarship): Promise<any> {
   const { data } = await axios.post(`${SecondServiceURL}/${starship.name}`)

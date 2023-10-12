@@ -249,9 +249,6 @@ export const FirstService = () => {
           }}
         >
           <Empty
-            image={
-              <img src="https://yt3.ggpht.com/a/AATXAJwRgclZ8SqalCSHZrPQQLt-UP5hAALx0FOJQw=s900-c-k-c0xffffffff-no-rj-mo" />
-            }
             description={ `The server is sleeping` }
           />
         </Row>
