@@ -40,27 +40,27 @@ export async function getSpaceMarines(
   const  { data }  = await axios.get(`${FirstServiceURL}`, {
     params: {
       sort: args.queryKey[1]?.field,
-      order: args.queryKey[1]?.order.toUpperCase(),
+      order: args.queryKey[1]?.field ? args.queryKey[1]?.order.toUpperCase(): false,
       page: args.queryKey[3]?.page,
       size: args.queryKey[3]?.size,
       ...args.queryKey[2],
     },
-    headers: {
-      'Content-Type': 'application/xml',
-    },
+    // headers: {
+    //   'Content-Type': 'application/xml',
+    // },
   })
-  let jsonData
-  parseString(data, { explicitArray: false }, (err: any, result: any) => {
-    if (err) {
-      throw err
-    }
-    jsonData = result
-  })
+  // let jsonData
+  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
+  //   if (err) {
+  //     throw err
+  //   }
+  //   jsonData = result
+  // })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
 
-  return jsonData?.SpaceMarines.spaceMarine;
-  // return data
+  // return jsonData?.SpaceMarines.spaceMarine;
+  return data
 }
 
 export async function deleteSpaceMarine(id: number) {

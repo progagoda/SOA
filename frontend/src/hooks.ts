@@ -76,7 +76,7 @@ export const useDeleteMarineForMelee= () => {
     }
   )
 
-  return mutate
+  return  mutate
 }
 export const useGetSpaceMarineForHealth= () => {
   const [api] = notification.useNotification()
@@ -93,11 +93,11 @@ export const useGetSpaceMarineForHealth= () => {
 }
 export const useGetSpaceMarineForMinCoords= () => {
   const [api] = notification.useNotification()
-  const { mutate } = useMutation(['getSpaceMarineForMinCoords'], () =>
+  const { mutate, data}= useMutation(['getSpaceMarineForMinCoords'], () =>
       apiService(api, getSpaceMarineForMinCoords),
     {
       onSuccess: () => {
-         queryClient.invalidateQueries('getSpaceMarines');
+        queryClient.setQueryData('getSpaceMarines', data)
       }
     }
   )

@@ -28,7 +28,7 @@ import {
   spaceMarineInit,
 } from '../../constants'
 import { buildFilters } from '../../helpers'
-import { DeleteOutlined } from '@ant-design/icons'
+import {   DeleteOutlined } from '@ant-design/icons'
 import { useQueryClient } from 'react-query'
 
 const { Option } = Select
@@ -54,7 +54,7 @@ export const FirstService = () => {
   })
   const createSpaceMarine = useCreateSpaceMarine()
   const { data, isLoading, isError } = useSpaceMarines(sorter, filters, pagination)
-  const deleteSpaceMarineForMelee= useDeleteMarineForMelee();
+  const deleteSpaceMarineForMelee = useDeleteMarineForMelee();
   const getSpaceMarineForHealth = useGetSpaceMarineForHealth()
   const getSpaceMarineForMinCoords= useGetSpaceMarineForMinCoords()
 
