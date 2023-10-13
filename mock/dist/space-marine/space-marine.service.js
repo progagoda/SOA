@@ -40,6 +40,9 @@ let SpaceMarineService = class SpaceMarineService {
             return item.meleeWeapon === meleeWeapon;
         });
     }
+    getForMinCoordinates() {
+        return spaceMarines_1.spaceMarines[0];
+    }
 };
 exports.SpaceMarineService = SpaceMarineService;
 exports.SpaceMarineService = SpaceMarineService = __decorate([

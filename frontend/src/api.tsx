@@ -40,7 +40,7 @@ export async function getSpaceMarines(
   const  { data }  = await axios.get(`${FirstServiceURL}`, {
     params: {
       sort: args.queryKey[1]?.field,
-      order: args.queryKey[1]?.field ? args.queryKey[1]?.order.toUpperCase(): false,
+      order: args.queryKey[1]?.field ? args.queryKey[1]?.order.toUpperCase(): undefined,
       page: args.queryKey[3]?.page,
       size: args.queryKey[3]?.size,
       ...args.queryKey[2],

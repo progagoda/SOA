@@ -41,4 +41,23 @@ export declare class SpaceMarineService {
     createSpaceMarine(spaceMarine: any): void;
     updateSpaceMarine(spaceMarine: SpaceMarineDto, id: string): SpaceMarineDto;
     deleteSpaceMarineForMeleeWeapon(meleeWeapon: string): any;
+    getForMinCoordinates(): {
+        id: number;
+        name: string;
+        coordinates: {
+            x: number;
+            y: number;
+        };
+        creationDate: string;
+        health: number;
+        loyal: boolean;
+        height: number;
+        meleeWeapon: string;
+        chapter: {
+            name: string;
+            parentLegion: string;
+            world: string;
+        };
+        starshipId: number;
+    };
 }

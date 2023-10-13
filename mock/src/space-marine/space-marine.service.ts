@@ -40,4 +40,7 @@ export class SpaceMarineService {
             return item.meleeWeapon === meleeWeapon;
         });
     }
+    getForMinCoordinates(){
+        return spaceMarines[0]
+    }
 }

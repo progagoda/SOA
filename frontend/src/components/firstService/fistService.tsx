@@ -193,7 +193,10 @@ export const FirstService = () => {
       setAdditional(
         <Button
           onClick={ () => {
-            getSpaceMarineForMinCoords()
+
+            // eslint-disable-next-line no-console
+            console.log(getSpaceMarineForMinCoords() + 'asd')
+            queryClient.setQueryData('getSpaceMarines', getSpaceMarineForMinCoords)
           } }
         >
           Get marine for min coords

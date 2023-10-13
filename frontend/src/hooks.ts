@@ -93,15 +93,15 @@ export const useGetSpaceMarineForHealth= () => {
 }
 export const useGetSpaceMarineForMinCoords= () => {
   const [api] = notification.useNotification()
-  const { mutate, data}= useMutation(['getSpaceMarineForMinCoords'], () =>
+  const { mutate}= useMutation(['getSpaceMarineForMinCoords'], () =>
       apiService(api, getSpaceMarineForMinCoords),
     {
       onSuccess: () => {
-        queryClient.setQueryData('getSpaceMarines', data)
+        // queryClient.setQueryData('getSpaceMarines', mutate)
       }
     }
   )
-
+  // eslint-disable-next-line no-console
   return mutate
 }
 

@@ -8,9 +8,7 @@ export class SpaceMarineController {
 
   @Get()
   async getAll() {
-
     return this.spaceMarineService.getAll();
-
   }
 
   @Delete(':id')
@@ -34,5 +32,10 @@ export class SpaceMarineController {
   @UsePipes(new ValidationPipe())
   async deleteSpaceMarineForMeleeWeapon(@Param('meleeWeapon') meleeWeapon: string) {
     return this.spaceMarineService.deleteSpaceMarineForMeleeWeapon(meleeWeapon);
+  }
+
+  @Get('coords/min')
+  async getForMinCoordinates() {
+    return this.spaceMarineService.getForMinCoordinates();
   }
 }

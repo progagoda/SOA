@@ -34,6 +34,9 @@ let SpaceMarineController = class SpaceMarineController {
     async deleteSpaceMarineForMeleeWeapon(meleeWeapon) {
         return this.spaceMarineService.deleteSpaceMarineForMeleeWeapon(meleeWeapon);
     }
+    async getForMinCoordinates() {
+        return this.spaceMarineService.getForMinCoordinates();
+    }
 };
 exports.SpaceMarineController = SpaceMarineController;
 __decorate([
@@ -75,6 +78,12 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "deleteSpaceMarineForMeleeWeapon", null);
+__decorate([
+    (0, common_1.Get)('coords/min'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], SpaceMarineController.prototype, "getForMinCoordinates", null);
 exports.SpaceMarineController = SpaceMarineController = __decorate([
     (0, common_1.Controller)('api/v1/space-marines'),
     __metadata("design:paramtypes", [space_marine_service_1.SpaceMarineService])
