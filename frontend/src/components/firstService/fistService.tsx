@@ -4,7 +4,9 @@ import {
   Divider,
   Drawer,
   Empty,
+  Flex,
   InputNumber,
+  Modal,
   notification,
   Row,
   Select,
@@ -25,14 +27,11 @@ import {
   useSpaceMarines,
 } from '../../hooks'
 import EditMarineForm from './editMarineForm'
-import {
-  meleeWeapon,
-  spaceMarineInit,
-} from '../../constants'
-import { buildFilters } from '../../helpers'
+import { meleeWeapon, spaceMarineInit } from '../../constants'
+import { buildFilters, mapSpaceMarine } from '../../helpers'
 import { DeleteOutlined } from '@ant-design/icons'
 import { useQueryClient } from 'react-query'
-
+import _ from 'lodash'
 
 export const FirstService = () => {
   const [open, setOpen] = useState(false)
@@ -42,21 +41,45 @@ export const FirstService = () => {
   const form = useRef<TSpaceMarineFormRef>(null)
   const queryClient = useQueryClient()
   const [mlWeapon, setMlWeapon] = useState(meleeWeapon.POWER_BLADE)
-  const [health, setHealth] = useState<number | null>()
+  const [health, setHealth] = useState<number>(1)
   const [api, contextHolder] = notification.useNotification()
   const deleteSpaceMarine = useDeleteSpace()
-  const [sorter,setSorter] = useState()
+  const [sorter, setSorter] = useState()
   const [filters, setFilters] = useState()
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 4,
   })
   const createSpaceMarine = useCreateSpaceMarine()
-  const { data, isLoading, isError } = useSpaceMarines(sorter, filters, pagination)
-  const deleteSpaceMarineForMelee = useDeleteMarineForMelee();
-  const getSpaceMarineForHealth = useGetSpaceMarineForHealth()
-  const getSpaceMarineForMinCoords= useGetSpaceMarineForMinCoords()
+  const { data, isLoading, isError } = useSpaceMarines(
+    sorter,
+    filters,
+    pagination,
+  )
+  const deleteSpaceMarineForMelee = useDeleteMarineForMelee()
+  const getSpaceMarineForHealth = useGetSpaceMarineForHealth(health)
+  const getSpaceMarineForMinCoords = useGetSpaceMarineForMinCoords()
+  const [isModalOpen, setIsModalOpen] = useState(false) 
+  const [isHealth, setIsHealth] = useState(false)
+  const showModal = (healthArg?: number) => {
+    if(healthArg){
+      getSpaceMarineForHealth.refetch()
+      setIsHealth(true);
+    }
+    else{
+      getSpaceMarineForMinCoords.refetch()
+      setIsHealth(false);
+      }
+    setIsModalOpen(true)
+  }
 
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
+  }
   const handleEditSpaceMarine = async (record: TSpaceMarine) => {
     setEditing(true)
     setEditingMarine(record)
@@ -65,7 +88,7 @@ export const FirstService = () => {
     deleteSpaceMarine(id)
     setDelete(true)
   }
-  const handleCreateSpaceMarine =  ()=> {
+  const handleCreateSpaceMarine = () => {
     const spaceMarine = form?.current?.getFieldsValue()
     const isEmpty = spaceMarine
       ? Object.values(spaceMarine).some(
@@ -96,7 +119,6 @@ export const FirstService = () => {
     pagination: any,
     filters: any,
     sorter: any,
-    extra: any,
   ) => {
     const { sorterCopy, paginationCopy } = buildFilters(
       pagination,
@@ -105,7 +127,12 @@ export const FirstService = () => {
     )
     setSorter(sorterCopy)
     setFilters(filters)
-    await queryClient.invalidateQueries(['getSpaceMarine', sorterCopy, filters, paginationCopy])
+    await queryClient.invalidateQueries([
+      'getSpaceMarine',
+      sorterCopy,
+      filters,
+      paginationCopy,
+    ])
   }
 
   const footer = (
@@ -127,7 +154,7 @@ export const FirstService = () => {
           <Button
             type="primary"
             htmlType="submit"
-            style={{ marginLeft: '10px'}}
+            style={{ marginLeft: '10px' }}
             onClick={ handleCreateSpaceMarine }
           >
             Submit
@@ -141,7 +168,16 @@ export const FirstService = () => {
     handleDeleteSpaceMarine,
     handleEditSpaceMarine,
   })
-  const changeMelee = (item: meleeWeapon)=>{
+  const parseSpaceMarine = (spaceMarine: TSpaceMarine) =>
+    _.map(spaceMarine, (value, key) => (
+      <div key={ key }>
+        <>
+          { key }: { value }
+        </>
+      </div>
+    ))
+
+  const changeMelee = (item: meleeWeapon) => {
     // eslint-disable-next-line no-console
     console.log(item)
     setMlWeapon(item)
@@ -193,9 +229,7 @@ export const FirstService = () => {
             height: '80vh',
           }}
         >
-          <Empty
-            description={ `The server is sleeping` }
-          />
+          <Empty description={ `The server is sleeping` } />
         </Row>
       ) : (
         <Table
@@ -227,52 +261,52 @@ export const FirstService = () => {
       />
       <Divider> First service additional</Divider>
       <Typography> Choose action</Typography>
-      <Space
-        direction = 'vertical'
-        size={ [8, 16] }
-      >
-        <Button
-          onClick={ () => {
-            // eslint-disable-next-line no-console
-            console.log(getSpaceMarineForMinCoords.mutate)
-            queryClient.setQueryData('getSpaceMarines', getSpaceMarineForMinCoords.mutate)
-          } }
+      <Flex>
+        <Space direction="vertical" size={ [8, 16] }>
+          <Button onClick={ ()=>showModal() }>Get marine for min coords</Button>
+          <Space wrap>
+            <InputNumber
+              required
+              onChange={ (value) => value? setHealth(value): false }
+              min={ -67 }
+              addonBefore="health"
+              value={ health }
+            />
+            <Button
+              onClick={ () => showModal(health) }
+            >
+              Get marine is less than the current value
+            </Button>
+          </Space>
+          <Space wrap>
+            <Select
+              placeholder="Select a option and change input text above"
+              defaultValue={ mlWeapon }
+              onChange={ changeMelee }
+              options={ Object.values(meleeWeapon).map((item) => ({
+                label: item,
+                value: item,
+              })) }
+            />
+            <DeleteOutlined
+              onClick={ () => {
+                deleteSpaceMarineForMelee(mlWeapon)
+              } }
+              style={{ color: 'red', marginLeft: 12 }}
+            />
+          </Space>
+        </Space>
+        <Modal
+          title="First additional service"
+          open={ isModalOpen }
+          onOk={ handleOk }
+          onCancel={ handleCancel }
         >
-          Get marine for min coords
-        </Button>
-        <Space wrap>
-          <InputNumber
-            onChange={ (value) => setHealth(value) }
-            min={ -67 }
-            addonBefore="health"
-            value={ health }
-          />
-          <Button
-            onClick={ () => {
-              health ? getSpaceMarineForHealth(health): api.error({
-                message: `ERROR`,
-                description: <>{ `Correct input field` }</>,
-              })
-            } }
-          >
-            Get marine is less than the current value
-          </Button>
-        </Space>
-        <Space wrap>
-          <Select
-            placeholder="Select a option and change input text above"
-            defaultValue={ mlWeapon }
-            onChange={ changeMelee }
-            options={ Object.values(meleeWeapon).map((item) => ({ label: item, value: item })) }
-          />
-          <DeleteOutlined
-            onClick={ () => {
-              deleteSpaceMarineForMelee(mlWeapon)} }
-            style={{ color: 'red', marginLeft: 12 }}
-          />
-        </Space>
-      </Space>
-
+          { isHealth ?
+            getSpaceMarineForHealth.data?? false
+            : getSpaceMarineForMinCoords.data ? parseSpaceMarine(mapSpaceMarine(getSpaceMarineForMinCoords.data)) : false }
+        </Modal>
+      </Flex>
     </>
   )
 }

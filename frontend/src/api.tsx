@@ -85,8 +85,8 @@ export async function getSpaceMarineForMinCoords(): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/coords/min`)
   return data
 }
-export async function getSpaceMarineForHealth(health: number): Promise<any> {
-  const { data } = await axios.get(`${FirstServiceURL}/health/${health}`)
+export async function getSpaceMarineForHealth(args: any): Promise<any> {
+  const { data } = await axios.get(`${FirstServiceURL}/health/${args.queryKey[1]}`)
   return data
 }
 export async function getStarships(){

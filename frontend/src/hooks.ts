@@ -76,32 +76,21 @@ export const useDeleteMarineForMelee= () => {
     }
   )
 
-  return  mutate
-}
-export const useGetSpaceMarineForHealth= () => {
-  const [api] = notification.useNotification()
-  const { mutate } = useMutation(['getSpaceMarineForHealth'], (health: number) =>
-    apiService(api, getSpaceMarineForHealth, health),
-    {
-      onSuccess: async () => {
-        await queryClient.invalidateQueries('getSpaceMarines');
-      }
-    }
-  )
-
   return mutate
 }
+export const useGetSpaceMarineForHealth= (health: number) => {
+  const { data, refetch } = useQuery<number>(["getSpaceMarineForHealth", health], getSpaceMarineForHealth, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  });
+  return {data, refetch}
+}
 export const useGetSpaceMarineForMinCoords = () => {
-  const [api] = notification.useNotification()
-  const mutate = () => queryClient.fetchQuery('getSpaceMarineForMinCoords',  () => apiService(api, getSpaceMarineForMinCoords))
-  // const {  mutate}= useMutation(['getSpaceMarineForMinCoords'], () =>
-  //     apiService(api, getSpaceMarineForMinCoords),
-  //   {
-  //     onError: ()=> console.error('Fuck')
-  //   }
-  // )
-
-  return {mutate}
+  const { data, refetch } = useQuery<TApiSpaceMarine>(["getSpaceMarineForMinCoords"], getSpaceMarineForMinCoords, {
+    refetchOnWindowFocus: false,
+    enabled: false
+  });
+  return {data, refetch}
 }
 
 export const useGetStarship = ()=> {

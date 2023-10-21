@@ -68,5 +68,20 @@ export const mapSpaceMarines= (spaceMarines: TApiSpaceMarine[]): TSpaceMarine[] 
     chapterWorld: spaceMarine.chapter.world,
     starshipId: spaceMarine.starshipId
   }))
+export const mapSpaceMarine= (spaceMarine: TApiSpaceMarine): TSpaceMarine =>({
+    id: spaceMarine.id,
+    name: spaceMarine.name,
+    coordinatesX: spaceMarine.coordinates.x,
+    coordinatesY: spaceMarine.coordinates.y,
+    creationDate: spaceMarine.creationDate,
+    health: spaceMarine.health,
+    loyal: spaceMarine.loyal,
+    height: spaceMarine.height,
+    meleeWeapon: spaceMarine.meleeWeapon,
+    chapterName: spaceMarine.chapter.name,
+    chapterParentLegion: spaceMarine.chapter.parentLegion,
+    chapterWorld: spaceMarine.chapter.world,
+    starshipId: spaceMarine.starshipId
+  })
 
 
