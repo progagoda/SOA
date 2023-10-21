@@ -78,7 +78,7 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
         >
           <Select
             placeholder="Select a option and change input text above"
-            allowClear
+
           >
             { Object.values(meleeWeapon).map((item: meleeWeapon) => (
               <Option key={ item } value={ item }>
@@ -109,7 +109,7 @@ export const CreateMarineForm = React.forwardRef<TSpaceMarineFormRef>(
         >
           <Select
             placeholder="Select a option and change input text above"
-            allowClear
+
           >
             <Option key={ 1 } value={ true }>
               true

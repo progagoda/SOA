@@ -31,8 +31,8 @@ export const useCreateSpaceMarine = () => {
     (spaceMarine: TSpaceMarine) =>
       apiService(api, createSpaceMarine, spaceMarine),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getSpaceMarines');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getSpaceMarines');
       }
     }
   )
@@ -45,8 +45,8 @@ export const useEditSpaceMarine = () => {
     (spaceMarine: TSpaceMarine) =>
       apiService(api, editSpaceMarine, spaceMarine),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getSpaceMarines');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getSpaceMarines');
       }
     }
   )
@@ -57,8 +57,8 @@ export const useDeleteSpace = () => {
   const { mutate } = useMutation(['deleteSpaceMarine'], (id: number) =>
     apiService(api, deleteSpaceMarine, id),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getSpaceMarines');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getSpaceMarines');
       }
     }
   )
@@ -67,11 +67,11 @@ export const useDeleteSpace = () => {
 }
 export const useDeleteMarineForMelee= () => {
   const [api] = notification.useNotification()
-  const { mutate } = useMutation(['deleteSpaceMarine'], (melee: meleeWeapon) =>
-      apiService(api, deleteSpaceMarineForMelee, melee),
+  const { mutate } = useMutation(['deleteSpaceMarine'], (mlWeapon?: meleeWeapon) =>
+      apiService(api, deleteSpaceMarineForMelee, mlWeapon),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getSpaceMarines');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getSpaceMarines');
       }
     }
   )
@@ -83,26 +83,25 @@ export const useGetSpaceMarineForHealth= () => {
   const { mutate } = useMutation(['getSpaceMarineForHealth'], (health: number) =>
     apiService(api, getSpaceMarineForHealth, health),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getSpaceMarines');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getSpaceMarines');
       }
     }
   )
 
   return mutate
 }
-export const useGetSpaceMarineForMinCoords= () => {
+export const useGetSpaceMarineForMinCoords = () => {
   const [api] = notification.useNotification()
-  const { mutate}= useMutation(['getSpaceMarineForMinCoords'], () =>
-      apiService(api, getSpaceMarineForMinCoords),
-    {
-      onSuccess: () => {
-        // queryClient.setQueryData('getSpaceMarines', mutate)
-      }
-    }
-  )
-  // eslint-disable-next-line no-console
-  return mutate
+  const mutate = () => queryClient.fetchQuery('getSpaceMarineForMinCoords',  () => apiService(api, getSpaceMarineForMinCoords))
+  // const {  mutate}= useMutation(['getSpaceMarineForMinCoords'], () =>
+  //     apiService(api, getSpaceMarineForMinCoords),
+  //   {
+  //     onError: ()=> console.error('Fuck')
+  //   }
+  // )
+
+  return {mutate}
 }
 
 export const useGetStarship = ()=> {
@@ -116,8 +115,8 @@ export const useCreateStarship = () => {
     (starship: TStarship) =>
       apiService(api, createStarship, starship),
     {
-      onSuccess: () => {
-        queryClient.invalidateQueries('getStarship');
+      onSuccess: async () => {
+        await queryClient.invalidateQueries('getStarship');
       }
     }
   )
@@ -129,8 +128,8 @@ export const useDisembarkStarship = ()=>{
     ['disembarkStarship'],
     (arg: TDisembarkStarshipArg) =>
       apiService(api, disembarkStarship, arg),{
-      onSuccess: () => {
-        queryClient.invalidateQueries('getStarship');
+      onSuccess:  async () => {
+        await queryClient.invalidateQueries('getStarship');
       }
     }
 

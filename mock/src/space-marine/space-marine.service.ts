@@ -36,11 +36,20 @@ export class SpaceMarineService {
         return updateSpaceMarine;
     }
     deleteSpaceMarineForMeleeWeapon(meleeWeapon:string){
+        // eslint-disable-next-line no-console
+        console.log(meleeWeapon)
+        // eslint-disable-next-line no-console
+        console.log(_.remove(spaceMarines, function(item) {
+            return item.meleeWeapon === meleeWeapon;
+        }))
         return _.remove(spaceMarines, function(item) {
             return item.meleeWeapon === meleeWeapon;
         });
     }
     getForMinCoordinates(){
-        return spaceMarines[0]
+        return _.minBy(spaceMarines,(marine: typeof spaceMarines[0]) => marine.coordinates.x)
+    }
+    getSpaceMarineForHealth(health: number){
+        return _.filter(spaceMarines,(marine: typeof spaceMarines[0]) => '')
     }
 }

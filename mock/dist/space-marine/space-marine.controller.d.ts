@@ -43,23 +43,5 @@ export declare class SpaceMarineController {
     createSpaceMarine(xmlBody: any): Promise<void>;
     updateSpaceMarine(xmlBody: any, id: string): Promise<import("./space-marine.dto").SpaceMarineDto>;
     deleteSpaceMarineForMeleeWeapon(meleeWeapon: string): Promise<any>;
-    getForMinCoordinates(): Promise<{
-        id: number;
-        name: string;
-        coordinates: {
-            x: number;
-            y: number;
-        };
-        creationDate: string;
-        health: number;
-        loyal: boolean;
-        height: number;
-        meleeWeapon: string;
-        chapter: {
-            name: string;
-            parentLegion: string;
-            world: string;
-        };
-        starshipId: number;
-    }>;
+    getForMinCoordinates(): Promise<any>;
 }

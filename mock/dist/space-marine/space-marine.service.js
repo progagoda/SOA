@@ -36,12 +36,19 @@ let SpaceMarineService = class SpaceMarineService {
         return updateSpaceMarine;
     }
     deleteSpaceMarineForMeleeWeapon(meleeWeapon) {
+        console.log(meleeWeapon);
+        console.log(lodash_1._.remove(spaceMarines_1.spaceMarines, function (item) {
+            return item.meleeWeapon === meleeWeapon;
+        }));
         return lodash_1._.remove(spaceMarines_1.spaceMarines, function (item) {
             return item.meleeWeapon === meleeWeapon;
         });
     }
     getForMinCoordinates() {
-        return spaceMarines_1.spaceMarines[0];
+        return lodash_1._.minBy(spaceMarines_1.spaceMarines, (marine) => marine.coordinates.x);
+    }
+    getSpaceMarineForHealth(health) {
+        return lodash_1._.filter(spaceMarines_1.spaceMarines, (marine) => '');
     }
 };
 exports.SpaceMarineService = SpaceMarineService;

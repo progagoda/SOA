@@ -60,5 +60,6 @@ export type TDisembarkStarshipArg = {
   spaceMarineId: number,
   starshipId: number
 }
+export type TMeleeWeapon = meleeWeapon;
 export type TSpaceMarineFormRef = FormInstance<TSpaceMarine>
 export type TStarshipFormRef = FormInstance<TStarship>

@@ -122,7 +122,6 @@ const EditMarineForm = ({
         >
           <Select
             placeholder="Select a option and change input text above"
-            allowClear
           >
             { Object.values(meleeWeapon).map((item: meleeWeapon) => (
               <Option key={ item } value={ item }>
@@ -155,7 +154,7 @@ const EditMarineForm = ({
         >
           <Select
             placeholder="Select a option and change input text above"
-            allowClear
+
           >
             <Option key={ 1 } value={ true }>
               true

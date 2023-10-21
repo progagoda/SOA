@@ -1,13 +1,15 @@
 import { TSpaceMarine } from '../../types'
 import { bol, meleeWeapon } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, Input, InputRef, Space } from 'antd'
+import { Button, Input, InputRef, Space, Tooltip } from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
+import _ from 'lodash'
 
 type DataIndex = keyof TSpaceMarine
+
 export const columns = ({
   handleDeleteSpaceMarine,
   handleEditSpaceMarine,
@@ -27,7 +29,16 @@ export const columns = ({
     setSearchText(selectedKeys[0])
     setSearchedColumn(dataIndex)
   }
-
+  const checkLength = (item: string | number, width: number )=> {
+   if(item.toString().length > 10*width){
+     const shortItem = _.truncate(item.toString(),{'length': 10*width})
+     return(
+       <Tooltip title={ item }>
+         { shortItem }
+       </Tooltip>)
+   }
+    return item
+  };
   const handleReset = (clearFilters: () => void) => {
     clearFilters()
     setSearchText('')
@@ -126,15 +137,19 @@ export const columns = ({
       title: 'Id',
       dataIndex: 'id',
       key: 'id',
+      width: '1vh',
       sorter: true,
       editable: true,
+      render: (item: any)=>checkLength(item,1)
     },
     {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: '1vh',
       sorter: true,
       ...getColumnSearchProps('name'),
+      render: (item: any)=>checkLength(item,1),
     },
     {
       title: 'Coordinates',
@@ -143,17 +158,21 @@ export const columns = ({
           title: 'X',
           dataIndex: 'coordinatesX',
           key: 'coordinatesX',
+          width: '1vh',
           sorter: true,
           editable: true,
           ...getColumnSearchProps('coordinatesX'),
+          render: (item: any)=>checkLength(item, 1)
         },
 
         {
           title: 'Y',
+          width: '1vh',
           dataIndex: 'coordinatesY',
           key: 'coordinatesY',
           sorter: true,
           ...getColumnSearchProps('coordinatesY'),
+          render: (item: any)=>checkLength(item, 1)
         },
       ],
     },
@@ -161,19 +180,23 @@ export const columns = ({
       title: 'Creation Date',
       dataIndex: 'creationDate',
       key: 'creationDate',
+      width: '3vh',
       sorter: true,
       ...getColumnSearchProps('creationDate'),
-      render: (item: Date) =>
-        `${new Date(item)
-          .toISOString()
-          .replace(/T/, ' ') // replace T with a space
-          .replace(/\..+/, '')}`,
+      render: (item: Date) =>checkLength( `${new Date(item)
+        .toISOString()
+        .replace(/T/, ' ') // replace T with a space
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        .replace(/\..+/, '')}`,3),
     },
     {
       title: 'Health',
       dataIndex: 'health',
       key: 'health',
       sorter: true,
+      width: '1vh',
+      render: (item: any)=>checkLength(item,1),
       ...getColumnSearchProps('health'),
     },
     {
@@ -181,26 +204,31 @@ export const columns = ({
       dataIndex: 'loyal',
       key: 'loyal',
       sorter: true,
+      width: '1vh',
       ...getColumnSearchProps('loyal'),
-      render: (item: boolean) => `${item ? bol.ok: bol.no}`,
+      render: (item: boolean) => checkLength(`${item ? bol.ok: bol.no}`,1),
     },
     {
       title: 'Height',
       dataIndex: 'height',
       key: 'height',
       sorter: true,
+      width: '1vh',
       ...getColumnSearchProps('height'),
+      render: (item: any)=>checkLength(item,1),
     },
     {
       title: 'MeleeWeapon',
       dataIndex: 'meleeWeapon',
       key: 'meleeWeapon',
       sorter: true,
+      width: '2vh',
       filters: [
         { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE, },
         { text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER },
         { text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE },
       ],
+      render: (item: any)=>checkLength(item,2),
     },
     {
       title: 'Chapter',
@@ -210,21 +238,27 @@ export const columns = ({
           dataIndex: 'chapterName',
           key: 'chapterName',
           sorter: true,
+          width: '3vh',
           ...getColumnSearchProps('chapterName'),
+          render: (item: any)=>checkLength(item,2),
         },
         {
           title: 'ParentLegion',
           dataIndex: 'chapterParentLegion',
           key: 'chapterParentLegion',
           sorter: true,
+          width: '3vh',
           ...getColumnSearchProps('chapterParentLegion'),
+          render: (item: any)=>checkLength(item,2),
         },
         {
           title: 'World',
           dataIndex: 'chapterWorld',
           key: 'chapterWorld',
           sorter: true,
+          width: '3vh',
           ...getColumnSearchProps('chapterWorld'),
+          render: (item: any)=>checkLength(item,2),
         },
       ],
     },
@@ -233,10 +267,13 @@ export const columns = ({
       dataIndex: 'starshipId',
       key: 'starshipId',
       sorter: true,
+      width: '1vh',
       ...getColumnSearchProps('starshipId'),
+      render: (item: any)=>checkLength(item,2),
     },
     {
       title: 'Action',
+      width: '1vh',
       render: (record: TSpaceMarine) => (
         <>
           <EditOutlined
