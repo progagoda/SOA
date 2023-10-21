@@ -111,6 +111,7 @@ export const FirstService = () => {
     setOpen(true)
   }
   const onClose = () => {
+
     // eslint-disable-next-line no-console
     setOpen(false)
   }
@@ -178,17 +179,11 @@ export const FirstService = () => {
     ))
 
   const changeMelee = (item: meleeWeapon) => {
-    // eslint-disable-next-line no-console
-    console.log(item)
     setMlWeapon(item)
   }
+
   useEffect(() => {
-    queryClient.invalidateQueries('getSpaceMarines').catch((error) => {
-      api.error({
-        message: `ERROR`,
-        description: <>{ `${error}` }</>,
-      })
-    })
+    queryClient.invalidateQueries('getSpaceMarines')
   }, [isDelete])
 
   return (
@@ -303,8 +298,8 @@ export const FirstService = () => {
           onCancel={ handleCancel }
         >
           { isHealth ?
-            getSpaceMarineForHealth.data?? false
-            : getSpaceMarineForMinCoords.data ? parseSpaceMarine(mapSpaceMarine(getSpaceMarineForMinCoords.data)) : false }
+            getSpaceMarineForHealth.data?? 'No content yet'
+            : getSpaceMarineForMinCoords.data ? parseSpaceMarine(mapSpaceMarine(getSpaceMarineForMinCoords.data)) :  'No content yet' }
         </Modal>
       </Flex>
     </>

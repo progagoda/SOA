@@ -2,36 +2,21 @@ import axios from 'axios'
 import { TDisembarkStarshipArg, TSpaceMarine, TStarship } from './types'
 import { buildMarineXML } from './helpers'
 import { meleeWeapon } from './constants'
-import React from 'react'
-import { NotificationInstance } from 'antd/es/notification/interface'
-import { parseString } from 'xml2js';
+import { parseString } from 'xml2js'
+
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
 
-export const apiService = async (
-  api: NotificationInstance,
-  fun?: (arg: any) => Promise<any>,
-  arg: any = null,
-) => {
-  if(fun) {
-    await fun(arg).catch((error) => {
-      api.error({
-        message: `ERROR`,
-        description: <>{ `${error.message}` }</>,
-      })
-    })
-  }
-}
 
 export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
   const xmlObject = buildMarineXML(spaceMarine);
-  const { data } = await axios.post(`${FirstServiceURL}`, xmlObject, {
-    headers: {
-      'Content-Type': 'application/xml',
-    },
-  })
-  return data
+  return await axios
+    .post(`${FirstServiceURL}`, xmlObject, {
+      headers: {
+        'Content-Type': 'application/xml',
+      },
+    })
 }
 
 export async function getSpaceMarines(
@@ -45,22 +30,21 @@ export async function getSpaceMarines(
       size: args.queryKey[3]?.size,
       ...args.queryKey[2],
     },
-    // headers: {
-    //   'Content-Type': 'application/xml',
-    // },
+    headers: {
+      'Content-Type': 'application/xml',
+    },
   })
-  // let jsonData
-  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
-  //   if (err) {
-  //     throw err
-  //   }
-  //   jsonData = result
-  // })
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  //eslint-disable-next-line @typescript-eslint/ban-ts-comment
   //@ts-ignore
-
-  // return jsonData?.SpaceMarines.spaceMarine;
-  return data
+  return jsonData?.SpaceMarines.spaceMarine;
+  // return data
 }
 
 export async function deleteSpaceMarine(id: number) {
@@ -89,23 +73,7 @@ export async function getSpaceMarineForHealth(args: any): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/health/${args.queryKey[1]}`)
   return data
 }
-export async function getStarships(){
-  const {data} = await axios.get(`${SecondServiceURL}`, {
-    headers: {
-      'Content-Type': 'application/xml',
-    }
-  })
-  let jsonData
-  parseString(data, { explicitArray: false }, (err: any, result: any) => {
-    if (err) {
-      throw err
-    }
-    jsonData = result
-  })
-  //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  return jsonData?.Starships.starship
-}
+
 export async function createStarship(starship: TStarship): Promise<any> {
   const { data } = await axios.post(`${SecondServiceURL}/${starship.name}`)
   return data

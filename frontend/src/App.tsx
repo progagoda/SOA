@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import './App.css'
 import { MainPage } from './pages/mainPage'
-import { ConfigProvider, Layout, Switch, theme } from 'antd'
+import { ConfigProvider, Layout, notification, Switch, theme } from 'antd'
 import { ReactQueryDevtools } from 'react-query/devtools';
+import axios from 'axios'
 
 function App() {
   const [currentTheme, setCurrentTheme] = useState('Dark')
+  const [api, contextHolder] = notification.useNotification()
+
   const changeTheme = () => {
     if (currentTheme === 'Light') {
       setCurrentTheme('Dark')
@@ -13,6 +16,21 @@ function App() {
       setCurrentTheme('Light')
     }
   }
+  axios.interceptors.response.use(function (response) {
+    api.destroy()
+    api.success({
+      message: `Success`,
+    })
+    return response;
+
+  },  function(error) {
+    api.destroy()
+    api.error({
+      message: `ERROR`,
+      description: <>{ error.message }</>,
+    })
+    return Promise.reject(error);
+  })
   return (
     <>
       <ConfigProvider
@@ -30,6 +48,7 @@ function App() {
             checkedChildren={ currentTheme }
             unCheckedChildren={ currentTheme }
           />
+          { contextHolder }
           <MainPage />
         </Layout>
       </ConfigProvider>
