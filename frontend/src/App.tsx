@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import axios from 'axios'
 
 function App() {
-  const [currentTheme, setCurrentTheme] = useState('Dark')
+  const [currentTheme, setCurrentTheme] = useState('Light')
   const [api, contextHolder] = notification.useNotification()
 
   const changeTheme = () => {
@@ -31,6 +31,7 @@ function App() {
     })
     return Promise.reject(error);
   })
+
   return (
     <>
       <ConfigProvider

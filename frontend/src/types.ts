@@ -52,6 +52,36 @@ export type TSpaceMarine = {
   chapterWorld: TChapter['world']
   starshipId: number
 }
+export type TAntFilters = {
+  id: [] | null,
+  name: [] | null,
+  coordinatesX: [] | null,
+  coordinatesY: [] | null,
+  creationDate: [] | null,
+  health: [] | null,
+  loyal: [] | null,
+  height: [] | null,
+  meleeWeapon: [] | null,
+  chapterName: [] | null,
+  chapterParentLegion: [] | null,
+  chapterWorld: [] | null,
+  starshipId: [] | null
+}
+export type TFilters = {
+  id?: string,
+  name?: string,
+  coordinatesX?: string,
+  coordinatesY?: string,
+  creationDate?: string,
+  health?: string,
+  loyal?: string,
+  height?: string,
+  meleeWeapon?: string,
+  chapterName?: string,
+  chapterParentLegion?: string,
+  chapterWorld?: string,
+  starshipId?: string
+}
 export type TStarship = {
   id: number,
   name: string

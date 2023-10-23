@@ -36,12 +36,6 @@ export class SpaceMarineService {
         return updateSpaceMarine;
     }
     deleteSpaceMarineForMeleeWeapon(meleeWeapon:string){
-        // eslint-disable-next-line no-console
-        console.log(meleeWeapon)
-        // eslint-disable-next-line no-console
-        console.log(_.remove(spaceMarines, function(item) {
-            return item.meleeWeapon === meleeWeapon;
-        }))
         return _.remove(spaceMarines, function(item) {
             return item.meleeWeapon === meleeWeapon;
         });

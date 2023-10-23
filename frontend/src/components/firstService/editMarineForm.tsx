@@ -4,6 +4,7 @@ import { TSpaceMarine } from '../../types'
 import { meleeWeapon } from '../../constants'
 import { NotificationInstance } from 'antd/es/notification/interface'
 import { useEditSpaceMarine } from '../../hooks'
+import _ from 'lodash'
 
 const { Option } = Select
 const EditMarineForm = ({
@@ -25,22 +26,32 @@ const EditMarineForm = ({
   const saveEditMarine = async () => {
     const spaceMarine = form.getFieldsValue()
     spaceMarine.id = editingMarine.id;
+    spaceMarine.creationDate = editingMarine.creationDate
     const isEmpty = spaceMarine
       ? Object.values(spaceMarine).some(
-          (value) => value === undefined || value === null || value === '',
-        )
+        (value) => value === undefined || value === null || value === '' || spaceMarine===editingMarine,
+      )
       : false
-
-    if (isEmpty) {
+    if(_.isEqual(spaceMarine,editingMarine)){
       api.error({
         message: `ERROR`,
-        description: <>{ `Correct your fields` }</>,
+        description: <>{ `You need to change some field` }</>,
         placement: 'bottomLeft',
-      })
-    } else {
-      form.resetFields();
-      editSpaceMarine(spaceMarine);
-      setEditing(false)
+      }
+      )
+    }
+    else{
+      if (isEmpty) {
+        api.error({
+          message: `ERROR`,
+          description: <>{ `Correct your fields` }</>,
+          placement: 'bottomLeft',
+        })
+      } else {
+        form.resetFields();
+        editSpaceMarine(spaceMarine);
+        setEditing(false)
+      }
     }
   }
   useEffect(()=>{
@@ -68,6 +79,7 @@ const EditMarineForm = ({
         <Form.Item
           name="name"
           label="Name"
+          initialValue={ editingMarine.name }
           rules={ [
             {
               required: true,
@@ -154,7 +166,6 @@ const EditMarineForm = ({
         >
           <Select
             placeholder="Select a option and change input text above"
-
           >
             <Option key={ 1 } value={ true }>
               true

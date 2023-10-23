@@ -1,6 +1,7 @@
-import { TApiSpaceMarine, TSpaceMarine } from './types'
+import { TAntFilters, TApiSpaceMarine, TFilters, TSpaceMarine } from './types'
 import { create } from 'xmlbuilder2'
 import { spaceMarineInit } from './constants'
+import _ from 'lodash'
 
 export const buildFilters = (pagination: any, filters: any, sorter: any) => {
   const sorterCopy = { ...sorter }
@@ -83,5 +84,18 @@ export const mapSpaceMarine= (spaceMarine: TApiSpaceMarine): TSpaceMarine =>({
     chapterWorld: spaceMarine.chapter.world,
     starshipId: spaceMarine.starshipId
   })
+export const prepareFilters = (filters: TAntFilters): TFilters => {
+  const result: TFilters = {};
+  for (const key in filters) {
+      const filter = filters[key as keyof TAntFilters];
+      if (_.isArray(filter) && filter.length > 0) {
+        result[key as keyof TFilters] = _.head(filter);
+      }
+  }
+  return result;
+};
+
+
+
 
 

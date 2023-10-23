@@ -111,8 +111,6 @@ export const FirstService = () => {
     setOpen(true)
   }
   const onClose = () => {
-
-    // eslint-disable-next-line no-console
     setOpen(false)
   }
 

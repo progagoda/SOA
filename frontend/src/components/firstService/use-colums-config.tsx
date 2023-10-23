@@ -1,5 +1,5 @@
 import { TSpaceMarine } from '../../types'
-import { bol, meleeWeapon } from '../../constants'
+import { bol } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Input, InputRef, Space, Tooltip } from 'antd'
 import React, { useRef, useState } from 'react'
@@ -21,12 +21,12 @@ export const columns = ({
   const [searchedColumn, setSearchedColumn] = useState('')
   const searchInput = useRef<InputRef>(null)
   const handleSearch = (
-    selectedKeys: string[],
+    selectedKey: string,
     confirm: (param?: FilterConfirmProps) => void,
     dataIndex: DataIndex,
   ) => {
     confirm()
-    setSearchText(selectedKeys[0])
+    setSearchText(selectedKey)
     setSearchedColumn(dataIndex)
   }
   const checkLength = (item: string | number, width: number )=> {
@@ -62,14 +62,14 @@ export const columns = ({
           onChange={ (e) =>
             setSelectedKeys(e.target.value ? [e.target.value] : []) }
           onPressEnter={ () =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex) }
+            handleSearch(selectedKeys[0] as string, confirm, dataIndex) }
           style={{ marginBottom: 8, display: 'block' }}
         />
         <Space>
           <Button
             type="primary"
             onClick={ () =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex) }
+              handleSearch(selectedKeys[0] as string, confirm, dataIndex) }
             icon={ <SearchOutlined /> }
             size="small"
             style={{ width: 90 }}
@@ -223,11 +223,7 @@ export const columns = ({
       key: 'meleeWeapon',
       sorter: true,
       width: '2vh',
-      filters: [
-        { text: meleeWeapon.CHAIN_AXE, value: meleeWeapon.CHAIN_AXE, },
-        { text: meleeWeapon.MANREAPER, value: meleeWeapon.MANREAPER },
-        { text: meleeWeapon.POWER_BLADE, value: meleeWeapon.POWER_BLADE },
-      ],
+      ...getColumnSearchProps('meleeWeapon'),
       render: (item: any)=>checkLength(item,2),
     },
     {
