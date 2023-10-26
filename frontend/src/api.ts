@@ -78,7 +78,7 @@ export async function getSpaceMarineForMinCoords(): Promise<any> {
   })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return jsonData?.SpaceMarine;
+  return jsonData?.SpaceMarine.spaceMarine;
 }
 export async function getSpaceMarineForHealth(args: any): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/health/${args.queryKey[1]}`)
