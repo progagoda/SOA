@@ -1,12 +1,12 @@
 import { TSpaceMarine } from '../../types'
 import { bol } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, Input, InputRef, Space, Tooltip } from 'antd'
+import { Button, Input, InputRef, Space } from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 type DataIndex = keyof TSpaceMarine
 
@@ -29,16 +29,16 @@ export const columns = ({
     setSearchText(selectedKey)
     setSearchedColumn(dataIndex)
   }
-  const checkLength = (item: string | number, width: number )=> {
-   if(item.toString().length > 10*width){
-     const shortItem = _.truncate(item.toString(),{'length': 10*width})
-     return(
-       <Tooltip title={ item }>
-         { shortItem }
-       </Tooltip>)
-   }
-    return item
-  };
+  const checkLength = (item: string | number, width: number )=> 
+   // if(item.toString().length > 10*width){
+   //   const shortItem = _.truncate(item.toString(),{'length': 10*width})
+   //   return(
+   //     <Tooltip title={ item }>
+   //       { shortItem }
+   //     </Tooltip>)
+   // }
+     item
+  ;
   const handleReset = (clearFilters: () => void) => {
     clearFilters()
     setSearchText('')
