@@ -3,7 +3,7 @@ import { TDisembarkStarshipArg, TSpaceMarine, TStarship } from './types'
 import { buildMarineXML, prepareFilters } from './helpers'
 import { meleeWeapon } from './constants'
 import _ from 'lodash'
-// import { parseString } from 'xml2js'
+import { parseString } from 'xml2js'
 
 
 const FirstServiceURL = process.env.REACT_APP_URL1
@@ -36,17 +36,17 @@ export async function getSpaceMarines(
       'Content-Type': 'application/xml',
     },
   })
-  // let jsonData
-  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
-  //   if (err) {
-  //     throw err
-  //   }
-  //   jsonData = result
-  // })
-  //eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //@ts-ignore
-  // return jsonData?.SpaceMarines.spaceMarine;
-  return data
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return jsonData?.SpaceMarines.spaceMarine;
+  // return data
 }
 
 export async function deleteSpaceMarine(id: number) {
