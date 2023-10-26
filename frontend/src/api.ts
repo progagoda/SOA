@@ -45,7 +45,7 @@ export async function getSpaceMarines(
   })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return jsonData?.SpaceMarines.spaceMarine;
+  return jsonData?.SpaceMarines.spaceMarines;
   // return data
 }
 

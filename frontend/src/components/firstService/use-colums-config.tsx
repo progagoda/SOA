@@ -1,12 +1,12 @@
 import { TSpaceMarine } from '../../types'
 import { bol } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
-import { Button, Input, InputRef, Space } from 'antd'
+import { Button, Input, InputRef, Space, Tooltip } from 'antd'
 import React, { useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 type DataIndex = keyof TSpaceMarine
 
@@ -29,16 +29,16 @@ export const columns = ({
     setSearchText(selectedKey)
     setSearchedColumn(dataIndex)
   }
-  const checkLength = (item: string | number, width: number )=> 
-   // if(item.toString().length > 10*width){
-   //   const shortItem = _.truncate(item.toString(),{'length': 10*width})
-   //   return(
-   //     <Tooltip title={ item }>
-   //       { shortItem }
-   //     </Tooltip>)
-   // }
-     item
-  ;
+  const checkLength = (item: string | number, width: number ) =>{
+    if(item.toString().length > 10*width){
+     const shortItem = _.truncate(item.toString(),{'length': 10*width})
+     return(
+       <Tooltip title={ item }>
+         { shortItem }
+       </Tooltip>)
+   }
+     return item;
+}
   const handleReset = (clearFilters: () => void) => {
     clearFilters()
     setSearchText('')
@@ -206,7 +206,7 @@ export const columns = ({
       sorter: true,
       width: '1vh',
       ...getColumnSearchProps('loyal'),
-      render: (item: boolean) => checkLength(`${item ? bol.ok: bol.no}`,1),
+      render: (item: boolean) =>`${item ? bol.ok: bol.no}`,
     },
     {
       title: 'Height',
@@ -224,7 +224,6 @@ export const columns = ({
       sorter: true,
       width: '2vh',
       ...getColumnSearchProps('meleeWeapon'),
-      render: (item: any)=>checkLength(item,2),
     },
     {
       title: 'Chapter',
