@@ -4,11 +4,15 @@ import { buildMarineXML, prepareFilters } from './helpers'
 import { meleeWeapon } from './constants'
 import _ from 'lodash'
 import { parseString } from 'xml2js'
+import * as https from 'https'
 
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
 
+const agent = new https.Agent({
+  rejectUnauthorized: false,
+})
 
 export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
   const xmlObject = buildMarineXML(spaceMarine);
@@ -100,6 +104,8 @@ export async function createStarship(starship: TStarship): Promise<any> {
   return data
 }
 export async function disembarkStarship(arg: TDisembarkStarshipArg){
-  const {data} = await axios.put(`${SecondServiceURL}/${arg.starshipId}/unload/${arg.spaceMarineId}`)
+  const {data} = await axios.put(`${SecondServiceURL}/${arg.starshipId}/unload/${arg.spaceMarineId}`,{},
+    {httpsAgent: agent})
+
   return data
 }
