@@ -69,12 +69,30 @@ export async function deleteSpaceMarineForMelee(meleeWeapon: meleeWeapon): Promi
 }
 export async function getSpaceMarineForMinCoords(): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/coords/min`)
-  return data
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return jsonData?.SpaceMarine;
 }
 export async function getSpaceMarineForHealth(args: any): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/health/${args.queryKey[1]}`)
-  return data
-}
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return jsonData?.SpaceMarinesCount;
+  }
 
 export async function createStarship(starship: TStarship): Promise<any> {
   const id = _.random(0, 1000);

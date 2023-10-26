@@ -59,7 +59,6 @@ export const useDeleteSpace = () => {
       }
     }
   )
-
   return mutate
 }
 
@@ -72,7 +71,6 @@ export const useDeleteMarineForMelee= () => {
       }
     }
   )
-
   return mutate
 }
 
@@ -116,7 +114,6 @@ export const useDisembarkStarship = ()=>{
         await queryClient.invalidateQueries('getStarship');
       }
     }
-
   )
   return mutate
 }
