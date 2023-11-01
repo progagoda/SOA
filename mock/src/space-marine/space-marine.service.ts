@@ -5,7 +5,10 @@ import {_} from 'lodash'
 
 @Injectable()
 export class SpaceMarineService {
-    getAll() {
+    getAll(name?:string) {
+        if (name){
+            return _.take(spaceMarines, 2)
+        }
         return spaceMarines;
     }
     deleteSpaceMarine(id:string){
@@ -22,7 +25,7 @@ export class SpaceMarineService {
         newSpaceMarine.creationDate= new Date;
         const lastMarines =  spaceMarines[spaceMarines.length-1];
         newSpaceMarine.id = (lastMarines ? lastMarines.id+1: 1);
-        newSpaceMarine.loyal = spaceMarine.loyal === 'true'
+        newSpaceMarine.loyal = spaceMarine.loyal
         spaceMarines.push(newSpaceMarine);
     }
     updateSpaceMarine(spaceMarine: SpaceMarineDto, id: string){

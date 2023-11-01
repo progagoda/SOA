@@ -3,11 +3,10 @@ import {
   Col,
   Divider,
   Drawer,
-  Empty,
   Flex,
   InputNumber,
   Modal,
-  notification,
+  notification, Result,
   Row,
   Select,
   Space,
@@ -214,16 +213,11 @@ export const FirstService = () => {
         </Drawer>
       </Space>
       { isError ? (
-        <Row
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: '80vh',
-          }}
-        >
-          <Empty description={ `The server is sleeping` } />
-        </Row>
+        <Result
+          status="500"
+          title="500"
+          subTitle="Sorry, something went wrong."
+        />
       ) : (
         <Table
           pagination={{

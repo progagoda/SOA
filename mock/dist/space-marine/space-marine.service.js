@@ -11,7 +11,10 @@ const common_1 = require("@nestjs/common");
 const spaceMarines_1 = require("../db/spaceMarines");
 const lodash_1 = require("lodash");
 let SpaceMarineService = class SpaceMarineService {
-    getAll() {
+    getAll(name) {
+        if (name) {
+            return lodash_1._.take(spaceMarines_1.spaceMarines, 2);
+        }
         return spaceMarines_1.spaceMarines;
     }
     deleteSpaceMarine(id) {
@@ -24,7 +27,7 @@ let SpaceMarineService = class SpaceMarineService {
         newSpaceMarine.creationDate = new Date;
         const lastMarines = spaceMarines_1.spaceMarines[spaceMarines_1.spaceMarines.length - 1];
         newSpaceMarine.id = (lastMarines ? lastMarines.id + 1 : 1);
-        newSpaceMarine.loyal = spaceMarine.loyal === 'true';
+        newSpaceMarine.loyal = spaceMarine.loyal;
         spaceMarines_1.spaceMarines.push(newSpaceMarine);
     }
     updateSpaceMarine(spaceMarine, id) {
@@ -36,10 +39,6 @@ let SpaceMarineService = class SpaceMarineService {
         return updateSpaceMarine;
     }
     deleteSpaceMarineForMeleeWeapon(meleeWeapon) {
-        console.log(meleeWeapon);
-        console.log(lodash_1._.remove(spaceMarines_1.spaceMarines, function (item) {
-            return item.meleeWeapon === meleeWeapon;
-        }));
         return lodash_1._.remove(spaceMarines_1.spaceMarines, function (item) {
             return item.meleeWeapon === meleeWeapon;
         });

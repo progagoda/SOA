@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import './App.css'
 import { MainPage } from './pages/mainPage'
-import { ConfigProvider, Layout, notification, Switch, theme } from 'antd'
+import { App as AntdApp, ConfigProvider, Layout, notification, Switch, theme } from 'antd'
 import { ReactQueryDevtools } from 'react-query/devtools';
 import axios from 'axios'
 
 function App() {
-  const [currentTheme, setCurrentTheme] = useState('Light')
+  const [currentTheme, setCurrentTheme] = useState('Dark')
   const [api, contextHolder] = notification.useNotification()
 
   const changeTheme = () => {
@@ -42,7 +42,8 @@ function App() {
               : [theme.darkAlgorithm, theme.compactAlgorithm],
         }}
       >
-        <Layout className="layout">
+        <AntdApp>
+          <Layout className='layout'>
           <Switch
             style={{ width: 80, margin: 10 }}
             onChange={ () => changeTheme() }
@@ -50,8 +51,9 @@ function App() {
             unCheckedChildren={ currentTheme }
           />
           { contextHolder }
-          <MainPage />
-        </Layout>
+          <MainPage/>
+          </Layout>
+        </AntdApp>
       </ConfigProvider>
       <ReactQueryDevtools/>
     </>

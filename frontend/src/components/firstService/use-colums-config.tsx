@@ -2,8 +2,7 @@ import { TSpaceMarine } from '../../types'
 import { bol } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Input, InputRef, Space, Tooltip } from 'antd'
-import React, { useRef, useState } from 'react'
-import Highlighter from 'react-highlight-words'
+import React, { useRef } from 'react'
 import { FilterConfirmProps } from 'antd/es/table/interface'
 import type { ColumnType } from 'antd/es/table'
 import _ from 'lodash'
@@ -17,8 +16,7 @@ export const columns = ({
   handleDeleteSpaceMarine: { (id: number): Promise<void> }
   handleEditSpaceMarine: { (record: TSpaceMarine): Promise<void> }
 }) => {
-  const [searchText, setSearchText] = useState('')
-  const [searchedColumn, setSearchedColumn] = useState('')
+
   const searchInput = useRef<InputRef>(null)
   const handleSearch = (
     selectedKey: string,
@@ -26,8 +24,6 @@ export const columns = ({
     dataIndex: DataIndex,
   ) => {
     confirm()
-    setSearchText(selectedKey)
-    setSearchedColumn(dataIndex)
   }
   const checkLength = (item: string | number, width: number ) =>{
     if(item.toString().length > 10*width){
@@ -41,9 +37,7 @@ export const columns = ({
 }
   const handleReset = (clearFilters: () => void) => {
     clearFilters()
-    setSearchText('')
   }
-
   const getColumnSearchProps = (
     dataIndex: DataIndex,
   ): ColumnType<TSpaceMarine> => ({
@@ -88,8 +82,6 @@ export const columns = ({
             size="small"
             onClick={ () => {
               confirm({ closeDropdown: false })
-              setSearchText((selectedKeys as string[])[0])
-              setSearchedColumn(dataIndex)
             } }
           >
             Filter
@@ -109,27 +101,11 @@ export const columns = ({
     filterIcon: (filtered: boolean) => (
       <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
     ),
-    onFilter: (value, record) =>
-      record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
     onFilterDropdownOpenChange: (visible) => {
       if (visible) {
         setTimeout(() => searchInput.current?.select(), 100)
       }
     },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={ [searchText] }
-          autoEscape
-          textToHighlight={ text ? text.toString() : '' }
-        />
-      ) : (
-        text
-      ),
   })
 
   return [

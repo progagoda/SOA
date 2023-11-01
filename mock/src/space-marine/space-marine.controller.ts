@@ -1,36 +1,52 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common'
-import {SpaceMarineService} from './space-marine.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common'
+import { SpaceMarineService } from "./space-marine.service";
 
-@Controller('api/v1/space-marines')
+@Controller("api/v1/space-marines")
 export class SpaceMarineController {
-  constructor(private readonly spaceMarineService: SpaceMarineService) {
-  }
+  constructor(private readonly spaceMarineService: SpaceMarineService) {}
 
   @Get()
-  async getAll() {
-    return this.spaceMarineService.getAll();
+  async getAll(@Query('name') name) {
+    return this.spaceMarineService.getAll(name);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @UsePipes(new ValidationPipe())
-  async deleteSpaceMarine(@Param('id') id: string) {
+  async deleteSpaceMarine(@Param("id") id: string) {
     return this.spaceMarineService.deleteSpaceMarine(id);
   }
 
   @Post()
   @UsePipes(new ValidationPipe())
   async createSpaceMarine(@Body() xmlBody: any) {
-    return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine)
+    return this.spaceMarineService.createSpaceMarine(xmlBody.SpaceMarine);
   }
 
-  @Put(':id')
+  @Put(":id")
   @UsePipes(new ValidationPipe())
-  async updateSpaceMarine(@Body(new ValidationPipe()) xmlBody: any,@Param('id') id: string) {
-    return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id)
+  async updateSpaceMarine(
+    @Body(new ValidationPipe()) xmlBody: any,
+    @Param("id") id: string,
+  ) {
+    return this.spaceMarineService.updateSpaceMarine(xmlBody.SpaceMarine, id);
   }
-  @Delete('melee-weapon/:meleeWeapon')
+
+  @Delete("melee-weapon/:meleeWeapon")
   @UsePipes(new ValidationPipe())
-  async deleteSpaceMarineForMeleeWeapon(@Param('meleeWeapon') meleeWeapon: string) {
+  async deleteSpaceMarineForMeleeWeapon(
+    @Param("meleeWeapon") meleeWeapon: string,
+  ) {
     return this.spaceMarineService.deleteSpaceMarineForMeleeWeapon(meleeWeapon);
   }
 

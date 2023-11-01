@@ -19,8 +19,8 @@ let SpaceMarineController = class SpaceMarineController {
     constructor(spaceMarineService) {
         this.spaceMarineService = spaceMarineService;
     }
-    async getAll() {
-        return this.spaceMarineService.getAll();
+    async getAll(name) {
+        return this.spaceMarineService.getAll(name);
     }
     async deleteSpaceMarine(id) {
         return this.spaceMarineService.deleteSpaceMarine(id);
@@ -41,14 +41,15 @@ let SpaceMarineController = class SpaceMarineController {
 exports.SpaceMarineController = SpaceMarineController;
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Query)('name')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "getAll", null);
 __decorate([
-    (0, common_1.Delete)(':id'),
+    (0, common_1.Delete)(":id"),
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
-    __param(0, (0, common_1.Param)('id')),
+    __param(0, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
@@ -62,18 +63,18 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "createSpaceMarine", null);
 __decorate([
-    (0, common_1.Put)(':id'),
+    (0, common_1.Put)(":id"),
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
     __param(0, (0, common_1.Body)(new common_1.ValidationPipe())),
-    __param(1, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Param)("id")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "updateSpaceMarine", null);
 __decorate([
-    (0, common_1.Delete)('melee-weapon/:meleeWeapon'),
+    (0, common_1.Delete)("melee-weapon/:meleeWeapon"),
     (0, common_1.UsePipes)(new common_1.ValidationPipe()),
-    __param(0, (0, common_1.Param)('meleeWeapon')),
+    __param(0, (0, common_1.Param)("meleeWeapon")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
@@ -85,7 +86,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SpaceMarineController.prototype, "getForMinCoordinates", null);
 exports.SpaceMarineController = SpaceMarineController = __decorate([
-    (0, common_1.Controller)('api/v1/space-marines'),
+    (0, common_1.Controller)("api/v1/space-marines"),
     __metadata("design:paramtypes", [space_marine_service_1.SpaceMarineService])
 ], SpaceMarineController);
 //# sourceMappingURL=space-marine.controller.js.map
