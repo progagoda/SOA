@@ -1,5 +1,4 @@
 import { TSpaceMarine } from '../../types'
-import { bol } from '../../constants'
 import { DeleteOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons'
 import { Button, Input, InputRef, Space, Tooltip } from 'antd'
 import React, { useRef } from 'react'
@@ -182,7 +181,6 @@ export const columns = ({
       sorter: true,
       width: '1vh',
       ...getColumnSearchProps('loyal'),
-      render: (item: boolean) =>`${item ? bol.ok: bol.no}`,
     },
     {
       title: 'Height',
