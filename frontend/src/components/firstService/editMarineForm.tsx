@@ -198,12 +198,10 @@ const EditMarineForm = ({
               },
             ] }
           >
-            <Space>
               <Input
                 placeholder="parentLegion"
                 value={ editingMarine.chapterParentLegion }
-              ></Input>
-            </Space>
+              />
           </Form.Item>
           <Form.Item
             name="chapterWorld"
@@ -215,9 +213,7 @@ const EditMarineForm = ({
               },
             ] }
           >
-            <Space>
               <Input value={ editingMarine.chapterWorld } placeholder="world" />
-            </Space>
           </Form.Item>
         </Space>
         <Form.Item

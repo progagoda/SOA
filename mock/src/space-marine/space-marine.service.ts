@@ -7,7 +7,7 @@ import {_} from 'lodash'
 export class SpaceMarineService {
     getAll(name?:string) {
         if (name){
-            return _.take(spaceMarines, 2)
+            return _.take(spaceMarines, 1)
         }
         return spaceMarines;
     }

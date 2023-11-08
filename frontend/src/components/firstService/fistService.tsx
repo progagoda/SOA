@@ -6,7 +6,7 @@ import {
   Flex,
   InputNumber,
   Modal,
-  notification, Result,
+  notification,
   Row,
   Select,
   Space,
@@ -50,7 +50,7 @@ export const FirstService = () => {
     pageSize: 4,
   })
   const createSpaceMarine = useCreateSpaceMarine()
-  const { data, isLoading, isError } = useSpaceMarines(
+  const { data, isLoading } = useSpaceMarines(
     sorter,
     filters,
     pagination,
@@ -212,13 +212,6 @@ export const FirstService = () => {
           <CreateMarineForm ref={ form } />
         </Drawer>
       </Space>
-      { isError ? (
-        <Result
-          status="500"
-          title="500"
-          subTitle="Sorry, something went wrong."
-        />
-      ) : (
         <Table
           pagination={{
             current: pagination.current,
@@ -238,7 +231,6 @@ export const FirstService = () => {
           columns={ columnsConfig }
           onChange={ onChange }
         />
-      ) }
       <EditMarineForm
         isEditing={ isEditing }
         setEditing={ setEditing }

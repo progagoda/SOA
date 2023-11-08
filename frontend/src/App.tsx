@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import './App.css'
 import { MainPage } from './pages/mainPage'
-import { App as AntdApp, ConfigProvider, Layout, notification, Switch, theme } from 'antd'
-import { ReactQueryDevtools } from 'react-query/devtools';
+import { ConfigProvider, Layout, notification, Switch, theme } from 'antd'
+import { ReactQueryDevtools } from 'react-query/devtools'
 import axios from 'axios'
 
 function App() {
@@ -16,21 +16,23 @@ function App() {
       setCurrentTheme('Light')
     }
   }
-  axios.interceptors.response.use(function (response) {
-    api.destroy()
-    api.success({
-      message: `Success`,
-    })
-    return response;
-
-  },  function(error) {
-    api.destroy()
-    api.error({
-      message: `ERROR`,
-      description: <>{ error.message }</>,
-    })
-    return Promise.reject(error);
-  })
+  axios.interceptors.response.use(
+    function (response) {
+      api.destroy()
+      api.success({
+        message: `Success`,
+      })
+      return response
+    },
+    function (error) {
+      api.destroy()
+      api.error({
+        message: `ERROR`,
+        description: <>{ error.message }</>,
+      })
+      return Promise.reject(error)
+    },
+  )
 
   return (
     <>
@@ -42,8 +44,7 @@ function App() {
               : [theme.darkAlgorithm, theme.compactAlgorithm],
         }}
       >
-        <AntdApp>
-          <Layout className='layout'>
+        <Layout className={ 'layout' }>
           <Switch
             style={{ width: 80, margin: 10 }}
             onChange={ () => changeTheme() }
@@ -51,11 +52,10 @@ function App() {
             unCheckedChildren={ currentTheme }
           />
           { contextHolder }
-          <MainPage/>
-          </Layout>
-        </AntdApp>
+          <MainPage />
+          <ReactQueryDevtools />
+        </Layout>
       </ConfigProvider>
-      <ReactQueryDevtools/>
     </>
   )
 }

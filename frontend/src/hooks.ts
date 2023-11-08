@@ -11,15 +11,17 @@ import { queryClient } from './index'
 import { meleeWeapon } from './constants'
 
 export const useSpaceMarines = (sorter?: any, filters?:any, pagination?: any) => {
-  const { data, isLoading, isError } = useQuery(
+  const { data, isLoading } = useQuery(
     ['getSpaceMarines', sorter, filters, pagination],
     getSpaceMarines,
     {
-      select: (data: TApiSpaceMarine[]): TSpaceMarine[] =>
-        mapSpaceMarines(data),
+      select: (data: TApiSpaceMarine[]): TSpaceMarine[] =>{
+        console.error(data)
+        return mapSpaceMarines(data)
+      }
     },
   )
-  return { data, isLoading, isError }
+  return { data, isLoading }
 }
 
 export const useCreateSpaceMarine = () => {

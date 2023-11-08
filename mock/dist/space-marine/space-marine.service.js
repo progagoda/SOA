@@ -13,7 +13,7 @@ const lodash_1 = require("lodash");
 let SpaceMarineService = class SpaceMarineService {
     getAll(name) {
         if (name) {
-            return lodash_1._.take(spaceMarines_1.spaceMarines, 2);
+            return lodash_1._.take(spaceMarines_1.spaceMarines, 1);
         }
         return spaceMarines_1.spaceMarines;
     }
