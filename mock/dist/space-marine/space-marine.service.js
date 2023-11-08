@@ -10,10 +10,52 @@ exports.SpaceMarineService = void 0;
 const common_1 = require("@nestjs/common");
 const spaceMarines_1 = require("../db/spaceMarines");
 const lodash_1 = require("lodash");
+const xmlbuilder2_1 = require("xmlbuilder2");
 let SpaceMarineService = class SpaceMarineService {
     getAll(name) {
         if (name) {
-            return lodash_1._.take(spaceMarines_1.spaceMarines, 1);
+            return (0, xmlbuilder2_1.create)()
+                .ele('SpaceMarines')
+                .ele('spaceMarines')
+                .ele('name')
+                .txt("sdfsdf")
+                .up()
+                .ele('coordinates')
+                .ele('x')
+                .txt("1")
+                .up()
+                .ele('y')
+                .txt("1")
+                .up()
+                .up()
+                .ele('health')
+                .txt("1")
+                .up()
+                .ele('height')
+                .txt("1")
+                .up()
+                .ele('loyal')
+                .txt("false")
+                .up()
+                .ele('meleeWeapon')
+                .txt("dfsd")
+                .up()
+                .ele('chapter')
+                .ele('name')
+                .txt("sdfsdf")
+                .up()
+                .ele('parentLegion')
+                .txt("fsdfsd")
+                .up()
+                .ele('world')
+                .txt("dsfsd")
+                .up()
+                .up()
+                .ele('starshipId')
+                .txt("1")
+                .up()
+                .up()
+                .end({ prettyPrint: true });
         }
         return spaceMarines_1.spaceMarines;
     }

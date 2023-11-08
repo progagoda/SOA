@@ -30,7 +30,8 @@
     "fastify-xml-body-parser": "^2.2.0",
     "lodash": "^4.17.21",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "xmlbuilder2": "^3.1.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

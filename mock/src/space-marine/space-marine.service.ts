@@ -2,12 +2,54 @@ import {Injectable} from '@nestjs/common';
 import {spaceMarines} from "../db/spaceMarines";
 import { SpaceMarineDto } from './space-marine.dto'
 import {_} from 'lodash'
+import { create } from 'xmlbuilder2'
 
 @Injectable()
 export class SpaceMarineService {
     getAll(name?:string) {
         if (name){
-            return _.take(spaceMarines, 1)
+            return create()
+              .ele('SpaceMarines')
+              .ele('spaceMarines')
+              .ele('name')
+              .txt("sdfsdf")
+              .up()
+              .ele('coordinates')
+              .ele('x')
+              .txt("1")
+              .up()
+              .ele('y')
+              .txt("1")
+              .up()
+              .up()
+              .ele('health')
+              .txt("1")
+              .up()
+              .ele('height')
+              .txt("1")
+              .up()
+              .ele('loyal')
+              .txt("false")
+              .up()
+              .ele('meleeWeapon')
+              .txt("dfsd")
+              .up()
+              .ele('chapter')
+              .ele('name')
+              .txt("sdfsdf")
+              .up()
+              .ele('parentLegion')
+              .txt("fsdfsd")
+              .up()
+              .ele('world')
+              .txt("dsfsd")
+              .up()
+              .up()
+              .ele('starshipId')
+              .txt("1")
+              .up()
+              .up()
+              .end({ prettyPrint: true })
         }
         return spaceMarines;
     }

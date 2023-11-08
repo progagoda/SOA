@@ -54,7 +54,15 @@ export const buildMarineXML = (spaceMarine: TSpaceMarine = spaceMarineInit): str
     .end({ prettyPrint: true })
 
 export const mapSpaceMarines= (spaceMarines: TApiSpaceMarine[]): TSpaceMarine[] =>
-  spaceMarines.map((spaceMarine)=>({
+{
+  const spaceMarinesArray: TApiSpaceMarine[] = []
+  if (!_.isArray(spaceMarines)) {
+    spaceMarinesArray.push(spaceMarines)
+    // eslint-disable-next-line no-param-reassign
+    spaceMarines = spaceMarinesArray
+  }
+
+  return spaceMarines.map((spaceMarine) => ({
     id: spaceMarine.id,
     name: spaceMarine.name,
     coordinatesX: spaceMarine.coordinates.x,
@@ -67,9 +75,11 @@ export const mapSpaceMarines= (spaceMarines: TApiSpaceMarine[]): TSpaceMarine[] 
     chapterName: spaceMarine.chapter.name,
     chapterParentLegion: spaceMarine.chapter.parentLegion,
     chapterWorld: spaceMarine.chapter.world,
-    starshipId: spaceMarine.starshipId
+    starshipId: spaceMarine.starshipId,
   }))
-export const mapSpaceMarine= (spaceMarine: TApiSpaceMarine): TSpaceMarine =>({
+}
+
+  export const mapSpaceMarine = (spaceMarine: TApiSpaceMarine): TSpaceMarine => ({
     id: spaceMarine.id,
     name: spaceMarine.name,
     coordinatesX: spaceMarine.coordinates.x,
@@ -94,8 +104,3 @@ export const prepareFilters = (filters: TAntFilters): TFilters => {
   }
   return result;
 };
-
-
-
-
-

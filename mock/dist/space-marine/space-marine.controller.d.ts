@@ -2,7 +2,25 @@ import { SpaceMarineService } from "./space-marine.service";
 export declare class SpaceMarineController {
     private readonly spaceMarineService;
     constructor(spaceMarineService: SpaceMarineService);
-    getAll(name: any): Promise<any>;
+    getAll(name: any): Promise<string | {
+        id: number;
+        name: string;
+        coordinates: {
+            x: number;
+            y: number;
+        };
+        creationDate: string;
+        health: number;
+        loyal: boolean;
+        height: number;
+        meleeWeapon: string;
+        chapter: {
+            name: string;
+            parentLegion: string;
+            world: string;
+        };
+        starshipId: number;
+    }[]>;
     deleteSpaceMarine(id: string): Promise<{
         id: number;
         name: string;

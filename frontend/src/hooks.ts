@@ -15,10 +15,7 @@ export const useSpaceMarines = (sorter?: any, filters?:any, pagination?: any) =>
     ['getSpaceMarines', sorter, filters, pagination],
     getSpaceMarines,
     {
-      select: (data: TApiSpaceMarine[]): TSpaceMarine[] =>{
-        console.error(data)
-        return mapSpaceMarines(data)
-      }
+      select: (data: TApiSpaceMarine[]): TSpaceMarine[] =>mapSpaceMarines(data)
     },
   )
   return { data, isLoading }
