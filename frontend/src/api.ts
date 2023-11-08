@@ -34,17 +34,17 @@ export async function getSpaceMarines(
       'Content-Type': 'application/xml',
     },
   })
-  // let jsonData
-  // parseString(data, { explicitArray: false }, (err: any, result: any) => {
-  //   if (err) {
-  //     throw err
-  //   }
-  //   jsonData = result
-  // })
+  let jsonData
+  parseString(data, { explicitArray: false }, (err: any, result: any) => {
+    if (err) {
+      throw err
+    }
+    jsonData = result
+  })
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  // return jsonData?.SpaceMarines.spaceMarines;
-  return data
+  return jsonData?.SpaceMarines.spaceMarines;
+  // return data
 }
 
 export async function deleteSpaceMarine(id: number) {
