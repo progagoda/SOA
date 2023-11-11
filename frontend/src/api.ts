@@ -7,7 +7,7 @@ import { parseString } from 'xml2js'
 
 const FirstServiceURL = process.env.REACT_APP_URL1
 const SecondServiceURL = process.env.REACT_APP_URL2
-
+const mode = process.env.REACT_APP_MODE
 export async function createSpaceMarine(spaceMarine: TSpaceMarine): Promise<any> {
   const xmlObject = buildMarineXML(spaceMarine);
   return await axios
@@ -26,14 +26,15 @@ export async function getSpaceMarines(
     params: {
       sort: args.queryKey[1]?.field,
       order: args.queryKey[1]?.field ? args.queryKey[1]?.order.toUpperCase(): undefined,
-      page: args.queryKey[3]?.page,
-      size: args.queryKey[3]?.size,
+      page: args.queryKey[3]?.current,
+      size: args.queryKey[3]?.pageSize,
       ...filters,
     },
     headers: {
       'Content-Type': 'application/xml',
     },
   })
+  if (mode ==='PROD'){
   let jsonData
   parseString(data, { explicitArray: false }, (err: any, result: any) => {
     if (err) {
@@ -41,10 +42,12 @@ export async function getSpaceMarines(
     }
     jsonData = result
   })
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return jsonData?.SpaceMarines.spaceMarines;
-  // return data
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return jsonData?.SpaceMarines.spaceMarines;
+  }
+
+  return data
 }
 
 export async function deleteSpaceMarine(id: number) {
@@ -94,7 +97,7 @@ export async function getSpaceMarineForHealth(args: any): Promise<any> {
 
 export async function createStarship(starship: TStarship): Promise<any> {
   const id = _.random(0, 1000);
-  const { data } = await axios.post(`${SecondServiceURL}/${id}/${starship.name}`)
+  const { data } = await axios.post(`${SecondServiceURL}/create/${id}/${starship.name}`)
   return data
 }
 export async function disembarkStarship(arg: TDisembarkStarshipArg){

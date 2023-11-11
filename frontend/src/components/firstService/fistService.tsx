@@ -52,8 +52,7 @@ export const FirstService = () => {
   const createSpaceMarine = useCreateSpaceMarine()
   const { data, isLoading } = useSpaceMarines(
     sorter,
-    filters,
-    pagination,
+    filters
   )
   const deleteSpaceMarineForMelee = useDeleteMarineForMelee()
   const getSpaceMarineForHealth = useGetSpaceMarineForHealth(health)
