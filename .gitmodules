@@ -1,0 +1,6 @@
+[submodule "mockSOA"]
+	path = mockSOA
+	url = https://github.com/progagoda/mockSOA
+[submodule "frontendSOA"]
+	path = frontendSOA
+	url = https://github.com/progagoda/frontendSOA
