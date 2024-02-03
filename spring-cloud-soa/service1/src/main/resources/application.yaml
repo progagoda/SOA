@@ -1,9 +1,13 @@
 spring:
   application:
-    name: first-service
+    name: starship-service
+  config:
+    import: configserver:http://localhost:8888
+  cloud:
+    config:
+      username: test
+      password: test
+      profile: development
 server:
   port: 0
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://localhost:8761/eureka
+

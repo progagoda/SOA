@@ -1,13 +1,13 @@
-package com.progagoda.service1;
+package ifmo.drukhary.configserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class Service1ApplicationTests {
+class ConfigserverApplicationTests {
 
-    @Test
-    void contextLoads() {
-    }
+	@Test
+	void contextLoads() {
+	}
 
 }

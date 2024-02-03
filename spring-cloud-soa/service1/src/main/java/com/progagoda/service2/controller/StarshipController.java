@@ -1,23 +1,28 @@
-package controller;
+package com.progagoda.service2.controller;
 
-import domain.StarshipRequest;
-import domain.XMLResponse;
+import com.progagoda.service2.domain.StarshipRequest;
+import com.progagoda.service2.domain.XMLResponse;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import javax.net.ssl.HttpsURLConnection;
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.function.Consumer;
 
-@Path("/")
+@RestController()
+@RequestMapping("/api/v1")
 public class StarshipController {
 
     private String spaceMarineServiceUrl = "https://localhost:28081/api/v1/starships";
@@ -63,11 +68,9 @@ public class StarshipController {
         return response;
     }
 
-    @POST
-    @Produces(MediaType.APPLICATION_XML)
-    @Consumes(MediaType.APPLICATION_XML)
-    @Path("/starship/create/{id}/{name}")
-    public Response createStarship(@PathParam("id") Integer id, @PathParam("name") String name, StarshipRequest starshipRequest) throws JAXBException, InterruptedException {
+
+    @PostMapping(path="/starship/create/{id}/{name}", produces ={MediaType.APPLICATION_XML_VALUE}, consumes = {MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> createStarship(@RequestParam("id") Integer id, @RequestParam("name") String name, @RequestBody StarshipRequest starshipRequest) throws JAXBException, InterruptedException {
         String responseEntity;
         Integer responseHttpStatusCode;
         try {
@@ -78,23 +81,18 @@ public class StarshipController {
             responseHttpStatusCode = 503;
             responseEntity = "Service is not ready to handle requests.";
         }
-        return Response
-                .status(responseHttpStatusCode)
+        return ResponseEntity.status(responseHttpStatusCode)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Credentials", "true")
                 .header("Access-Control-Allow-Headers",
                         "Origin, Content-Type, Accept, Authorization")
                 .header("Access-Control-Allow-Methods",
                         "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .entity(responseEntity)
-                .build();
+                .body(responseEntity);
     }
 
-    @GET
-    @Path("/starships")
-    @Produces(MediaType.APPLICATION_XML)
-    @Consumes(MediaType.APPLICATION_XML)
-    public Response getStarships() throws IOException, InterruptedException {
+    @GetMapping(path="/starships", produces ={MediaType.APPLICATION_XML_VALUE})
+    public ResponseEntity<?> getStarships() throws IOException, InterruptedException {
         String responseEntity;
         Integer responseHttpStatusCode;
         try{
@@ -105,7 +103,7 @@ public class StarshipController {
             responseHttpStatusCode = 503;
             responseEntity = "Service is not ready to handle requests.";
         }
-        return Response
+        return ResponseEntity
                 .status(responseHttpStatusCode)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Credentials", "true")
@@ -113,13 +111,12 @@ public class StarshipController {
                         "Origin, Content-Type, Accept, Authorization")
                 .header("Access-Control-Allow-Methods",
                         "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .entity(responseEntity)
-                .build();
+                .body(responseEntity);
     }
-    @OPTIONS
-    @Path("/starship/{starshipId}/unload/{spaceMarineId}")
-    public Response blyadskayaHuinya() {
-        return Response.ok("")
+
+    @RequestMapping(path = "/starship/{starshipId}/unload/{spaceMarineId}", method = {RequestMethod.OPTIONS})
+    public ResponseEntity blyadskayaHuinya() {
+        return ResponseEntity.status(HttpStatus.OK)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
                 .header("Access-Control-Allow-Credentials", "true")
@@ -128,15 +125,8 @@ public class StarshipController {
                 .build();
     }
 
-    //@POST
-    @PUT
-    @Path("/starship/{starshipId}/unload/{spaceMarineId}")
-    @Produces(MediaType.APPLICATION_XML)
-    public Response unload(@PathParam("starshipId") Integer starshipId, @PathParam("spaceMarineId") Integer spaceMarineId) throws IOException, InterruptedException {
-        //BufferedWriter writer = new BufferedWriter(new FileWriter("test.txt"));
-        //writer.write("test request " + starshipId + ' ' + spaceMarineId);
-        //writer.close();
-        //return Response.status(200).entity("Ok").build();
+    @RequestMapping(path="/starship/{starshipId}/unload/{spaceMarineId}", produces = {MediaType.APPLICATION_XML_VALUE}, method = RequestMethod.PUT)
+    public ResponseEntity unload(@RequestParam("starshipId") Integer starshipId, @RequestParam("spaceMarineId") Integer spaceMarineId) throws IOException, InterruptedException {
         String responseEntity;
         Integer responseHttpStatusCode;
         try{
@@ -144,37 +134,34 @@ public class StarshipController {
             responseHttpStatusCode = response.getStatusLine().getStatusCode();
             if (responseHttpStatusCode != 204){
                 responseEntity = new String(response.getEntity().getContent().readAllBytes());
-                return Response
+                return ResponseEntity
                         .status(responseHttpStatusCode)
                         .header("Access-Control-Allow-Origin", "*")
                         .header("Access-Control-Allow-Headers",
                                "Origin, Content-Type, Accept, Authorization")
                         .header("Access-Control-Allow-Methods",
                                 "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                        .entity("Space marine" + spaceMarineId + " was not on starship " + starshipId)
-                        .build();
+                        .body("Space marine" + spaceMarineId + " was not on starship " + starshipId);
             }
         } catch (IOException e){
             responseHttpStatusCode = 503;
             responseEntity = "Service is not ready to handle requests.";
-            return Response
+            return ResponseEntity
                     .status(responseHttpStatusCode)
                     .header("Access-Control-Allow-Origin", "*")
                     .header("Access-Control-Allow-Headers",
                             "Origin, Content-Type, Accept, Authorization")
                     .header("Access-Control-Allow-Methods",
                             "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                    .entity(responseEntity)
-                    .build();
+                    .body(responseEntity);
         }
-        return Response
+        return ResponseEntity
                 .status(responseHttpStatusCode)
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Access-Control-Allow-Headers",
                         "Origin, Content-Type, Accept, Authorization")
                 .header("Access-Control-Allow-Methods",
                         "GET, POST, PUT, DELETE, OPTIONS, HEAD")
-                .entity("Ok")
-                .build();
+                .body("Ok");
     }
 }
