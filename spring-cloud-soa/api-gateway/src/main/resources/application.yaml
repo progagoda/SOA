@@ -10,3 +10,7 @@ spring:
       profile: development
 server:
   port: 8082
+ribbon:
+  eureka:
+    enabled: true
+  OkToRetryOnAllOperations: true
