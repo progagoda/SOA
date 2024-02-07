@@ -8,6 +8,14 @@ spring:
       username: test
       password: test
       profile: development
+zuul:
+  routes:
+    agency-service:
+      path: /isu-app/**
+      serviceId: isu-app
+  okhttp:
+    enabled: true
+  ignoredServices: '*'
 server:
   port: 8082
 ribbon:

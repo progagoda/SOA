@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 @RequestMapping("/api/v1")
 public class StarshipController {
 
-    private String spaceMarineServiceUrl = "https://localhost:28081/api/v1/starships";
+    private String spaceMarineServiceUrl = "http://localhost:28080/api/v1/starships";
     private XMLParser<XMLResponse> xmlResponseParser = new XMLParser();
     private XMLParser<StarshipRequest> xmlStarshipParser = new XMLParser();
     private HttpsURLConnection connection;
