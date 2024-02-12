@@ -9,5 +9,10 @@ spring:
       password: test
       profile: development
 server:
-  port: 0
+  ssl:
+    key-store: classpath:springboot.p12
+    key-store-password: password
+    key-store-type: pkcs12
+    key-alias: springboot
+    key-password: password
 

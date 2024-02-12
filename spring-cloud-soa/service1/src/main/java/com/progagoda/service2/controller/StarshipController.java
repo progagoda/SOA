@@ -69,7 +69,7 @@ public class StarshipController {
     }
 
 
-    @PostMapping(path="/starship/create/{id}/{name}", produces ={MediaType.APPLICATION_XML_VALUE})
+    @PostMapping(path="/starships/create/{id}/{name}", produces ={MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<?> createStarship(@PathVariable("id") Integer id, @PathVariable("name") String name) throws JAXBException, InterruptedException {
         String responseEntity;
         Integer responseHttpStatusCode;
@@ -115,7 +115,6 @@ public class StarshipController {
                         "GET, POST, PUT, DELETE, OPTIONS, HEAD")
                 .body(responseEntity);
     }
-
     @RequestMapping(path = "/starship/{starshipId}/unload/{spaceMarineId}", method = {RequestMethod.OPTIONS})
     public ResponseEntity blyadskayaHuinya() {
         return ResponseEntity.status(HttpStatus.OK)
@@ -127,7 +126,7 @@ public class StarshipController {
                 .build();
     }
 
-    @RequestMapping(path="/starship/{starshipId}/unload/{spaceMarineId}", produces = {MediaType.APPLICATION_XML_VALUE}, method = RequestMethod.PUT)
+    @RequestMapping(path="/starships/{starshipId}/unload/{spaceMarineId}", produces = {MediaType.APPLICATION_XML_VALUE}, method = RequestMethod.PUT)
     public ResponseEntity unload(@PathVariable("starshipId") Integer starshipId, @PathVariable("spaceMarineId") Integer spaceMarineId) throws IOException, InterruptedException {
         String responseEntity;
         Integer responseHttpStatusCode;

@@ -1,24 +1,34 @@
+server:
+  port: 8761
+
 spring:
   application:
     name: api-gateway
-  config:
-    import: configserver:http://localhost:8888
-  cloud:
-    config:
-      username: test
-      password: test
-      profile: development
+
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    serviceUrl:
+      defaultZone: http://localhost:8760/eureka
+
 zuul:
   routes:
-    agency-service:
-      path: /isu-app/**
-      serviceId: isu-app
+    starship:
+      path: /**
+      service-id: starship-service
   okhttp:
     enabled: true
-  ignoredServices: '*'
-server:
-  port: 8082
+
 ribbon:
-  eureka:
-    enabled: true
-  OkToRetryOnAllOperations: true
+    eureka:
+      enabled: true
+    OkToRetryOnAllOperations: true
+#  config:
+#    import: configserver:http://localhost:8888
+#  cloud:
+#    config:
+#      username: test
+#      password: test
+#      profile: development

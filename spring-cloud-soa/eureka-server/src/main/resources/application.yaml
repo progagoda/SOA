@@ -8,5 +8,3 @@ spring:
       username: test
       password: test
       profile: development
-server:
-  port: 8761
