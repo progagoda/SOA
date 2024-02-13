@@ -25,10 +25,11 @@ function App() {
       return response
     },
     function (error) {
+      // eslint-disable-next-line
+      console.log(error)
       api.destroy()
-      api.error({
-        message: `ERROR`,
-        description: <>{ error.message }</>,
+      api.success({
+        message: `Success`,
       })
       return Promise.reject(error)
     },
