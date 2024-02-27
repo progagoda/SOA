@@ -96,7 +96,7 @@ export const useCreateStarship = () => {
     (starship: TStarship) =>
      createStarship(starship),
     {
-      onSuccess: async () => {
+      onSuccess: async (r) => {
         await queryClient.invalidateQueries('getStarship');
       }
     }

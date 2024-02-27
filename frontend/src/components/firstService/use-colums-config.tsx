@@ -158,9 +158,10 @@ export const columns = ({
       width: '3vh',
       sorter: true,
       ...getColumnSearchProps('creationDate'),
-      render: (item: Date) =>checkLength( `${new Date(item)
-        .toISOString()
-        .replace(/T/, ' ') // replace T with a space
+      render: (item: Date) => checkLength( `${
+        // new Date(item)
+        // .toISOString()
+        item.toString().replace(/T/, ' ') // replace T with a space
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         .replace(/\..+/, '')}`,3),

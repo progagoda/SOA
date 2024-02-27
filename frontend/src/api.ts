@@ -36,6 +36,7 @@ export async function getSpaceMarines(
   })
   if (mode ==='PROD'){
   let jsonData
+    // eslint-disable-next-line no-console
   parseString(data, { explicitArray: false }, (err: any, result: any) => {
     if (err) {
       throw err
@@ -77,9 +78,10 @@ export async function getSpaceMarineForMinCoords(): Promise<any> {
     }
     jsonData = result
   })
+
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  return jsonData?.SpaceMarine.spaceMarine;
+  return jsonData?.SpaceMarine;
 }
 export async function getSpaceMarineForHealth(args: any): Promise<any> {
   const { data } = await axios.get(`${FirstServiceURL}/health/${args.queryKey[1]}`)

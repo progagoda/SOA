@@ -26,10 +26,18 @@ function App() {
     },
     function (error) {
       // eslint-disable-next-line
-      console.log(error)
+      const url = error.config.url
       api.destroy()
-      api.success({
-        message: `Success`,
+
+      if (url.includes('https://localhost:8082/api/v1/starships')) {
+        api.success({
+          message: `Success`,
+        })
+        return Promise.resolve()
+      }
+      api.error({
+        message: `Network Error`,
+        description: error.code
       })
       return Promise.reject(error)
     },

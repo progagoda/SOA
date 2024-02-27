@@ -63,12 +63,15 @@ export const FirstService = () => {
     if(healthArg){
       getSpaceMarineForHealth.refetch()
       setIsHealth(true);
+      // eslint-disable-next-line no-console
     }
     else{
       getSpaceMarineForMinCoords.refetch()
       setIsHealth(false);
+      // eslint-disable-next-line no-console
+      console.log(getSpaceMarineForMinCoords)
       }
-    setIsModalOpen(true)
+    setIsModalOpen(true);
   }
 
   const handleOk = () => {
@@ -275,7 +278,7 @@ export const FirstService = () => {
           </Space>
         </Space>
         <Modal
-          title="First additional service"
+          title='First additional service'
           open={ isModalOpen }
           onOk={ handleOk }
           onCancel={ handleCancel }
