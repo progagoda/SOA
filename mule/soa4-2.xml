@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP_Listener_config" doc:id="1fa6b9b0-22ae-4cea-9c55-b16d9cdf2972" >
+		<http:listener-connection host="0.0.0.0" port="8081" tlsContext="TLS_Context" protocol="HTTPS">
+		</http:listener-connection>
+	</http:listener-config>
+	<wsc:config name="Web_Service_Consumer_Config" doc:name="Web Service Consumer Config" doc:id="a1cc1bc9-2049-4427-bd12-50308d5d0b02" >
+		<wsc:connection wsdlLocation="https://localhost:8080/ws/soa4.wsdl" service="Soa4PortService" port="Soa4PortSoap11" address="https://localhost:8080/ws">
+			<wsc:custom-transport-configuration >
+				<wsc:http-transport-configuration requesterConfig="HTTP_Request_configuration" />
+			</wsc:custom-transport-configuration>
+			<wsc:web-service-security actor="http://schemas.xmlsoap.org/soap/actor/next" />
+		</wsc:connection>
+	</wsc:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="7b1637f3-a201-42c4-92ed-cbbe2931193a" >
+		<http:request-connection host="localhost" port="8080" tlsContext="TLS_Context" protocol="HTTPS">
+		</http:request-connection>
+		<http:response-validator >
+			<http:success-status-code-validator values="0..599" />
+		</http:response-validator>
+	</http:request-config>
+	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="86e5edfb-b1a2-4c03-967b-3d4f6248e7a8" >
+		<tls:trust-store path="keystore.jks" password="changeit" type="jks" insecure="true"/>
+		<tls:key-store type="jks" path="keystore.jks" alias="baeldung" keyPassword="changeit" password="changeit"/>
+	</tls:context>
+	<flow name="getAllSpaceMarines" doc:id="ca77f896-8c7a-422f-90a9-50f55a72140c" >
+		<http:listener doc:name="Listener" doc:id="d2229c7e-e6a6-4a9e-bdbb-e79ac9e0de1e" config-ref="HTTP_Listener_config" path="/api/v1/space-marines" outputMimeType="application/xml" allowedMethods="GET">
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[read(error.cause.cause.detail,'application/xml').detail.errorCode]">
+				<http:body ><![CDATA[#[output application/xml --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="fdba27f2-803b-437d-8527-e8f8cc4f74cb" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output text/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+ gs#getAllSpaceMarinesRequest: {
+  gs#id: attributes.queryParams.'id',
+  gs#creationDate: attributes.queryParams.creationDate,
+  gs#page: attributes.queryParams.page,
+  gs#size: attributes.queryParams.size,
+  gs#sort: attributes.queryParams.sort,
+  gs#order: attributes.queryParams.order,
+  gs#name: attributes.queryParams.name,
+  gs#coordinatesX: attributes.queryParams.coordinatesX,
+  gs#coordinatesY: attributes.queryParams.coordinatesY,
+  gs#loyal: attributes.queryParams.loyal,
+  gs#health: attributes.queryParams.health,
+  gs#height: attributes.queryParams.height,
+  gs#meleeWeapon: attributes.queryParams.meleeWeapon,
+  gs#chapterName: attributes.queryParams.chapterName,
+  gs#chapterParentLegion: attributes.queryParams.chapterParentLegion,
+  gs#chapterWorld: attributes.queryParams.chapterWorld,
+  gs#starshipId: attributes.queryParams.starshipId
+ }
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="getAllSpaceMarines" doc:name="Consume" doc:id="3d6cc932-5717-42c0-a718-fb71d6da32c7" config-ref="Web_Service_Consumer_Config"/>
+		<ee:transform doc:name="Transform Message" doc:id="0bd20b72-9ead-4027-a75d-8a1ac2f2d81f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	SpaceMarines: {
+		(payload.body.ns0#getAllSpaceMarinesResponse.*ns0#spaceMarines map ( spaceMarine , indexOfSpaceMarine ) -> {
+			spaceMarines: {
+				id: spaceMarine.ns0#id default 0,
+				name: spaceMarine.ns0#name default "",
+				coordinates: {
+					x: spaceMarine.ns0#coordinates.ns0#x default 0,
+					y: spaceMarine.ns0#coordinates.ns0#y default 0
+				},
+				creationDate: spaceMarine.ns0#creationDate default |1815-12-10|,
+				health: spaceMarine.ns0#health default 0,
+				loyal: spaceMarine.ns0#loyal default true,
+				height: spaceMarine.ns0#height default 0,
+				meleeWeapon: spaceMarine.ns0#meleeWeapon default "",
+				chapter: {
+					name: spaceMarine.ns0#chapter.ns0#name default "",
+					parentLegion: spaceMarine.ns0#chapter.ns0#parentLegion default "",
+					world: spaceMarine.ns0#chapter.ns0#world default ""
+				},
+				starshipId: spaceMarine.ns0#starshipId default 0
+			}
+		})
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="96f8752c-23dd-4d17-a914-29d89b729ef1" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="fdbd405e-779e-40a6-af3c-72fca2c90198" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="80e5109a-aeb4-433c-b098-7d6e9f90bf42" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="42eb4d03-4b0b-4bf5-bc33-6d81b8e65040" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="0c70a3d7-05ec-42b6-bbc4-f5b613c6ece1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+		
+	</flow>
+	<flow name="getSpaceMarine" doc:id="b1712cbc-ad95-4b6e-840d-70b827640369" >
+		<http:listener doc:name="Listener" doc:id="809c5e7f-cf9a-451e-95b7-b1cffce2b095" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/{id}" outputMimeType="application/xml" >
+			<ee:repeatable-file-store-stream bufferUnit="MB" />
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="500">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET, PUT, POST, DELETE, HEAD, OPTIONS",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="a2f3a55f-2646-4a09-b136-e9a0e2eb7344">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#getSpaceMarineRequest: {
+		gs#id: attributes.uriParams.'id'
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="getSpaceMarine" doc:name="Consume" doc:id="7944e428-6fc9-4b3d-be46-cf8c8f667c85" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message Space Marine" doc:id="a20494d9-86cc-43dd-86d9-a5bf7dfddb93" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	SpaceMarine: {
+		id: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#id default 0,
+		name: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#name default "",
+		coordinates: {
+			x: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#coordinates.gs#x default 0,
+			y: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#coordinates.gs#y default 0
+		},
+		creationDate: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#creationDate default |1815-12-10|,
+		health: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#health default 0,
+		loyal: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#loyal default true,
+		height: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#height default 0,
+		meleeWeapon: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#meleeWeapon default "",
+		chapter: {
+			name: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#chapter.gs#name default "",
+			parentLegion: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#chapter.gs#parentLegion default "",
+			world: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#chapter.gs#world default ""
+		},
+		starshipId: payload.body.gs#getSpaceMarineResponse.gs#spaceMarine.gs#starshipId default 0
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9ce8cb85-ec59-479e-8826-9d576a935ab2" type="WSC:SOAP_FAULT">
+				<ee:transform doc:name="Transform Message" doc:id="50c113d3-34e9-4e9d-960e-62f040b17103">
+					<ee:message>
+						<ee:set-payload><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="52476380-beae-4e48-be88-7b47b8744555" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="16bee915-3ff9-4fc1-9a20-f66792a890cb" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="d77b3ea4-3458-4c6a-a5a3-c479ff49c752" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="createSpaceMarine" doc:id="fb11d909-add9-45b4-94d1-79deeda0162f" >
+		<http:listener doc:name="Listener" doc:id="b9ec605b-8b1c-47d7-8c3c-b0b09efed217" config-ref="HTTP_Listener_config" path="/api/v1/space-marines" outputMimeType="application/xml" allowedMethods="POST,OPTIONS">
+			<http:response statusCode="201">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="e077a21c-df0b-47a5-b6f8-9f301270c6af" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#createSpaceMarineRequest: {
+		gs#name: payload.SpaceMarine.name,
+		gs#coordinates: {
+			gs#x: payload.SpaceMarine.coordinates.x,
+			gs#y: payload.SpaceMarine.coordinates.y
+		},
+		gs#health: payload.SpaceMarine.health,
+		gs#loyal: payload.SpaceMarine.loyal,
+		gs#height: payload.SpaceMarine.height,
+		gs#meleeWeapon: payload.SpaceMarine.meleeWeapon,
+		gs#chapter: {
+			gs#name: payload.SpaceMarine.chapter.name,
+			gs#parentLegion: payload.SpaceMarine.chapter.parentLegion,
+			gs#world: payload.SpaceMarine.chapter.world
+		},
+		gs#starshipId: payload.SpaceMarine.starshipId
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="createSpaceMarine" doc:name="Consume" doc:id="bcfab89b-b8d9-46c1-96da-09f750caf792" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="89fbe0d4-291b-4547-94c2-ab5ecd183bd1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	SpaceMarine: {
+		id: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#id default 0,
+		name: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#name default "",
+		coordinates: {
+			x: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#x default 0,
+			y: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#y default 0
+		},
+		creationDate: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#creationDate default |1815-12-10|,
+		health: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#health default 0,
+		loyal: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#loyal default true,
+		height: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#height default 0,
+		meleeWeapon: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#meleeWeapon default "",
+		chapter: {
+			name: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#name default "",
+			parentLegion: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#parentLegion default "",
+			world: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#world default ""
+		},
+		starshipId: payload.body.ns0#createSpaceMarineResponse.ns0#spaceMarine.ns0#starshipId default 0
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="72983888-9401-4dc4-a0eb-799abf0b3acc" type="MULE:EXPRESSION">
+				<ee:transform doc:name="Transform Message" doc:id="e6e1c50a-5728-4cdf-a1c9-211f7b036db6">
+					<ee:message>
+						<ee:set-payload><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 400,
+		message: "meleeWeapon"
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="76686b52-16ee-4e9b-8403-2b16974204a9" type="WSC:SOAP_FAULT">
+				<ee:transform doc:name="Transform Message" doc:id="41c46919-793c-45bb-a6f8-4b6f63ee8a81">
+					<ee:message>
+						<ee:set-payload><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="78396231-5d6b-4eff-b4b7-32161c528901" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="3ad0343f-2437-4096-8663-6f86c9e26778" type="ANY">
+				<ee:transform doc:name="Transform Message" doc:id="901e89ab-4813-4685-af0b-bcb2d21802c1">
+					<ee:message>
+						<ee:set-payload><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="deleteSpaceMarineRequest" doc:id="24e8192e-dc0c-4f93-9e1d-1d51e610d822" >
+		<http:listener doc:name="Listener" doc:id="03e2eb5f-c530-4d0b-83d6-2bd4ac776d28" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/{id}" outputMimeType="application/xml" allowedMethods="DELETE,OPTIONS" >
+			<http:response statusCode="204">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="400" >
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="dadc7218-410c-4e08-bff5-a98e6bd04d78" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#deleteSpaceMarineRequest: {
+		gs#id: attributes.uriParams.'id'
+	},
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="deleteSpaceMarine" doc:name="Consume" doc:id="f8182270-f935-4050-91f4-888258c3fef6" config-ref="Web_Service_Consumer_Config" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="3552596a-1d6a-4bc4-86bb-0252469d9f3b" type="MULE:EXPRESSION" >
+				<ee:transform doc:name="Transform Message" doc:id="9e4eb812-4d52-43ae-ba4d-960747305cea" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: "400",
+		message: "No space marine found."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="23575080-79a3-4e7e-b41b-eae06c400f22" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="b6d2c214-4771-4f69-afdc-640fe775b447" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="3ebe8f38-e4b0-4efa-b08c-51d324170fce" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="deleteByMeleeWeapon" doc:id="26bb5eab-95d9-4562-a057-833ac85a057f" >
+		<http:listener doc:name="Listener" doc:id="ebf87c0d-4e50-4e01-883d-cf5f324465e4" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/melee-weapon/{meleeWeapon}" outputMimeType="application/xml" allowedMethods="DELETE,OPTIONS" >
+			<http:response statusCode="204">
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[read(error.cause.cause.detail,'application/xml').detail.errorCode]" >
+				<http:body ><![CDATA[#[output application/xml --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="284311ae-c773-4e69-935a-76f669dd1c6e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#deleteByMeleeWeaponRequest: {
+		gs#meleeWeapon: attributes.uriParams.'meleeWeapon'
+	},
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="deleteByMeleeWeapon" doc:name="Consume" doc:id="4994bee5-8963-4716-b919-76323a673253" config-ref="Web_Service_Consumer_Config" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="9c4bbc3a-c684-4215-9e4c-05208cda50ff" type="MULE:EXPRESSION" >
+				<ee:transform doc:name="Transform Message" doc:id="6ab903ad-87a3-4de5-b17d-7cc309ecde07" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: "400",
+		message: "Invalid meleeWeapon"
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="200e8dda-d08b-4e7a-a053-6a80b87e041b" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="59a894cd-2855-4834-96cd-e602b6b3d881" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="24b9e1da-a481-4ddb-a67f-0b83148c695b" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="getMinSpaceMarine" doc:id="2c1763da-7261-4b76-b8cf-83c1b130cf67" >
+		<http:listener doc:name="Listener" doc:id="42f69a28-e8c1-416a-a083-e99ee92a1907" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/coords/min" outputMimeType="application/xml" >
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[read(error.cause.cause.detail,'application/xml').detail.errorCode]" >
+				<http:body ><![CDATA[#[output application/xml --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="50cc5962-9e8d-47dc-9cda-cf13e203682b">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#getMinSpaceMarineRequest: ""
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="getMinSpaceMarine" doc:name="Consume" doc:id="37adbd91-e222-49e6-8da0-018657e23746" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="4e16a91e-bd7b-48c6-87a7-abb3a9157a34" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	SpaceMarine: {
+		id: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#id default 0,
+		name: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#name default "",
+		coordinates: {
+			x: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#x default 0,
+			y: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#y default 0
+		},
+		creationDate: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#creationDate default |1815-12-10|,
+		health: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#health default 0,
+		loyal: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#loyal default true,
+		height: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#height default 0,
+		meleeWeapon: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#meleeWeapon default "",
+		chapter: {
+			name: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#name default "",
+			parentLegion: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#parentLegion default "",
+			world: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#world default ""
+		},
+		starshipId: payload.body.ns0#getMinSpaceMarineResponse.ns0#spaceMarine.ns0#starshipId default 0
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="85b46470-3900-4245-8e1a-fa5994e6363c" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="dedc77bb-3db7-41bc-8923-e28dacb42326" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="b5021c62-1ab5-4e95-b8c1-46c89eaac669" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="fe2d433b-76f3-4ae5-bc85-830d7d742d81" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="ea8bae83-72cb-4c30-bdd0-c638509fed0e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="countByHealth" doc:id="add15114-36c0-4c57-b98a-7f69eee38a03" >
+		<http:listener doc:name="Listener" doc:id="1aca8e5e-ff0e-4a9b-bd97-75c077d726b0" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/health/{health}" outputMimeType="application/xml" >
+			<http:response >
+				<http:headers ><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+			<http:error-response statusCode="#[read(error.cause.cause.detail,'application/xml').detail.errorCode]" >
+				<http:body ><![CDATA[#[output application/xml --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="c50aaf7d-2b2a-4ee2-95a7-525aca84391c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#countByHealthRequest: {
+		gs#health: attributes.uriParams.'health'
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="countByHealth" doc:name="Consume" doc:id="771e4812-c404-4327-9a57-6eabbd38d334" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message1" doc:id="78c2bee3-0800-422e-9741-699c8143714a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	SpaceMarinesCount: payload.body.ns0#countByHealthResponse.ns0#count
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="12672b81-9b30-4e8f-8954-757e88a6fb4b" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="9593ffe5-6207-4593-9e0b-d28cb9153d00" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="e3887b05-8655-429f-b4ca-a6e6ce0c31d2" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="c75d7df9-3e2d-4e4a-9f92-dc3ef1bfe163" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="43b3b146-b54c-4dac-b116-8e110e04cd41" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="updateSpaceMarine" doc:id="d7b4abd0-f29e-4239-824c-ee63b9017219">
+		<http:listener doc:name="Listener" doc:id="800f78b9-78f2-44b9-a05b-009983c80a33" config-ref="HTTP_Listener_config" path="/api/v1/space-marines/{id}" outputMimeType="application/xml" allowedMethods="PUT">
+			<http:response statusCode="200">
+				<http:headers><![CDATA[#[output application/java
+---
+{
+	"Access-Control-Allow-Origin" : "*",
+	"Access-Control-Allow-Methods" : "GET,POST,PUT,DELETE",
+	"Access-Control-Allow-Headers" : "*",
+	"Access-Control-Allow-Credentials" : "true"
+}]]]></http:headers>
+			</http:response>
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="8ceb682b-8416-47bd-a7c3-dd3a8ef3cbf3">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns gs 8080/api/v1/space-marines
+---
+{
+	gs#updateSpaceMarineRequest: {
+		gs#id: attributes.uriParams.'id',
+		gs#name: payload.SpaceMarine.name,
+		gs#coordinates: {
+			gs#x: payload.SpaceMarine.coordinates.x,
+			gs#y: payload.SpaceMarine.coordinates.y
+		},
+		gs#health: payload.SpaceMarine.health,
+		gs#loyal: payload.SpaceMarine.loyal,
+		gs#height: payload.SpaceMarine.height,
+		gs#meleeWeapon: payload.SpaceMarine.meleeWeapon,
+		gs#chapter: {
+			gs#name: payload.SpaceMarine.chapter.name,
+			gs#parentLegion: payload.SpaceMarine.chapter.parentLegion,
+			gs#world: payload.SpaceMarine.chapter.world
+		},
+		gs#starshipId: payload.SpaceMarine.starshipId
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="updateSpaceMarine" doc:name="Consume" doc:id="27c7c975-2744-407b-8f3c-548f6359d0f0" config-ref="Web_Service_Consumer_Config" />
+		<ee:transform doc:name="Transform Message" doc:id="9025fada-d828-4f9d-b97d-e34e472ed285">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	SpaceMarine: {
+		id: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#id default 0,
+		name: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#name default "",
+		coordinates: {
+			x: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#x default 0,
+			y: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#coordinates.ns0#y default 0
+		},
+		creationDate: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#creationDate default |1815-12-10|,
+		health: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#health default 0,
+		loyal: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#loyal default true,
+		height: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#height default 0,
+		meleeWeapon: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#meleeWeapon default "",
+		chapter: {
+			name: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#name default "",
+			parentLegion: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#parentLegion default "",
+			world: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#chapter.ns0#world default ""
+		},
+		starshipId: payload.body.ns0#updateSpaceMarineResponse.ns0#spaceMarine.ns0#starshipId default 0
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="64fe84a4-d96d-4df1-9254-fe42f155f9db" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="b313426e-2516-4800-9f0b-a31c7c99409e" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 400,
+		message: error.description	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="f4fbac4a-9ffc-4065-a6d7-74cb430fb45f" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="c40e4b8c-0953-4e66-933a-fb2f95b5bc39" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="58d8366b-104c-4324-8925-1ec045139520" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="createStarship" doc:id="49a9f463-ba22-4a19-970e-9ef5495f9eb4" >
+		<http:listener doc:name="Listener" doc:id="e26598c9-23a4-44ba-a4b7-bc8784c944fe" config-ref="HTTP_Listener_config" path="/api/v1/starship/{id}/{name}" allowedMethods="POST,OPTIONS">
+			<http:response statusCode="201" />
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="82bcd231-7215-4d33-ba18-dfd6105b5424" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	ns0#createStarshipRequest: {
+		ns0#id: attributes.uriParams.'id',
+		ns0#name: attributes.uriParams.'name'	
+		}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume doc:name="Consume" doc:id="bf0d6652-b1a6-486d-9408-578230dee385" config-ref="Web_Service_Consumer_Config" operation="createStarship"/>
+		<ee:transform doc:name="Transform Message" doc:id="ec29542f-ed54-471e-9a4b-6ed2922e4c15" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	Starship: {
+		id: payload.body.ns0#createStarshipResponse.ns0#starship.ns0#id,
+		name: payload.body.ns0#createStarshipResponse.ns0#starship.ns0#name
+		}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="d4fc2bf5-4825-40c3-be0d-bd175e6d62a3" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="8fb122f9-c659-4582-8a66-f28ff60c5c2c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="782f0076-ff67-495d-8c66-835718603821" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="ece04a4c-30f2-4bbb-8caa-7cdfc4cdbd5d" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="86239122-64ee-415a-a1f6-64dba37398f8" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="unloadSpaceMarine" doc:id="2b4fa52f-0bd3-47de-be12-e63ea3f98d06" >
+		<http:listener doc:name="Listener" doc:id="f3d95fad-c6fd-4975-bf68-bb1a14653d8b" config-ref="HTTP_Listener_config" path="/api/v1/starship/{starshipId}/unload/{spaceMarineId}" allowedMethods="PUT">
+			<http:response statusCode="204" />
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="a4e2a020-0a6f-4373-95f7-aafbdcc70bd2" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	ns0#unloadSpaceMarineRequest: {
+		ns0#spaceMarineId: attributes.uriParams.'spaceMarineId',
+		ns0#starshipId: attributes.uriParams.'starshipId'
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<wsc:consume operation="unloadSpaceMarine" doc:name="Consume" doc:id="50f69cad-31ec-47e1-a828-7bf2d254032b" config-ref="Web_Service_Consumer_Config" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e9378cca-dd39-4283-a069-19f8be348a4d" type="WSC:SOAP_FAULT" >
+				<ee:transform doc:name="Transform Message" doc:id="43ce3d73-6d4f-4bac-960c-857ff078dec1" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: read(error.exception.cause.detail,'application/xml').detail.code,
+		message: read(error.exception.cause.detail,'application/xml').detail.description
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+				<logger level="INFO" doc:name="Logger" doc:id="05e482c8-caf9-4acf-bf8b-87c09d21235d" />
+			</on-error-continue>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue1" doc:id="88e76b6f-204e-4087-a889-b3b4e4022b91" type="ANY" >
+				<ee:transform doc:name="Transform Message" doc:id="49556497-dbeb-45ee-b643-36f6bb7dbff9" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[output text/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 503,
+		message: "Service unavailable."
+	}
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="errorNotFound" doc:id="3644b3c5-29a1-47fa-9884-2cbbd33da520" >
+		<http:listener doc:name="Listener" doc:id="fe8c642f-474d-4c92-a0b5-8baf99906449" config-ref="HTTP_Listener_config" path="*" allowedMethods="GET,POST,PUT,DELETE,OPTIONS" >
+			<http:response statusCode="404" />
+		</http:listener>
+		<ee:transform doc:name="Transform Message" doc:id="d2b455b9-2d9a-4ee0-91d7-073752a6f1bd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+ns ns0 8080/api/v1/space-marines
+---
+{
+	UnexpectedError: {
+		code: 404,
+		msg: "Not found"
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	
+</mule>

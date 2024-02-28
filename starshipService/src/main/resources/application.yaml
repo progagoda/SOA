@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: starship-service
+server:
+  port: 8082
+  ssl:
+#    key-store: classpath:springboot.p12
+#    key-store-password: password
+#    key-store-type: pkcs12
+#    key-alias: springboot
+#    key-password: password
+    key-store: classpath:keystore.jks
+    key-store-password: changeit
+    key-store-type: JKS
+    key-alias: baeldung
+    key-password: changeit
+#    trust-store: classpath:keystore.jks
+#    trust-store-password: changeit
+    enabled: true
+security:
+    ignored: /**
+    basic:
+      enabled: true
+#logging:
+#   level:
+#     root: DEBUG
